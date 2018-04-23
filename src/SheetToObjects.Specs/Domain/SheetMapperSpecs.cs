@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using Moq;
 using SheetToObjects.Lib;
 using SheetToObjects.Specs.Builders;
 using SheetToObjects.Specs.TestModels;
@@ -11,36 +10,69 @@ namespace SheetToObjects.Specs.Domain
     public class SheetMapperSpecs
     {
         [Fact]
-        public void Foo()
+        public void GivenASheet_WhenMappingModelStringProperty_ItSetsPropertyOnModel()
         {
-            const string firstValue = "FirstValue";
-            const int secondValue = 42;
-            const double thirdValue = 42.42D;
+            const string value = "FirstValue";
+
+            var sheetData = new SheetBuilder()
+                .AddRow(r => r
+                    .AddCell(c => c.WithColumnLetter("A").WithRowNumber(1).WithValue(value).Build())
+                    .Build())
+                .Build();
 
             var mappingConfig = new MappingConfig()
                 .For<TestModel>()
                 .Column("A").MapTo(t => t.StringProperty)
-                .Column("B").MapTo(t => t.IntProperty)
-                .Column("C").MapTo(t => t.DoubleProperty)
                 .Build();
 
-            var mappingConfigProviderMock = new Mock<IProvideMappingConfig>();
-            mappingConfigProviderMock.Setup(m => m.Get()).Returns(mappingConfig);
+            var testModelList = new SheetMapper().Map(sheetData).To<TestModel>(mappingConfig);
+
+            testModelList.Should().HaveCount(1);
+            testModelList.Single().StringProperty.Should().Be(value);
+        }
+
+        [Fact]
+        public void GivenASheet_WhenMappingModelIntProperty_ItSetsPropertyOnModel()
+        {
+            const int value = 42;
 
             var sheetData = new SheetBuilder()
                 .AddRow(r => r
-                    .AddCell(c => c.WithColumnLetter("A").WithRowNumber(1).WithValue(firstValue).Build())
-                    .AddCell(c => c.WithColumnLetter("B").WithRowNumber(1).WithValue(secondValue).Build())
-                    .AddCell(c => c.WithColumnLetter("C").WithRowNumber(1).WithValue(thirdValue).Build())
+                    .AddCell(c => c.WithColumnLetter("B").WithRowNumber(1).WithValue(value).Build())
                     .Build())
                 .Build();
 
-            var testModelList = new SheetMapper(mappingConfigProviderMock.Object).Map(sheetData).To<TestModel>();
+            var mappingConfig = new MappingConfig()
+                .For<TestModel>()
+                .Column("B").MapTo(t => t.IntProperty)
+                .Build();
+
+            var testModelList = new SheetMapper().Map(sheetData).To<TestModel>(mappingConfig);
 
             testModelList.Should().HaveCount(1);
-            testModelList.Single().StringProperty.Should().Be(firstValue);
-            testModelList.Single().IntProperty.Should().Be(secondValue);
-            testModelList.Single().DoubleProperty.Should().Be(thirdValue);
+            testModelList.Single().IntProperty.Should().Be(value);
+        }
+
+        [Fact]
+        public void GivenASheet_WhenMappingModelDoubleProperty_ItSetsPropertyOnModel()
+        {
+            const double value = 42.42D;
+
+            var sheetData = new SheetBuilder()
+                .AddRow(r => r
+                    .AddCell(c => c.WithColumnLetter("C").WithRowNumber(1).WithValue(value).Build())
+                    .Build())
+                .Build();
+
+            var mappingConfig = new MappingConfig()
+                .For<TestModel>()
+                .Column("C").MapTo(t => t.DoubleProperty)
+                .Build();
+
+            var testModelList = new SheetMapper().Map(sheetData).To<TestModel>(mappingConfig);
+
+            testModelList.Should().HaveCount(1);
+            testModelList.Single().DoubleProperty.Should().Be(value);
         }
     }
 }
