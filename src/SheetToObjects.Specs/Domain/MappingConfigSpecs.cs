@@ -11,7 +11,7 @@ namespace SheetToObjects.Specs.Domain
         [Fact]
         public void GivenCreatingMappingConfiguration_WhenAddingColumnConfig_ColumnConfigIsAdded()
         {
-            var result = new MappingConfig()
+            var result = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("A").MapTo(m => m.StringProperty)
                 .Build();
@@ -22,7 +22,7 @@ namespace SheetToObjects.Specs.Domain
         [Fact]
         public void GivenCreatingMappingConfiguration_WhenAddingColumnLetter_ColumnLetterIsSet()
         {
-            var result = new MappingConfig()
+            var result = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("A").MapTo(m => m.StringProperty)
                 .Build();
@@ -33,7 +33,7 @@ namespace SheetToObjects.Specs.Domain
         [Fact]
         public void GivenCreatingMappingConfiguration_WhenAddingProperty_PropertyTypeIsSet()
         {
-            var result = new MappingConfig()
+            var result = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("A").MapTo(m => m.StringProperty)
                 .Build();
@@ -44,7 +44,7 @@ namespace SheetToObjects.Specs.Domain
         [Fact]
         public void GivenCreatingMappingConfiguration_WhenAddingProperty_PropertyNameIsSet()
         {
-            var result = new MappingConfig()
+            var result = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("A").MapTo(m => m.StringProperty)
                 .Build();
@@ -55,7 +55,7 @@ namespace SheetToObjects.Specs.Domain
         [Fact]
         public void GivenCreatingMappingConfiguration_WhenColumnIsNotSetToRequired_ColumnIsNotRequired()
         {
-            var result = new MappingConfig()
+            var result = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("A").MapTo(m => m.StringProperty)
                 .Build();
@@ -66,7 +66,7 @@ namespace SheetToObjects.Specs.Domain
         [Fact]
         public void GivenCreatingMappingConfiguration_WhenColumnIsSetToRequired_ColumnIsRequired()
         {
-            var result = new MappingConfig()
+            var result = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("A").IsRequired().MapTo(m => m.StringProperty)
                 .Build();

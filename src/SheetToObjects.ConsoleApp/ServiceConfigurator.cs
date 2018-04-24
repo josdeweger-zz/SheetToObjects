@@ -12,7 +12,21 @@ namespace SheetToObjects.ConsoleApp
         {
             serviceCollection.AddTransient<IGenerateColumnLetters, ColumnLetterGenerator>();
             serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetsConverter>();
-            serviceCollection.AddTransient<IMapSheetToObjects, SheetMapper>();
+            serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
+            {
+                return new SheetMapper()
+                    .Configure(cfg => cfg
+                        .For<EpicTrackingModel>()
+                        .Column("A").MapTo(m => m.SprintNumber)
+                        .Column("B").MapTo(m => m.SprintName)
+                        .Column("C").MapTo(m => m.StoryPointsCompleted)
+                        .Column("D").MapTo(m => m.TotalCompleted)
+                        .Column("E").MapTo(m => m.ForecastNormal)
+                        .Column("F").MapTo(m => m.ForecastHigh)
+                        .Column("G").MapTo(m => m.ForecastLow)
+                        .Column("H").MapTo(m => m.Scope)
+                        .Build());
+            });
 
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

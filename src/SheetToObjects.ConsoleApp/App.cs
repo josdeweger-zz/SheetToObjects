@@ -36,29 +36,11 @@ namespace SheetToObjects.ConsoleApp
             //convert to generic sheet model
             var sheet = _sheetDataConverter.Convert(sheetDataResponse);
 
-            //create configuration to specify what column value should be mapped to what class property
-            var mappingConfig = BuildMappingConfig();
-
             //do the actual mapping
-            var epicTrackingModels = _sheetMapper.Map(sheet).To<EpicTrackingModel>(mappingConfig);
+            var epicTrackingModels = _sheetMapper.Map(sheet).To<EpicTrackingModel>();
 
             //write response, sheet and model to console
             WriteToConsole(sheetDataResponse, sheet, epicTrackingModels);
-        }
-
-        private static MappingConfig BuildMappingConfig()
-        {
-            return new MappingConfig()
-                .For<EpicTrackingModel>()
-                .Column("A").MapTo(m => m.SprintNumber)
-                .Column("B").MapTo(m => m.SprintName)
-                .Column("C").MapTo(m => m.StoryPointsCompleted)
-                .Column("D").MapTo(m => m.TotalCompleted)
-                .Column("E").MapTo(m => m.ForecastNormal)
-                .Column("F").MapTo(m => m.ForecastHigh)
-                .Column("G").MapTo(m => m.ForecastLow)
-                .Column("H").MapTo(m => m.Scope)
-                .Build();
         }
 
         private static void WriteToConsole(params object[] objects)

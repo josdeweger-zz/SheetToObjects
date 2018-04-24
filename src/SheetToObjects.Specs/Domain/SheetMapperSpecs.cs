@@ -20,12 +20,12 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var mappingConfig = new MappingConfig()
+            var mappingConfig = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("A").MapTo(t => t.StringProperty)
                 .Build();
 
-            var testModelList = new SheetMapper().Map(sheetData).To<TestModel>(mappingConfig);
+            var testModelList = new SheetMapper(mappingConfig).Map(sheetData).To<TestModel>();
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().StringProperty.Should().Be(value);
@@ -42,12 +42,12 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var mappingConfig = new MappingConfig()
+            var mappingConfig = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("B").MapTo(t => t.IntProperty)
                 .Build();
 
-            var testModelList = new SheetMapper().Map(sheetData).To<TestModel>(mappingConfig);
+            var testModelList = new SheetMapper(mappingConfig).Map(sheetData).To<TestModel>();
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().IntProperty.Should().Be(value);
@@ -64,12 +64,12 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var mappingConfig = new MappingConfig()
+            var mappingConfig = new MappingConfigBuilder()
                 .For<TestModel>()
                 .Column("C").MapTo(t => t.DoubleProperty)
                 .Build();
 
-            var testModelList = new SheetMapper().Map(sheetData).To<TestModel>(mappingConfig);
+            var testModelList = new SheetMapper(mappingConfig).Map(sheetData).To<TestModel>();
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().DoubleProperty.Should().Be(value);

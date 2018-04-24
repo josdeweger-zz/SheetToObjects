@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SheetToObjects.Lib
 {
     public class MappingConfig
     {
-        public IList<IColumnMapping> ColumnMappings = new List<IColumnMapping>();
-
-        public ColumnMapping<TModel> For<TModel>()
+        public Type ForType { get; set; }
+        public IList<ColumnMapping> ColumnMappings = new List<ColumnMapping>();
+        
+        public ColumnMapping GetColumnMappingByPropertyName(string propertyName)
         {
-            return new ColumnMapping<TModel>(this);
+            return ColumnMappings.FirstOrDefault(m =>
+                m.PropertyName.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
