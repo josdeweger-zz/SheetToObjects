@@ -40,4 +40,6 @@ This library is in an early alpha stage, some core functionalities are still mis
 - [ ] Add validation (Required, Regex, Unique, ...) - return Result object containing validation
 - [ ] Allow headers through `MappingConfig`
 - [ ] Add different mapping config types (CSV config will probably be different)
+- [ ] Setup Cake script for simple CI build
+- [ ] Create NuGet package in CI build
 - [ ] Split into different repo's: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.Csv etc.
