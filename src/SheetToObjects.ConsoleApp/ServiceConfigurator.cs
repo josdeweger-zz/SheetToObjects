@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SheetToObjects.Infrastructure.GoogleSheets;
 using SheetToObjects.Lib;
+using SheetToObjects.Lib.ValueParsers;
 
 namespace SheetToObjects.ConsoleApp
 {
@@ -15,8 +16,7 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddTransient<IParseValues, ValueParser>();
             serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
             {
-                return new SheetMapper(ctx.GetService<IParseValues>())
-                    .Configure(cfg => cfg
+                return SheetMapper.Create(cfg => cfg
                         .For<EpicTrackingModel>()
                         .Column("A").MapTo(m => m.SprintNumber)
                         .Column("B").MapTo(m => m.SprintName)

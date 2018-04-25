@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Configuration;
+using SheetToObjects.Lib.ValueParsers;
 
 namespace SheetToObjects.Lib
 {
     public class SheetMapper : IMapSheetToObjects
     {
-        private readonly IParseValues _valueParser;
+        private readonly IParseValues _valueParser = new ValueParser();
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
-        public SheetMapper(IParseValues valueParser)
+        public static SheetMapper Create(Func<MappingConfigBuilder, MappingConfig> mappingConfigFunc)
         {
-            _valueParser = valueParser;
+            return new SheetMapper().Configure(mappingConfigFunc);
         }
 
-        public SheetMapper Configure(Func<MappingConfigBuilder, MappingConfig> mappingConfigFunc)
+        private SheetMapper Configure(Func<MappingConfigBuilder, MappingConfig> mappingConfigFunc)
         {
             var mappingConfig = mappingConfigFunc(new MappingConfigBuilder());
             _mappingConfigs.Add(mappingConfig.ForType, mappingConfig);
