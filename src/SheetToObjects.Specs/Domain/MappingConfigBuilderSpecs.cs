@@ -1,12 +1,13 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using SheetToObjects.Lib;
+using SheetToObjects.Lib.Configuration;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
 
 namespace SheetToObjects.Specs.Domain
 {
-    public class MappingConfigSpecs
+    public class MappingConfigBuilderSpecs
     {
         [Fact]
         public void GivenCreatingMappingConfiguration_WhenAddingColumnConfig_ColumnConfigIsAdded()

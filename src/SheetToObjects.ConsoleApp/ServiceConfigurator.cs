@@ -12,9 +12,10 @@ namespace SheetToObjects.ConsoleApp
         {
             serviceCollection.AddTransient<IGenerateColumnLetters, ColumnLetterGenerator>();
             serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetsConverter>();
+            serviceCollection.AddTransient<IParseValues, ValueParser>();
             serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
             {
-                return new SheetMapper()
+                return new SheetMapper(ctx.GetService<IParseValues>())
                     .Configure(cfg => cfg
                         .For<EpicTrackingModel>()
                         .Column("A").MapTo(m => m.SprintNumber)

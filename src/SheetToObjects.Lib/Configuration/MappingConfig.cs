@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SheetToObjects.Lib
+namespace SheetToObjects.Lib.Configuration
 {
     public class MappingConfig
     {

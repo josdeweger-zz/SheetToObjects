@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace SheetToObjects.Lib
+namespace SheetToObjects.Lib.Configuration
 {
     public class MappingConfigBuilder
     {

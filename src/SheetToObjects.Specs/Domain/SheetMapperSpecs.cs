@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using SheetToObjects.Lib;
+using SheetToObjects.Lib.ValueParsers;
 using SheetToObjects.Specs.Builders;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
@@ -20,12 +21,13 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var mappingConfig = new MappingConfigBuilder()
-                .For<TestModel>()
-                .Column("A").MapTo(t => t.StringProperty)
-                .Build();
-
-            var testModelList = new SheetMapper(mappingConfig).Map(sheetData).To<TestModel>();
+            var testModelList = new SheetMapper(new ValueParser())
+                .Configure(cfg => cfg
+                    .For<TestModel>()
+                    .Column("A").MapTo(t => t.StringProperty)
+                    .Build())
+                .Map(sheetData)
+                .To<TestModel>();
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().StringProperty.Should().Be(value);
@@ -42,12 +44,13 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var mappingConfig = new MappingConfigBuilder()
-                .For<TestModel>()
-                .Column("B").MapTo(t => t.IntProperty)
-                .Build();
-
-            var testModelList = new SheetMapper(mappingConfig).Map(sheetData).To<TestModel>();
+            var testModelList = new SheetMapper(new ValueParser())
+                .Configure(cfg => cfg
+                    .For<TestModel>()
+                    .Column("B").MapTo(t => t.IntProperty)
+                    .Build())
+                .Map(sheetData)
+                .To<TestModel>();
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().IntProperty.Should().Be(value);
@@ -64,12 +67,13 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var mappingConfig = new MappingConfigBuilder()
-                .For<TestModel>()
-                .Column("C").MapTo(t => t.DoubleProperty)
-                .Build();
-
-            var testModelList = new SheetMapper(mappingConfig).Map(sheetData).To<TestModel>();
+            var testModelList = new SheetMapper(new ValueParser())
+                .Configure(cfg => cfg
+                    .For<TestModel>()
+                    .Column("C").MapTo(t => t.DoubleProperty)
+                    .Build())
+                .Map(sheetData)
+                .To<TestModel>();
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().DoubleProperty.Should().Be(value);

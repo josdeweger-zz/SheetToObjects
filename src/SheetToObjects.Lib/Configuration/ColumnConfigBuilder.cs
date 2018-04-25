@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SheetToObjects.Lib
+namespace SheetToObjects.Lib.Configuration
 {
     public class ColumnConfigBuilder
     {

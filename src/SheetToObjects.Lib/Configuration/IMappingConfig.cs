@@ -1,4 +1,4 @@
-﻿namespace SheetToObjects.Lib
+﻿namespace SheetToObjects.Lib.Configuration
 {
     public interface IMappingConfig
     {

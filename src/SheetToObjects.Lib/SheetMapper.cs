@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using SheetToObjects.Core;
+using SheetToObjects.Lib.Configuration;
 
 namespace SheetToObjects.Lib
 {
     public class SheetMapper : IMapSheetToObjects
     {
+        private readonly IParseValues _valueParser;
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
-        public SheetMapper()
+        public SheetMapper(IParseValues valueParser)
         {
-        }
-
-        public SheetMapper(MappingConfig mappingConfig)
-        {
-            _mappingConfigs.Add(mappingConfig.ForType, mappingConfig);
+            _valueParser = valueParser;
         }
 
         public SheetMapper Configure(Func<MappingConfigBuilder, MappingConfig> mappingConfigFunc)
@@ -31,8 +29,7 @@ namespace SheetToObjects.Lib
             return this;
         }
 
-        public List<T> To<T>()
-            where T : new()
+        public List<T> To<T>() where T : new()
         {
             var list = new List<T>();
 
@@ -57,24 +54,8 @@ namespace SheetToObjects.Lib
                     if (cell.IsNull() || cell.Value.IsNull())
                         continue;
 
-                    switch (true)
-                    {
-                        case var _ when columnMapping.PropertyType == typeof(string):
-                            property.SetValue(obj, cell.Value.ToString(), null);
-                            break;
-                        case var _ when columnMapping.PropertyType == typeof(int) || columnMapping.PropertyType == typeof(int?):
-                            if (int.TryParse(cell.Value.ToString(), out var intValue))
-                            {
-                                property.SetValue(obj, intValue, null);
-                            }
-                            break;
-                        case var _ when columnMapping.PropertyType == typeof(double) || columnMapping.PropertyType == typeof(double?):
-                            if (double.TryParse(cell.Value.ToString(), out var doubleValue))
-                            {
-                                property.SetValue(obj, doubleValue, null);
-                            }
-                            break;
-                    }
+                    var parsedValue = _valueParser.Parse(columnMapping.PropertyType, cell.Value);
+                    property.SetValue(obj, parsedValue, null);
                 }
 
                 list.Add(obj);
