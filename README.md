@@ -33,6 +33,8 @@ new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 });
 ```
 
+For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs/Domain/SheetMapperSpecs.cs
+
 ## Status
 This library is in an early alpha stage, some core functionalities are still missing and it has NOT been battle tested in production. As the To Do implies, some core functionality is still missing.
 
