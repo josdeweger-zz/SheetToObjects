@@ -287,4 +287,8 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
+# Build related
+tools/**
+!tools/packages.config
+
 src/SheetToObjects\.ConsoleApp/app-settings\.json
