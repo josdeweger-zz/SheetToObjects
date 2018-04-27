@@ -2,8 +2,6 @@ version: 0.0.{build}
 image: Visual Studio 2017
 build_script:
 - ps: .\build.ps1
-artifacts:
-- path: artifacts/*.nupkg
 build: off
 test: off
 deploy: off
