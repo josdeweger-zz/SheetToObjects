@@ -6,6 +6,7 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var solutionFolderPath = "./src/";
+var artifactsFolderPath = "./artifacts/";
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -70,7 +71,13 @@ Task("Create-Nuget-Package")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    DotNetCorePack(solutionFolderPath + "/SheetToObjects.Lib/SheetToObjects.Lib.csproj");
+    var settings = new DotNetCorePackSettings
+     {
+         Configuration = configuration,
+         OutputDirectory = artifactsFolderPath
+     };
+
+    DotNetCorePack(solutionFolderPath + "/SheetToObjects.Lib/SheetToObjects.Lib.csproj", settings);
 });
 
 //////////////////////////////////////////////////////////////////////
