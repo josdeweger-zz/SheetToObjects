@@ -1,0 +1,17 @@
+version: 0.0.{build}
+image: Visual Studio 2017
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+build_script:
+- ps: .\build.ps1
+artifacts:
+- path: artifacts/*.nupkg
+build: off
+test: off
+deploy: off
