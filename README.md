@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/xyh066af9kpkqpgm?svg=true)](https://ci.appveyor.com/project/josdeweger/sheettoobjects)
+
 # SheetToObjects
 
 ## What is SheetToObjects?
