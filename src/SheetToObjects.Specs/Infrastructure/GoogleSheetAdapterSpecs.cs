@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using SheetToObjects.Infrastructure.GoogleSheets;
+using SheetToObjects.Adapters.GoogleSheets;
 using SheetToObjects.Lib;
 using SheetToObjects.Specs.Builders;
 using Xunit;
 
 namespace SheetToObjects.Specs.Infrastructure
 {
-    public class GoogleSheetsConverterSpecs
+    public class GoogleSheetAdapterSpecs
     {
         private readonly Mock<IGenerateColumnLetters> _columnLettersGenerator;
 
-        public GoogleSheetsConverterSpecs()
+        public GoogleSheetAdapterSpecs()
         {
             _columnLettersGenerator = new ColumnLetterGeneratorBuilder()
                 .WithColumnLetters("A", "B", "C")
@@ -24,7 +24,7 @@ namespace SheetToObjects.Specs.Infrastructure
         [Fact]
         public void GivenNoResponseData_WhenConvertingToSheet_ArgumentExceptionIsThrown()
         {
-            var converter = new GoogleSheetsConverter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
 
             Action result = () => converter.Convert(null);
 
@@ -36,7 +36,7 @@ namespace SheetToObjects.Specs.Infrastructure
         {
             var responseData = new GoogleSheetResponse();
 
-            var converter = new GoogleSheetsConverter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
 
             var result = converter.Convert(responseData);
 
@@ -54,7 +54,7 @@ namespace SheetToObjects.Specs.Infrastructure
                 .WithRow(new List<string>{ rowZeroColumnAValue, rowZeroColumnBValue, rowZeroColumnCValue })
                 .Build();
 
-            var converter = new GoogleSheetsConverter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
 
             var result = converter.Convert(responseData);
 
@@ -71,7 +71,7 @@ namespace SheetToObjects.Specs.Infrastructure
                 .WithRow(new List<string> { "myValue" })
                 .Build();
 
-            var converter = new GoogleSheetsConverter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
 
             var result = converter.Convert(responseData);
 
@@ -86,7 +86,7 @@ namespace SheetToObjects.Specs.Infrastructure
                 .WithRow(new List<string> { "myValue" })
                 .Build();
 
-            var converter = new GoogleSheetsConverter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
 
             var result = converter.Convert(responseData);
 

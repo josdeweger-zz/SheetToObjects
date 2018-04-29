@@ -1,9 +1,9 @@
 ﻿using System;
 using SheetToObjects.Lib;
 
-namespace SheetToObjects.Infrastructure.MicrosoftExcel
+namespace SheetToObjects.Adapters.MicrosoftExcel
 {
-    public class MicrosoftExcelConverter : IConvertResponseToSheet<ExcelSheet>
+    public class Adapter : IConvertResponseToSheet<ExcelSheet>
     {
         public Sheet Convert(ExcelSheet sheetData)
         {

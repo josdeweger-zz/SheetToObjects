@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SheetToObjects.Infrastructure.GoogleSheets
+namespace SheetToObjects.Adapters.GoogleSheets
 {
     public class GoogleSheetResponse
     {

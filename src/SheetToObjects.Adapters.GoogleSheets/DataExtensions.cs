@@ -2,9 +2,9 @@
 using System.Linq;
 using SheetToObjects.Lib;
 
-namespace SheetToObjects.Infrastructure.GoogleSheets
+namespace SheetToObjects.Adapters.GoogleSheets
 {
-    public static class GoogleSheetDataExtensions
+    public static class DataExtensions
     {
         public static List<Row> ToRows(this List<List<string>> sheetData, List<string> columnLetters)
         {

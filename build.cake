@@ -71,7 +71,7 @@ Task("Run-Unit-Tests")
     }
 });
 
-Task("Create-Nuget-Package")
+Task("Create-Nuget-Packages")
     .IsDependentOn("Build")
     .Does(() =>
 {
@@ -85,7 +85,12 @@ Task("Create-Nuget-Package")
         NoBuild = true,
     };
 
-    DotNetCorePack(solutionFolderPath + "/SheetToObjects.Lib/SheetToObjects.Lib.csproj", settings);
+    var projects = GetFiles(solutionFolderPath + "**/*.csproj");
+
+    foreach(var project in projects)
+    {
+        DotNetCorePack(project.FullPath, settings);
+    }
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -93,8 +98,8 @@ Task("Create-Nuget-Package")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Create-Nuget-Package");
+    //.IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Create-Nuget-Packages");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

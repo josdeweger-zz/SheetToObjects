@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Refit;
-using SheetToObjects.Infrastructure.GoogleSheets;
+using SheetToObjects.Adapters.GoogleSheets;
 using SheetToObjects.Lib;
 
 namespace SheetToObjects.ConsoleApp
@@ -11,7 +11,7 @@ namespace SheetToObjects.ConsoleApp
     public class App
     {
         private readonly AppSettings _appSettings;
-        private readonly IProvideGoogleSheets _googleSheetDataProvider;
+        private readonly IProvideGoogleSheet _googleSheetDataProvider;
         private readonly IConvertResponseToSheet<GoogleSheetResponse> _sheetDataConverter;
         private readonly IMapSheetToObjects _sheetMapper;
 
@@ -21,7 +21,7 @@ namespace SheetToObjects.ConsoleApp
             IMapSheetToObjects sheetMapper)
         {
             _appSettings = appSettings.Value;
-            _googleSheetDataProvider = RestService.For<IProvideGoogleSheets>(_appSettings.GoogleSheetsUrl);
+            _googleSheetDataProvider = RestService.For<IProvideGoogleSheet>(_appSettings.GoogleSheetsUrl);
             _sheetDataConverter = sheetDataConverter;
             _sheetMapper = sheetMapper;
         }

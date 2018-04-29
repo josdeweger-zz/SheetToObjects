@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using SheetToObjects.Infrastructure.GoogleSheets;
+﻿using SheetToObjects.Adapters.GoogleSheets;
+using System.Collections.Generic;
 
 namespace SheetToObjects.Specs.Builders
 {

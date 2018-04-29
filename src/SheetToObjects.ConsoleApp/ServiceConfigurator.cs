@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SheetToObjects.Infrastructure.GoogleSheets;
+using SheetToObjects.Adapters.GoogleSheets;
 using SheetToObjects.Lib;
 using SheetToObjects.Lib.ValueParsers;
 
@@ -12,7 +12,7 @@ namespace SheetToObjects.ConsoleApp
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<IGenerateColumnLetters, ColumnLetterGenerator>();
-            serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetsConverter>();
+            serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
             serviceCollection.AddTransient<IParseValues, ValueParser>();
             serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
             {

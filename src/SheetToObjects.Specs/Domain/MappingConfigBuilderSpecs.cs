@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using SheetToObjects.Lib;
 using SheetToObjects.Lib.Configuration;
 using SheetToObjects.Specs.TestModels;
 using Xunit;

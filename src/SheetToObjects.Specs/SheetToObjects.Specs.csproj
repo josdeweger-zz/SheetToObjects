@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SheetToObjects.Infrastructure\SheetToObjects.Infrastructure.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Adapters.GoogleSheets\SheetToObjects.Adapters.GoogleSheets.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
   </ItemGroup>
 
 </Project>

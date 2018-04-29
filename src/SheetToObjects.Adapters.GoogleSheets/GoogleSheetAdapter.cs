@@ -4,13 +4,13 @@ using System.Linq;
 using SheetToObjects.Core;
 using SheetToObjects.Lib;
 
-namespace SheetToObjects.Infrastructure.GoogleSheets
+namespace SheetToObjects.Adapters.GoogleSheets
 {
-    public class GoogleSheetsConverter : IConvertResponseToSheet<GoogleSheetResponse>
+    public class GoogleSheetAdapter : IConvertResponseToSheet<GoogleSheetResponse>
     {
         private readonly IGenerateColumnLetters _columnLettersGenerator;
 
-        public GoogleSheetsConverter(IGenerateColumnLetters columnLettersGenerator)
+        public GoogleSheetAdapter(IGenerateColumnLetters columnLettersGenerator)
         {
             _columnLettersGenerator = columnLettersGenerator;
         }
