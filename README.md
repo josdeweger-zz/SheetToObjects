@@ -46,4 +46,4 @@ This library is in an early alpha stage, some core functionalities are still mis
 - [ ] Add different mapping config types (CSV config will probably be different)
 - [x] Setup Cake script for simple CI build
 - [x] Create NuGet package in CI build
-- [ ] Split into different repo's: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.Csv etc.
+- [ ] Split into different projects/nuget packages: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.MicrosoftExcel etc.
