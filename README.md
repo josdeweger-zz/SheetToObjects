@@ -16,11 +16,11 @@ There are two ways to use SheetToObjects in your code, by immediately instantiat
 
 ```
 var sheetMapper = new SheetMapper()
-    .For<EpicTrackingModel>(cfg => cfg
+    .For<SomeModel>(cfg => cfg
     .HasHeaders()
     .Columns(columns => columns
-        .Add(column => column.WithLetter("A").MapTo(m => m.Number))
-        .Add(column => column.WithLetter("B").MapTo(m => m.Name))));
+        .Add(column => column.WithLetter("A").MapTo(m => m.FirstName))
+        .Add(column => column.WithLetter("B").MapTo(m => m.LastName))));
  ```
 
 The alternative is to register the `IMapSheetToObjects` interface using your favourite DI framework. An example using `Microsoft.Extensions.DependencyInjection`:
@@ -29,11 +29,11 @@ The alternative is to register the `IMapSheetToObjects` interface using your fav
 new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 {
     return new SheetMapper()
-        .For<EpicTrackingModel>(cfg => cfg
+        .For<SomeModel>(cfg => cfg
         .HasHeaders()
         .Columns(columns => columns
-            .Add(column => column.WithLetter("A").MapTo(m => m.Number))
-            .Add(column => column.WithLetter("B").MapTo(m => m.Name))));
+            .Add(column => column.WithLetter("A").MapTo(m => m.FirstName))
+            .Add(column => column.WithLetter("B").MapTo(m => m.LastName))));
 });
 ```
 
