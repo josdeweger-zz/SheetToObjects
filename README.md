@@ -16,9 +16,9 @@ There are two ways to use SheetToObjects in your code, by immediately instantiat
 
 ```
 var sheetMapper = new SheetMapper()
-    .AddConfigFor<MyNumberNameModel>(cfg => cfg
-    .DataHasHeaders()
-    .WithColumns(columns => columns
+    .For<EpicTrackingModel>(cfg => cfg
+    .HasHeaders()
+    .Columns(columns => columns
         .Add(column => column.WithLetter("A").MapTo(m => m.Number))
         .Add(column => column.WithLetter("B").MapTo(m => m.Name))));
  ```
@@ -29,9 +29,9 @@ The alternative is to register the `IMapSheetToObjects` interface using your fav
 new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 {
     return new SheetMapper()
-        .AddConfigFor<MyNumberNameModel>(cfg => cfg
-        .DataHasHeaders()
-        .WithColumns(columns => columns
+        .For<EpicTrackingModel>(cfg => cfg
+        .HasHeaders()
+        .Columns(columns => columns
             .Add(column => column.WithLetter("A").MapTo(m => m.Number))
             .Add(column => column.WithLetter("B").MapTo(m => m.Name))));
 });
