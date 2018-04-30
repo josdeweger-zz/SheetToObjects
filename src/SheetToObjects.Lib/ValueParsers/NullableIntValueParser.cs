@@ -1,13 +1,14 @@
 ﻿using System;
 using SheetToObjects.Core;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.ValueParsers
 {
-    public class NullableIntValueParser : IParseValueStrategy<int?>
+    public class NullableIntValueParser : IParseValueStrategy
     {
-        private readonly int? _defaultValue = default(int?);
+        private readonly Result _defaultValue = Result.From(default(int?));
 
-        public int? Parse(object value)
+        public Result Parse(object value)
         {
             if (value.IsNull())
                 return _defaultValue;
@@ -16,7 +17,7 @@ namespace SheetToObjects.Lib.ValueParsers
             {
                 if (int.TryParse(value.ToString(), out var intValue))
                 {
-                    return intValue;
+                    return Result.From(intValue);
                 };
             }
             catch (Exception)

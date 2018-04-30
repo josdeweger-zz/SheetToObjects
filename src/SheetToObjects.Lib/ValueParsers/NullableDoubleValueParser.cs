@@ -1,13 +1,14 @@
 ﻿using System;
 using SheetToObjects.Core;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.ValueParsers
 {
-    public class NullableDoubleValueParser : IParseValueStrategy<double?>
+    public class NullableDoubleValueParser : IParseValueStrategy
     {
-        private readonly double? _defaultValue = default(double?);
+        private readonly Result _defaultValue = Result.From(default(double?));
 
-        public double? Parse(object value)
+        public Result Parse(object value)
         {
             if (value.IsNull())
                 return _defaultValue;
@@ -16,7 +17,7 @@ namespace SheetToObjects.Lib.ValueParsers
             {
                 if (double.TryParse(value.ToString(), out var doubleValue))
                 {
-                    return doubleValue;
+                    return Result.From(doubleValue);
                 };
             }
             catch (Exception)

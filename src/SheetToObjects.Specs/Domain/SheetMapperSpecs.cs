@@ -23,7 +23,7 @@ namespace SheetToObjects.Specs.Domain
             var testModelList = SheetMapper.Create(cfg => cfg
                     .For<TestModel>()
                     .Column("A").MapTo(t => t.StringProperty)
-                    .Build())
+                    .Configure())
                 .Map(sheetData)
                 .To<TestModel>();
 
@@ -45,7 +45,7 @@ namespace SheetToObjects.Specs.Domain
             var testModelList = SheetMapper.Create(cfg => cfg
                     .For<TestModel>()
                     .Column("B").MapTo(t => t.IntProperty)
-                    .Build())
+                    .Configure())
                 .Map(sheetData)
                 .To<TestModel>();
 
@@ -67,7 +67,7 @@ namespace SheetToObjects.Specs.Domain
             var testModelList = SheetMapper.Create(cfg => cfg
                     .For<TestModel>()
                     .Column("C").MapTo(t => t.DoubleProperty)
-                    .Build())
+                    .Configure())
                 .Map(sheetData)
                 .To<TestModel>();
 

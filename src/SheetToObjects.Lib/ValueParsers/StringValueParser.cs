@@ -1,20 +1,21 @@
 ﻿using System;
 using SheetToObjects.Core;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.ValueParsers
 {
-    public class StringValueParser : IParseValueStrategy<string>
+    public class StringValueParser : IParseValueStrategy
     {
-        private readonly string _defaultValue = string.Empty;
+        private readonly Result _defaultValue = Result.From(string.Empty);
 
-        public string Parse(object value)
+        public Result Parse(object value)
         {
             if (value.IsNull())
                 return _defaultValue;
 
             try
             {
-                return value.ToString();
+                return Result.From(value.ToString());
             }
             catch (Exception)
             {

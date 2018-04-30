@@ -1,30 +1,31 @@
 ﻿using System;
 using SheetToObjects.Core;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.ValueParsers
 {
-    public class DoubleValueParser : IParseValueStrategy<double>
+    public class DoubleValueParser : IParseValueStrategy
     {
-        private const double DefaultValue = default(double);
+        private readonly Result _defaultValue = Result.From(default(double));
 
-        public double Parse(object value)
+        public Result Parse(object value)
         {
             if (value.IsNull())
-                return DefaultValue;
+                return _defaultValue;
 
             try
             {
                 if (double.TryParse(value.ToString(), out var doubleValue))
                 {
-                    return doubleValue;
+                    return Result.From(doubleValue);
                 };
             }
             catch (Exception)
             {
-                return DefaultValue;
+                return _defaultValue;
             }
 
-            return DefaultValue;
+            return _defaultValue;
         }
     }
 }

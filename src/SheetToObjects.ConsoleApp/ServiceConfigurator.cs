@@ -26,7 +26,7 @@ namespace SheetToObjects.ConsoleApp
                         .Column("F").MapTo(m => m.ForecastHigh)
                         .Column("G").MapTo(m => m.ForecastLow)
                         .Column("H").MapTo(m => m.Scope)
-                        .Build());
+                        .Configure());
             });
 
             var configuration = new ConfigurationBuilder()

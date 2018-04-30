@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Configuration
 {
@@ -25,8 +27,8 @@ namespace SheetToObjects.Lib.Configuration
         private string _columnLetter;
         private string _propertyName;
         private Type _propertyType;
-        private bool _isRequired;
         private readonly MappingConfig _mappingConfig;
+        private readonly List<IRule> _rules = new List<IRule>();
 
         public ColumnMappingBuilder(MappingConfig mappingConfig)
         {
@@ -39,9 +41,21 @@ namespace SheetToObjects.Lib.Configuration
             return this;
         }
 
+        public ColumnMappingBuilder<TModel> AddRule(IRule rule)
+        {
+            _rules.Add(rule);
+            return this;
+        }
+
         public ColumnMappingBuilder<TModel> IsRequired()
         {
-            _isRequired = true;
+            _rules.Add(new RequiredRule());
+            return this;
+        }
+
+        public ColumnMappingBuilder<TModel> Matches(string regex)
+        {
+            _rules.Add(new RegexRule(regex));
             return this;
         }
 
@@ -62,13 +76,16 @@ namespace SheetToObjects.Lib.Configuration
 
             _propertyName = propertyInfo.Name;
             _propertyType = propertyInfo.PropertyType;
-            
-            _mappingConfig.ColumnMappings.Add(new ColumnMapping(_columnLetter, _propertyName, _propertyType, _isRequired));
 
+            var columnMapping = new ColumnMapping(_columnLetter, _propertyName, _propertyType);
+            columnMapping.AddRules(_rules);
+
+            _mappingConfig.ColumnMappings.Add(columnMapping);
+            
             return this;
         }
 
-        public MappingConfig Build()
+        public MappingConfig Configure()
         {
             return _mappingConfig;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Configuration;
+using SheetToObjects.Lib.Validation;
 using SheetToObjects.Lib.ValueParsers;
 
 namespace SheetToObjects.Lib
@@ -55,8 +56,10 @@ namespace SheetToObjects.Lib
                     if (cell.IsNull() || cell.Value.IsNull())
                         continue;
 
-                    var parsedValue = _valueParser.Parse(columnMapping.PropertyType, cell.Value);
-                    property.SetValue(obj, parsedValue, null);
+                    var parsedValue = (Result)_valueParser.Parse(columnMapping.PropertyType, cell.Value);
+
+                    if(parsedValue.HasValue)
+                        property.SetValue(obj, parsedValue.Value, null);
                 }
 
                 list.Add(obj);

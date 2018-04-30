@@ -1,30 +1,31 @@
 ﻿using System;
 using SheetToObjects.Core;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.ValueParsers
 {
-    public class IntValueParser : IParseValueStrategy<int>
+    public class IntValueParser : IParseValueStrategy
     {
-        private const int DefaultValue = default(int);
+        private readonly Result _defaultValue = Result.From(default(int));
 
-        public int Parse(object value)
+        public Result Parse(object value)
         {
             if (value.IsNull())
-                return DefaultValue;
+                return _defaultValue;
 
             try
             {
                 if (int.TryParse(value.ToString(), out var intValue))
                 {
-                    return intValue;
+                    return Result.From(intValue);
                 };
             }
             catch (Exception)
             {
-                return DefaultValue;
+                return _defaultValue;
             }
 
-            return DefaultValue;
+            return _defaultValue;
         }
     }
 }

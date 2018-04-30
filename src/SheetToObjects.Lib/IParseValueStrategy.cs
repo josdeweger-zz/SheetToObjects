@@ -1,7 +1,9 @@
-﻿namespace SheetToObjects.Lib
+﻿using SheetToObjects.Lib.Validation;
+
+namespace SheetToObjects.Lib
 {
-    public interface IParseValueStrategy<out T>
+    public interface IParseValueStrategy
     {
-        T Parse(object value);
+        Result Parse(object value);
     }
 }
