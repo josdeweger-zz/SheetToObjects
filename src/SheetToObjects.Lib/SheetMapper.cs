@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Configuration;
 using SheetToObjects.Lib.Validation;
@@ -13,10 +14,10 @@ namespace SheetToObjects.Lib
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
-        public SheetMapper AddConfig(Func<MappingConfigBuilder, MappingConfig> mappingConfigFunc)
+        public SheetMapper AddConfigFor<TModel>(Func<MappingConfigBuilder<TModel>, MappingConfig> mappingConfigFunc)
         {
-            var mappingConfig = mappingConfigFunc(new MappingConfigBuilder());
-            _mappingConfigs.Add(mappingConfig.ForType, mappingConfig);
+            var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<TModel>());
+            _mappingConfigs.Add(typeof(TModel), mappingConfig);
 
             return this;
         }
@@ -35,7 +36,9 @@ namespace SheetToObjects.Lib
                 throw new ApplicationException(
                     $"Could not find Mapping Configuration for type {typeof(T)}. Make sure you use new SheetMapper().Configure(cfg => cfg) to setup a configuration for the type");
 
-            foreach (var row in _sheet.Rows)
+            var rows = mappingConfig.DataHasHeaders ? _sheet.Rows.Skip(1) : _sheet.Rows;
+
+            foreach (var row in rows)
             {
                 var obj = new T();
                 var objType = obj.GetType();

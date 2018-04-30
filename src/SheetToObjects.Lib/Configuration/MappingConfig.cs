@@ -6,8 +6,9 @@ namespace SheetToObjects.Lib.Configuration
 {
     public class MappingConfig
     {
-        public Type ForType { get; set; }
-        public IList<ColumnMapping> ColumnMappings = new List<ColumnMapping>();
+        public bool DataHasHeaders { get; set; }
+
+        public List<ColumnMapping> ColumnMappings = new List<ColumnMapping>();
         
         public ColumnMapping GetColumnMappingByPropertyName(string propertyName)
         {

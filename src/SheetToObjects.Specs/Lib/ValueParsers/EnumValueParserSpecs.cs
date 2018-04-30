@@ -4,7 +4,7 @@ using SheetToObjects.Lib.ValueParsers;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
 
-namespace SheetToObjects.Specs.Domain.ValueParsers
+namespace SheetToObjects.Specs.Lib.ValueParsers
 {
     public class EnumValueParserSpecs
     {

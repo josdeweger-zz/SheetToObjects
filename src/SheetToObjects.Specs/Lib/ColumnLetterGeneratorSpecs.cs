@@ -3,7 +3,7 @@ using FluentAssertions;
 using SheetToObjects.Lib;
 using Xunit;
 
-namespace SheetToObjects.Specs.Domain
+namespace SheetToObjects.Specs.Lib
 {
     public class ColumnLetterGeneratorSpecs
     {

@@ -1,93 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Configuration
 {
-    public class MappingConfigBuilder
+    public class MappingConfigBuilder<TModel>
     {
         private readonly MappingConfig _mappingConfig = new MappingConfig();
         
-        public ColumnMappingBuilder<TModel> For<TModel>()
+        public MappingConfigBuilder<TModel> DataHasHeaders()
         {
-            _mappingConfig.ForType = typeof(TModel);
-            return new ColumnMappingBuilder<TModel>(_mappingConfig);
+            _mappingConfig.DataHasHeaders = true;
+            return this;
         }
 
-        public MappingConfig Build()
+        public MappingConfig WithColumns(
+            Func<ColumnsMappingBuilder<TModel>, ColumnsMappingBuilder<TModel>> columnMappingBuilderFunc)
         {
+            var columnsMappingBuilder = new ColumnsMappingBuilder<TModel>(_mappingConfig);
+            columnMappingBuilderFunc(columnsMappingBuilder);
             return _mappingConfig;
         }
     }
 
-    public class ColumnMappingBuilder<TModel>
+    public class ColumnsMappingBuilder<TModel>
     {
-        private string _columnLetter;
-        private string _propertyName;
-        private Type _propertyType;
         private readonly MappingConfig _mappingConfig;
-        private readonly List<IRule> _rules = new List<IRule>();
 
-        public ColumnMappingBuilder(MappingConfig mappingConfig)
+        public ColumnsMappingBuilder(MappingConfig mappingConfig)
         {
             _mappingConfig = mappingConfig;
         }
 
-        public ColumnMappingBuilder<TModel> Column(string columnLetter)
+        public ColumnsMappingBuilder<TModel> Add(Func<ColumnMappingBuilder<TModel>, ColumnMapping> columnMappingBuilderFunc)
         {
-            _columnLetter = columnLetter;
-            return this;
-        }
-
-        public ColumnMappingBuilder<TModel> AddRule(IRule rule)
-        {
-            _rules.Add(rule);
-            return this;
-        }
-
-        public ColumnMappingBuilder<TModel> IsRequired()
-        {
-            _rules.Add(new RequiredRule());
-            return this;
-        }
-
-        public ColumnMappingBuilder<TModel> Matches(string regex)
-        {
-            _rules.Add(new RegexRule(regex));
-            return this;
-        }
-
-        public ColumnMappingBuilder<TModel> MapTo<TProperty>(Expression<Func<TModel, TProperty>> propertyLambda)
-        {
-            var type = typeof(TModel);
-
-            if (!(propertyLambda.Body is MemberExpression member))
-                throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");
-
-            var propertyInfo = member.Member as PropertyInfo;
-
-            if (propertyInfo == null)
-                throw new ArgumentException($"Expression '{propertyLambda}' refers to a field, not a property.");
-
-            if (type != propertyInfo.ReflectedType && !type.IsSubclassOf(propertyInfo.ReflectedType))
-                throw new ArgumentException($"Expression '{propertyLambda}' refers to a property that is not from type {type}.");
-
-            _propertyName = propertyInfo.Name;
-            _propertyType = propertyInfo.PropertyType;
-
-            var columnMapping = new ColumnMapping(_columnLetter, _propertyName, _propertyType);
-            columnMapping.AddRules(_rules);
-
+            var columnMappingBuilder = new ColumnMappingBuilder<TModel>();
+            var columnMapping = columnMappingBuilderFunc(columnMappingBuilder);
             _mappingConfig.ColumnMappings.Add(columnMapping);
-            
             return this;
-        }
-
-        public MappingConfig Configure()
-        {
-            return _mappingConfig;
         }
     }
 }

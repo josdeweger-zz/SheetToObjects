@@ -2,7 +2,7 @@ using FluentAssertions;
 using SheetToObjects.Lib.ValueParsers;
 using Xunit;
 
-namespace SheetToObjects.Specs.Domain.ValueParsers
+namespace SheetToObjects.Specs.Lib.ValueParsers
 {
     public class IntValueParserSpecs
     {
