@@ -4,19 +4,20 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Refit;
 using SheetToObjects.Adapters.GoogleSheets;
+using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Lib;
 
 namespace SheetToObjects.ConsoleApp
 {
-    public class App
+    public class GoogleSheetsApp
     {
         private readonly AppSettings _appSettings;
         private readonly IProvideGoogleSheet _googleSheetDataProvider;
         private readonly IConvertResponseToSheet<GoogleSheetResponse> _sheetDataConverter;
         private readonly IMapSheetToObjects _sheetMapper;
 
-        public App(
-            IOptions<AppSettings> appSettings, 
+        public GoogleSheetsApp(
+            IOptions<AppSettings> appSettings,
             IConvertResponseToSheet<GoogleSheetResponse> sheetDataConverter,
             IMapSheetToObjects sheetMapper)
         {
@@ -28,11 +29,16 @@ namespace SheetToObjects.ConsoleApp
 
         public async Task Run()
         {
+            await GoogleSheetsExample();
+        }
+
+        private async Task GoogleSheetsExample()
+        {
             const string range = "'Herstructurering Filters Data'!A1:H9";
-            
+
             //get sheet from google docs
             var sheetDataResponse = await _googleSheetDataProvider.GetSheet(_appSettings.SheetId, range, _appSettings.ApiKey);
-            
+
             //convert to generic sheet model
             var sheet = _sheetDataConverter.Convert(sheetDataResponse);
 

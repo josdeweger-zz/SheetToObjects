@@ -7,15 +7,25 @@ namespace SheetToObjects.ConsoleApp
     {
         private static void Main(string[] args)
         {
-            RunAsync().GetAwaiter().GetResult();
+            //RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
+            RunCsvExampleAsync();
         }
 
-        private static async Task RunAsync()
+        private static async Task RunGoogleSheetsExampleAsync()
         {
             await new ServiceCollection()
                 .ConfigureServices()
                 .BuildServiceProvider()
-                .GetService<App>()
+                .GetService<GoogleSheetsApp>()
+                .Run();
+        }
+
+        private static void RunCsvExampleAsync()
+        {
+            new ServiceCollection()
+                .ConfigureServices()
+                .BuildServiceProvider()
+                .GetService<CsvApp>()
                 .Run();
         }
     }

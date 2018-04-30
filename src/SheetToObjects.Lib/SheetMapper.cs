@@ -13,15 +13,11 @@ namespace SheetToObjects.Lib
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
-        public static SheetMapper Create(Func<MappingConfigBuilder, MappingConfig> mappingConfigFunc)
-        {
-            return new SheetMapper().Configure(mappingConfigFunc);
-        }
-
-        private SheetMapper Configure(Func<MappingConfigBuilder, MappingConfig> mappingConfigFunc)
+        public SheetMapper AddConfig(Func<MappingConfigBuilder, MappingConfig> mappingConfigFunc)
         {
             var mappingConfig = mappingConfigFunc(new MappingConfigBuilder());
             _mappingConfigs.Add(mappingConfig.ForType, mappingConfig);
+
             return this;
         }
 

@@ -4,20 +4,13 @@ namespace SheetToObjects.Lib.ValueParsers
 {
     public class ValueParser : IParseValues
     {
-        private readonly StringValueParser _stringValueParser;
-        private readonly IntValueParser _intValueParser;
-        private readonly NullableIntValueParser _nullableIntValueParser;
-        private readonly DoubleValueParser _doubleValueParser;
-        private readonly NullableDoubleValueParser _nullableDoubleValueParser;
-
-        public ValueParser()
-        {
-            _stringValueParser = new StringValueParser();
-            _intValueParser = new IntValueParser();
-            _nullableIntValueParser = new NullableIntValueParser();
-            _doubleValueParser = new DoubleValueParser();
-            _nullableDoubleValueParser = new NullableDoubleValueParser();
-        }
+        private readonly StringValueParser _stringValueParser = new StringValueParser();
+        private readonly IntValueParser _intValueParser = new IntValueParser();
+        private readonly NullableIntValueParser _nullableIntValueParser = new NullableIntValueParser();
+        private readonly DoubleValueParser _doubleValueParser = new DoubleValueParser();
+        private readonly NullableDoubleValueParser _nullableDoubleValueParser = new NullableDoubleValueParser();
+        private readonly BoolValueParser _boolValueParser = new BoolValueParser();
+        private readonly NullableBoolValueParser _nullableBoolValueParser = new NullableBoolValueParser();
 
         public object Parse(Type propertyType, object value)
         {
@@ -33,6 +26,12 @@ namespace SheetToObjects.Lib.ValueParsers
                     return _nullableDoubleValueParser.Parse(value);
                 case var _ when propertyType == typeof(double):
                     return _doubleValueParser.Parse(value);
+                case var _ when propertyType == typeof(bool?):
+                    return _nullableBoolValueParser.Parse(value);
+                case var _ when propertyType == typeof(bool):
+                    return _boolValueParser.Parse(value);
+                case var _ when propertyType.IsEnum:
+                    return new EnumValueParser(propertyType).Parse(value);
                 default:
                     throw new ApplicationException($"No value parser found for type {propertyType}");
             }

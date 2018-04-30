@@ -20,12 +20,11 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var testModelList = SheetMapper.Create(cfg => cfg
+            var testModelList = new SheetMapper().AddConfig(cfg => cfg
                     .For<TestModel>()
                     .Column("A").MapTo(t => t.StringProperty)
                     .Configure())
-                .Map(sheetData)
-                .To<TestModel>();
+                .Map(sheetData).To<TestModel>();
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().StringProperty.Should().Be(value);
@@ -42,7 +41,7 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var testModelList = SheetMapper.Create(cfg => cfg
+            var testModelList = new SheetMapper().AddConfig(cfg => cfg
                     .For<TestModel>()
                     .Column("B").MapTo(t => t.IntProperty)
                     .Configure())
@@ -64,7 +63,7 @@ namespace SheetToObjects.Specs.Domain
                     .Build())
                 .Build();
 
-            var testModelList = SheetMapper.Create(cfg => cfg
+            var testModelList = new SheetMapper().AddConfig(cfg => cfg
                     .For<TestModel>()
                     .Column("C").MapTo(t => t.DoubleProperty)
                     .Configure())

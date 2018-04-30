@@ -8,7 +8,7 @@ using SheetToObjects.Lib;
 using SheetToObjects.Specs.Builders;
 using Xunit;
 
-namespace SheetToObjects.Specs.Infrastructure
+namespace SheetToObjects.Specs.Adapters
 {
     public class GoogleSheetAdapterSpecs
     {
@@ -50,7 +50,7 @@ namespace SheetToObjects.Specs.Infrastructure
             var rowZeroColumnBValue = "0";
             var rowZeroColumnCValue = "text";
 
-            var responseData = new SheetDataResponseBuilder()
+            var responseData = new GoogleSheetDataResponseBuilder()
                 .WithRow(new List<string>{ rowZeroColumnAValue, rowZeroColumnBValue, rowZeroColumnCValue })
                 .Build();
 
@@ -67,7 +67,7 @@ namespace SheetToObjects.Specs.Infrastructure
         [Fact]
         public void GivenResponseDataContainsCell_WhenConvertingToSheet_CellShouldHaveCorrectColumnName()
         {
-            var responseData = new SheetDataResponseBuilder()
+            var responseData = new GoogleSheetDataResponseBuilder()
                 .WithRow(new List<string> { "myValue" })
                 .Build();
 
@@ -82,7 +82,7 @@ namespace SheetToObjects.Specs.Infrastructure
         [Fact]
         public void GivenResponseDataContainsCell_WhenConvertingToSheet_CellShouldHaveCorrectRowNumber()
         {
-            var responseData = new SheetDataResponseBuilder()
+            var responseData = new GoogleSheetDataResponseBuilder()
                 .WithRow(new List<string> { "myValue" })
                 .Build();
 

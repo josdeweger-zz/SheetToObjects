@@ -1,0 +1,2 @@
+email;gender;firstname;middlename;lastname;relationnumber;language;label;terms;profiletype;isVerified;registrationSource;
+john@doe.com;F;John;;Doe;123456789;nl-NL;LGP;yes;HomeOwner;false;Import;

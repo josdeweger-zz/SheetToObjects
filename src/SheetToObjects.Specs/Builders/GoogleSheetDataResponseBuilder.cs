@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace SheetToObjects.Specs.Builders
 {
-    public class SheetDataResponseBuilder
+    public class GoogleSheetDataResponseBuilder
     {
         private readonly List<List<string>> _values = new List<List<string>>();
 
-        public SheetDataResponseBuilder WithRow(List<string> row)
+        public GoogleSheetDataResponseBuilder WithRow(List<string> row)
         {
             _values.Add(row);
             return this;
