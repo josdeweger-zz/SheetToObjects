@@ -15,11 +15,12 @@ Having solved the problem of creating a custom csv/excel import (including uploa
 There are two ways to use SheetToObjects in your code, by immediately instantiating and configuring the SheetMapper through a static Create method:
 
 ```
-var sheetMapper = SheetMapper.Create(cfg => cfg
-                    .For<MyNumberNameModel>()
-                    .Column("A").MapTo(m => m.Number)
-                    .Column("B").MapTo(m => m.Name)
-                    .Build())
+var sheetMapper = new SheetMapper()
+    .AddConfigFor<MyNumberNameModel>(cfg => cfg
+    .DataHasHeaders()
+    .WithColumns(columns => columns
+        .Add(column => column.WithLetter("A").MapTo(m => m.Number))
+        .Add(column => column.WithLetter("B").MapTo(m => m.Name))));
  ```
 
 The alternative is to register the `IMapSheetToObjects` interface using your favourite DI framework. An example using `Microsoft.Extensions.DependencyInjection`:
@@ -27,11 +28,12 @@ The alternative is to register the `IMapSheetToObjects` interface using your fav
 ```
 new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 {
-    return SheetMapper.Create(cfg => cfg
-        .For<MyNumberNameModel>()
-        .Column("A").MapTo(m => m.Number)
-        .Column("B").MapTo(m => m.Name)
-        .Build());
+    return new SheetMapper()
+        .AddConfigFor<MyNumberNameModel>(cfg => cfg
+        .DataHasHeaders()
+        .WithColumns(columns => columns
+            .Add(column => column.WithLetter("A").MapTo(m => m.Number))
+            .Add(column => column.WithLetter("B").MapTo(m => m.Name))));
 });
 ```
 
@@ -42,8 +44,7 @@ This library is in an early alpha stage, some core functionalities are still mis
 
 ## To Do
 - [ ] Add validation (Required, Regex, Unique, ...) - return Result object containing validation
-- [ ] Allow headers through `MappingConfig`
-- [ ] Add different mapping config types (CSV config will probably be different)
+- [x] Allow headers through `MappingConfig`
 - [x] Setup Cake script for simple CI build
 - [x] Create NuGet package in CI build
-- [ ] Split into different projects/nuget packages: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.MicrosoftExcel etc.
+- [x] Split into different projects/nuget packages: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.MicrosoftExcel etc.
