@@ -6,13 +6,13 @@ namespace SheetToObjects.Lib.Configuration
     {
         private readonly MappingConfig _mappingConfig = new MappingConfig();
         
-        public MappingConfigBuilder<TModel> DataHasHeaders()
+        public MappingConfigBuilder<TModel> HasHeaders()
         {
             _mappingConfig.DataHasHeaders = true;
             return this;
         }
 
-        public MappingConfig WithColumns(
+        public MappingConfig Columns(
             Func<ColumnsMappingBuilder<TModel>, ColumnsMappingBuilder<TModel>> columnMappingBuilderFunc)
         {
             var columnsMappingBuilder = new ColumnsMappingBuilder<TModel>(_mappingConfig);

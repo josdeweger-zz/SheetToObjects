@@ -22,33 +22,33 @@ namespace SheetToObjects.ConsoleApp
             {
                 var sheetMapper = new SheetMapper();
 
-                sheetMapper.AddConfigFor<EpicTrackingModel>(cfg => cfg
-                    .DataHasHeaders()
-                    .WithColumns(columns => columns
-                        .Add(column => column.WithLetter("A").MapTo(m => m.SprintNumber))
-                        .Add(column => column.WithLetter("B").MapTo(m => m.SprintName))
-                        .Add(column => column.WithLetter("C").MapTo(m => m.StoryPointsCompleted))
-                        .Add(column => column.WithLetter("D").MapTo(m => m.TotalCompleted))
-                        .Add(column => column.WithLetter("E").MapTo(m => m.ForecastNormal))
-                        .Add(column => column.WithLetter("F").MapTo(m => m.ForecastHigh))
-                        .Add(column => column.WithLetter("G").MapTo(m => m.ForecastLow))
-                        .Add(column => column.WithLetter("H").MapTo(m => m.Scope))));
+                sheetMapper.For<EpicTrackingModel>(cfg => cfg
+                    .HasHeaders()
+                    .Columns(columns => columns
+                        .Add(column => column.Map("A").To(m => m.SprintNumber))
+                        .Add(column => column.Map("B").To(m => m.SprintName))
+                        .Add(column => column.Map("C").To(m => m.StoryPointsCompleted))
+                        .Add(column => column.Map("D").To(m => m.TotalCompleted))
+                        .Add(column => column.Map("E").To(m => m.ForecastNormal))
+                        .Add(column => column.Map("F").To(m => m.ForecastHigh))
+                        .Add(column => column.Map("G").To(m => m.ForecastLow))
+                        .Add(column => column.Map("H").To(m => m.Scope))));
 
-                sheetMapper.AddConfigFor<ProfileModel>(cfg => cfg
-                    .DataHasHeaders()
-                    .WithColumns(columns => columns
-                        .Add(column => column.WithLetter("A").IsRequired().MapTo(m => m.Email))
-                        .Add(column => column.WithLetter("B").IsRequired().MapTo(m => m.Gender))
-                        .Add(column => column.WithLetter("C").IsRequired().MapTo(m => m.FirstName))
-                        .Add(column => column.WithLetter("D").MapTo(m => m.MiddleName))
-                        .Add(column => column.WithLetter("E").IsRequired().MapTo(m => m.LastName))
-                        .Add(column => column.WithLetter("F").IsRequired().MapTo(m => m.RelationNumber))
-                        .Add(column => column.WithLetter("G").IsRequired().MapTo(m => m.LanguageCode))
-                        .Add(column => column.WithLetter("H").IsRequired().MapTo(m => m.Label))
-                        .Add(column => column.WithLetter("I").IsRequired().MapTo(m => m.Terms))
-                        .Add(column => column.WithLetter("J").IsRequired().MapTo(m => m.ProfileType))
-                        .Add(column => column.WithLetter("K").IsRequired().MapTo(m => m.IsVerified))
-                        .Add(column => column.WithLetter("L").IsRequired().MapTo(m => m.RegistrationSource))));
+                sheetMapper.For<ProfileModel>(cfg => cfg
+                    .HasHeaders()
+                    .Columns(columns => columns
+                        .Add(column => column.Map("A").IsRequired().To(m => m.Email))
+                        .Add(column => column.Map("B").IsRequired().To(m => m.Gender))
+                        .Add(column => column.Map("C").IsRequired().To(m => m.FirstName))
+                        .Add(column => column.Map("D").To(m => m.MiddleName))
+                        .Add(column => column.Map("E").IsRequired().To(m => m.LastName))
+                        .Add(column => column.Map("F").IsRequired().To(m => m.RelationNumber))
+                        .Add(column => column.Map("G").IsRequired().To(m => m.LanguageCode))
+                        .Add(column => column.Map("H").IsRequired().To(m => m.Label))
+                        .Add(column => column.Map("I").IsRequired().To(m => m.Terms))
+                        .Add(column => column.Map("J").IsRequired().To(m => m.ProfileType))
+                        .Add(column => column.Map("K").IsRequired().To(m => m.IsVerified))
+                        .Add(column => column.Map("L").IsRequired().To(m => m.RegistrationSource))));
 
                 return sheetMapper;
             });

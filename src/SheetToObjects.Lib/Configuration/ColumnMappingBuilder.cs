@@ -13,7 +13,7 @@ namespace SheetToObjects.Lib.Configuration
         private Type _propertyType;
         private readonly List<IRule> _rules = new List<IRule>();
 
-        public ColumnMappingBuilder<TModel> WithLetter(string columnLetter)
+        public ColumnMappingBuilder<TModel> Map(string columnLetter)
         {
             _columnLetter = columnLetter;
             return this;
@@ -37,7 +37,7 @@ namespace SheetToObjects.Lib.Configuration
             return this;
         }
 
-        public ColumnMapping MapTo<TProperty>(Expression<Func<TModel, TProperty>> propertyLambda)
+        public ColumnMapping To<TProperty>(Expression<Func<TModel, TProperty>> propertyLambda)
         {
             var type = typeof(TModel);
 
