@@ -14,7 +14,7 @@ namespace SheetToObjects.Lib
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
-        public SheetMapper AddConfigFor<TModel>(Func<MappingConfigBuilder<TModel>, MappingConfig> mappingConfigFunc)
+        public SheetMapper For<TModel>(Func<MappingConfigBuilder<TModel>, MappingConfig> mappingConfigFunc)
         {
             var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<TModel>());
             _mappingConfigs.Add(typeof(TModel), mappingConfig);

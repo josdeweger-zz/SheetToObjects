@@ -21,8 +21,8 @@ namespace SheetToObjects.Specs.Lib
                 .Build();
 
             var testModelList = new SheetMapper()
-                .AddConfigFor<TestModel>(cfg => cfg
-                    .WithColumns(columns => columns.Add(column => column.WithLetter("C").MapTo(t => t.DoubleProperty))))
+                .For<TestModel>(cfg => cfg
+                    .Columns(columns => columns.Add(column => column.Map("C").To(t => t.DoubleProperty))))
                 .Map(sheetData)
                 .To<TestModel>();
 
@@ -42,8 +42,8 @@ namespace SheetToObjects.Specs.Lib
                 .Build();
 
             var testModelList = new SheetMapper()
-                .AddConfigFor<TestModel>(cfg => cfg
-                    .WithColumns(columns => columns.Add(column => column.WithLetter("B").MapTo(t => t.IntProperty))))
+                .For<TestModel>(cfg => cfg
+                    .Columns(columns => columns.Add(column => column.Map("B").To(t => t.IntProperty))))
                 .Map(sheetData)
                 .To<TestModel>();
 
@@ -63,8 +63,8 @@ namespace SheetToObjects.Specs.Lib
                 .Build();
 
             var testModelList = new SheetMapper()
-                .AddConfigFor<TestModel>(cfg => cfg
-                    .WithColumns(columns => columns.Add(column => column.WithLetter("A").MapTo(t => t.StringProperty))))
+                .For<TestModel>(cfg => cfg
+                    .Columns(columns => columns.Add(column => column.Map("A").To(t => t.StringProperty))))
                 .Map(sheetData)
                 .To<TestModel>();
 
