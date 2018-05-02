@@ -10,7 +10,7 @@
         public int RelationNumber { get; set; }
         public string LanguageCode { get; set; }
         public Label Label { get; set; }
-        public bool Terms { get; set; }
+        public YesNo Terms { get; set; }
         public ProfileType ProfileType { get; set; }
         public bool IsVerified { get; set; }
         public RegistrationSource RegistrationSource { get; set; }
@@ -41,5 +41,11 @@
     public enum RegistrationSource
     {
         Import
+    }
+
+    public enum YesNo
+    {
+        Yes,
+        No
     }
 }

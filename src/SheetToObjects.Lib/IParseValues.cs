@@ -1,9 +1,9 @@
-﻿using System;
+﻿using SheetToObjects.Core;
 
 namespace SheetToObjects.Lib
 {
     public interface IParseValues
     {
-        object Parse(Type propertyType, object value);
+        Result Parse<T>(object value);
     }
 }

@@ -5,7 +5,7 @@ namespace SheetToObjects.ConsoleApp
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             //RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
             RunCsvExampleAsync();

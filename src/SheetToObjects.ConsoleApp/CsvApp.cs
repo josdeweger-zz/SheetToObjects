@@ -31,10 +31,10 @@ namespace SheetToObjects.ConsoleApp
             var sheet = _csvDataConverter.Convert(csvData);
 
             //do the actual mapping
-            var epicTrackingModels = _sheetMapper.Map(sheet).To<ProfileModel>();
+            var profileModels = _sheetMapper.Map(sheet).To<ProfileModel>();
 
             //write csv data, sheet and model to console
-            WriteToConsole(csvData, sheet, epicTrackingModels);
+            WriteToConsole(csvData, sheet, profileModels);
         }
         
         private static void WriteToConsole(params object[] objects)

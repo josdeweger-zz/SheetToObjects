@@ -8,4 +8,8 @@
     <ProjectReference Include="..\SheetToObjects.Core\SheetToObjects.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ValueParsers\" />
+  </ItemGroup>
+
 </Project>

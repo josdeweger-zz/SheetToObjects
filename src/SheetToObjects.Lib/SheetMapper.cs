@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Configuration;
-using SheetToObjects.Lib.Validation;
-using SheetToObjects.Lib.ValueParsers;
 
 namespace SheetToObjects.Lib
 {
     public class SheetMapper : IMapSheetToObjects
     {
-        private readonly IParseValues _valueParser = new ValueParser();
+        private readonly ValueParser _valueParser = new ValueParser();
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
@@ -34,7 +32,7 @@ namespace SheetToObjects.Lib
 
             if (!_mappingConfigs.TryGetValue(typeof(T), out var mappingConfig))
                 throw new ApplicationException(
-                    $"Could not find Mapping Configuration for type {typeof(T)}. Make sure you use new SheetMapper().Configure(cfg => cfg) to setup a configuration for the type");
+                    $"Could not find Mapping Configuration for type {typeof(T)}. Make sure to setup a configuration for the type");
 
             var rows = mappingConfig.DataHasHeaders ? _sheet.Rows.Skip(1) : _sheet.Rows;
 
@@ -55,10 +53,12 @@ namespace SheetToObjects.Lib
                     if (cell.IsNull() || cell.Value.IsNull())
                         continue;
 
-                    var parsedValue = (Result)_valueParser.Parse(columnMapping.PropertyType, cell.Value);
-
-                    if(parsedValue.HasValue)
-                        property.SetValue(obj, parsedValue.Value, null);
+                    var method = typeof(ValueParser).GetMethod("Parse");
+                    var genericMethod = method.MakeGenericMethod(columnMapping.PropertyType);
+                    var result = genericMethod.Invoke(_valueParser, new [] { cell.Value }) as Result;
+                    
+                    if(result.IsNotNull() && result.IsValid)
+                        property.SetValue(obj, result.Value, null);
                 }
 
                 list.Add(obj);

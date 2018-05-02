@@ -1,19 +1,38 @@
-﻿using System;
+﻿using SheetToObjects.Core;
+using System;
+using System.Text.RegularExpressions;
 
 namespace SheetToObjects.Lib.Validation
 {
     public class RegexRule : IRule
     {
-        private readonly string _regex;
+        private readonly string _pattern;
+        private readonly bool _isCaseSensitive;
 
-        public RegexRule(string regex)
+        public RegexRule(string pattern, bool isCaseSensitive = false)
         {
-            _regex = regex;
+            _pattern = pattern;
+            _isCaseSensitive = isCaseSensitive;
         }
 
-        public ValidationResult Validate()
+        public Result Validate(string value)
         {
-            throw new NotImplementedException();
+            if(value.IsNullOrEmpty())
+                return Result.Fail("Value is empty");
+
+            try
+            {
+                if (Regex.IsMatch(value, _pattern, _isCaseSensitive ? RegexOptions.IgnoreCase : RegexOptions.None))
+                {
+                    return Result.Ok(value);
+                }
+
+                return Result.Fail($"Value '{value}' does not match pattern '{_pattern}'");
+            }
+            catch (Exception)
+            {
+                return Result.Fail($"Value '{value}' could not be validated by regex '{_pattern}'");
+            }
         }
     }
 }

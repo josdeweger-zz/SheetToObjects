@@ -1,12 +1,15 @@
-﻿using System;
+﻿using SheetToObjects.Core;
 
 namespace SheetToObjects.Lib.Validation
 {
     public class RequiredRule : IRule
     {
-        public ValidationResult Validate()
+        public Result Validate(string value)
         {
-            throw new NotImplementedException();
+            if(value.IsNullOrEmpty())
+                return Result.Fail("Value is required");
+
+            return Result.Ok();
         }
     }
 }

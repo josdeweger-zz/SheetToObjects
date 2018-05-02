@@ -1,7 +1,9 @@
-﻿namespace SheetToObjects.Lib.Validation
+﻿using SheetToObjects.Core;
+
+namespace SheetToObjects.Lib.Validation
 {
     public interface IRule
     {
-        ValidationResult Validate();
+        Result Validate(string value);
     }
 }
