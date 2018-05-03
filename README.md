@@ -12,7 +12,7 @@ The overall idea is to create a `SheetMapper` which is provided with a `MappingC
 Having solved the problem of creating a custom csv/excel import (including upload, validation, mapping etc.) a couple of times, it seemed about time to make something generic and reusable.
 
 ## Getting Started
-There are two ways to use SheetToObjects in your code, by immediately instantiating and configuring the SheetMapper through a static Create method:
+There are two ways to use SheetToObjects in your code, by immediately instantiating and configuring the SheetMapper:
 
 ```
 var sheetMapper = new SheetMapper()
@@ -37,14 +37,14 @@ new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 });
 ```
 
-For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs/Domain/SheetMapperSpecs.cs
+For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs
 
 ## Status
 This library is in an early alpha stage, some core functionalities are still missing and it has NOT been battle tested in production. As the To Do implies, some core functionality is still missing.
 
 ## To Do
-- [ ] Add validation (Required, Regex, Unique, ...) - return Result object containing validation
 - [x] Allow headers through `MappingConfig`
 - [x] Setup Cake script for simple CI build
 - [x] Create NuGet package in CI build
 - [x] Split into different projects/nuget packages: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.MicrosoftExcel etc.
+- [ ] Add validation (Required, Regex, Unique, ...) - return Result object containing validation
