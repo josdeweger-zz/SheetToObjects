@@ -37,6 +37,11 @@ new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 });
 ```
 
+Then using the SheetMapper is easy:
+```
+sheetMapper.Map(sheet).To<SomeModel>();
+```
+
 For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs
 
 ## Status
@@ -48,3 +53,4 @@ This library is in an early alpha stage, some core functionalities are still mis
 - [x] Create NuGet package in CI build
 - [x] Split into different projects/nuget packages: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.MicrosoftExcel etc.
 - [ ] Add validation (Required, Regex, Unique, ...) - return Result object containing validation
+- [ ] Add option to add multiple configurations by type (the SheetMapper already contains a `Dictionary<Type, MappingConfig>`, which stores `MappingConfigs` per `Type`)
