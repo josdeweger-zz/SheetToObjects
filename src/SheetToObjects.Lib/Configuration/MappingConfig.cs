@@ -6,8 +6,6 @@ namespace SheetToObjects.Lib.Configuration
 {
     public class MappingConfig
     {
-        public bool DataHasHeaders { get; set; }
-
         public List<ColumnMapping> ColumnMappings = new List<ColumnMapping>();
         
         public ColumnMapping GetColumnMappingByPropertyName(string propertyName)

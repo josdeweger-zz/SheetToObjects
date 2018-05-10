@@ -14,19 +14,19 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.Map("A").To(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.Should().HaveCount(1);
         }
 
         [Fact]
-        public void GivenCreatingMappingConfiguration_WhenAddingColumnLetter_ColumnLetterIsSet()
+        public void GivenCreatingMappingConfiguration_WhenAddingHeader_HeaderIsSetToLower()
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.Map("A").To(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
 
-            result.ColumnMappings.Single().ColumnLetter.Should().Be("A");
+            result.ColumnMappings.Single().Header.Should().Be("firstname");
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.Map("A").To(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.Single().PropertyType.Should().Be<string>();
         }
@@ -44,7 +44,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.Map("A").To(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.Single().PropertyName.Should().Be("StringProperty");
         }
@@ -54,7 +54,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.Map("A").IsRequired().To(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").IsRequired().MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.Single().Rules.Single().Should().BeOfType<RequiredRule>();
         }
@@ -66,7 +66,7 @@ namespace SheetToObjects.Specs.Lib
 
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.Map("A").Matches(emailRegex).To(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").Matches(emailRegex).MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.Single().Rules.Single().Should().BeOfType<RegexRule>();
         }
@@ -77,9 +77,8 @@ namespace SheetToObjects.Specs.Lib
             var emailRegex = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
             var result = new MappingConfigBuilder<TestModel>()
-                .HasHeaders()
                 .Columns(columns => columns
-                    .Add(column => column.Map("A").Matches(emailRegex).To(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").Matches(emailRegex).MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.Single().Rules.Single().Should().BeOfType<RegexRule>();
         }

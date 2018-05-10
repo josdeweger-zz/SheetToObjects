@@ -2,14 +2,14 @@
 {
     public class Cell
     {
-        public string ColumnLetter { get; }
-        public int RowNumber { get; }
+        public int ColumnIndex { get; }
+        public int RowIndex { get; }
         public object Value { get; }
 
-        public Cell(string columnLetter, int rowNumber, object value)
+        public Cell(int columnIndex, int rowIndex, object value)
         {
-            ColumnLetter = columnLetter;
-            RowNumber = rowNumber;
+            ColumnIndex = columnIndex;
+            RowIndex = rowIndex;
             Value = value;
         }
     }

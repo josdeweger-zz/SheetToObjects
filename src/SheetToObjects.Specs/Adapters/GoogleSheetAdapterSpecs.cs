@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Moq;
 using SheetToObjects.Adapters.GoogleSheets;
-using SheetToObjects.Lib;
 using SheetToObjects.Specs.Builders;
 using Xunit;
 
@@ -12,19 +10,10 @@ namespace SheetToObjects.Specs.Adapters
 {
     public class GoogleSheetAdapterSpecs
     {
-        private readonly Mock<IGenerateColumnLetters> _columnLettersGenerator;
-
-        public GoogleSheetAdapterSpecs()
-        {
-            _columnLettersGenerator = new ColumnLetterGeneratorBuilder()
-                .WithColumnLetters("A", "B", "C")
-                .Build();
-        }
-
         [Fact]
         public void GivenNoResponseData_WhenConvertingToSheet_ArgumentExceptionIsThrown()
         {
-            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter();
 
             Action result = () => converter.Convert(null);
 
@@ -36,7 +25,7 @@ namespace SheetToObjects.Specs.Adapters
         {
             var responseData = new GoogleSheetResponse();
 
-            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter();
 
             var result = converter.Convert(responseData);
 
@@ -54,7 +43,7 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<string>{ rowZeroColumnAValue, rowZeroColumnBValue, rowZeroColumnCValue })
                 .Build();
 
-            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter();
 
             var result = converter.Convert(responseData);
 
@@ -71,12 +60,12 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<string> { "myValue" })
                 .Build();
 
-            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter();
 
             var result = converter.Convert(responseData);
 
             result.Rows.Single().Cells.Should().NotBeEmpty();
-            result.Rows.Single().Cells.Should().Contain(c => c.ColumnLetter == "A");
+            result.Rows.Single().Cells.Should().Contain(c => c.ColumnIndex == 0);
         }
 
         [Fact]
@@ -86,12 +75,12 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<string> { "myValue" })
                 .Build();
 
-            var converter = new GoogleSheetAdapter(_columnLettersGenerator.Object);
+            var converter = new GoogleSheetAdapter();
 
             var result = converter.Convert(responseData);
 
             result.Rows.Single().Cells.Should().NotBeEmpty();
-            result.Rows.Single().Cells.Should().Contain(c => c.RowNumber == 1);
+            result.Rows.Single().Cells.Should().Contain(c => c.RowIndex == 0);
         }
     }
 }

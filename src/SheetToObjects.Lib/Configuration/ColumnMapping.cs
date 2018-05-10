@@ -6,14 +6,14 @@ namespace SheetToObjects.Lib.Configuration
 {
     public class ColumnMapping
     {
-        public string ColumnLetter { get; }
+        public string Header { get; }
         public string PropertyName { get; }
         public Type PropertyType { get; }
         public List<IRule> Rules { get; }
 
-        public ColumnMapping(string columnLetter, string propertyName, Type propertyType)
+        public ColumnMapping(string header, string propertyName, Type propertyType)
         {
-            ColumnLetter = columnLetter;
+            Header = header.ToLowerInvariant();
             PropertyName = propertyName;
             PropertyType = propertyType;
             Rules = new List<IRule>();

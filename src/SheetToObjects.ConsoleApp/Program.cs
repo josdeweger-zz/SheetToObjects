@@ -8,7 +8,7 @@ namespace SheetToObjects.ConsoleApp
         private static void Main()
         {
             //RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
-            RunCsvExampleAsync();
+            RunCsvExample();
         }
 
         private static async Task RunGoogleSheetsExampleAsync()
@@ -20,7 +20,7 @@ namespace SheetToObjects.ConsoleApp
                 .Run();
         }
 
-        private static void RunCsvExampleAsync()
+        private static void RunCsvExample()
         {
             new ServiceCollection()
                 .ConfigureServices()

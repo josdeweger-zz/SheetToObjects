@@ -10,6 +10,7 @@ namespace SheetToObjects.Specs.Lib
     public class SheetMapperSpecs
     {
         private readonly Sheet _sheetData;
+        private readonly string[] _headers = {"Double", "Integer", "Boolean", "Enumeration", "String"};
         private readonly string _stringValue = "foo";
         private readonly double _doubleValue = 42.42D;
         private readonly int _intValue = 42;
@@ -19,12 +20,13 @@ namespace SheetToObjects.Specs.Lib
         public SheetMapperSpecs()
         {
             _sheetData = new SheetBuilder()
+                .AddHeaders(_headers)
                 .AddRow(r => r
-                    .AddCell(c => c.WithColumnLetter("A").WithRowNumber(1).WithValue(_doubleValue).Build())
-                    .AddCell(c => c.WithColumnLetter("B").WithRowNumber(1).WithValue(_intValue).Build())
-                    .AddCell(c => c.WithColumnLetter("C").WithRowNumber(1).WithValue(_boolValue).Build())
-                    .AddCell(c => c.WithColumnLetter("D").WithRowNumber(1).WithValue(_enumValue).Build())
-                    .AddCell(c => c.WithColumnLetter("E").WithRowNumber(1).WithValue(_stringValue).Build())
+                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue(_doubleValue).Build())
+                    .AddCell(c => c.WithColumnIndex(1).WithRowIndex(1).WithValue(_intValue).Build())
+                    .AddCell(c => c.WithColumnIndex(2).WithRowIndex(1).WithValue(_boolValue).Build())
+                    .AddCell(c => c.WithColumnIndex(3).WithRowIndex(1).WithValue(_enumValue).Build())
+                    .AddCell(c => c.WithColumnIndex(4).WithRowIndex(1).WithValue(_stringValue).Build())
                     .Build())
                 .Build();
         }
@@ -34,7 +36,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var testModelList = new SheetMapper()
                 .For<TestModel>(cfg => cfg
-                    .Columns(columns => columns.Add(column => column.Map("A").To(t => t.DoubleProperty))))
+                    .Columns(columns => columns.Add(column => column.WithHeader("Double").MapTo(t => t.DoubleProperty))))
                 .Map(_sheetData)
                 .To<TestModel>();
 
@@ -47,7 +49,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var testModelList = new SheetMapper()
                 .For<TestModel>(cfg => cfg
-                    .Columns(columns => columns.Add(column => column.Map("B").To(t => t.IntProperty))))
+                    .Columns(columns => columns.Add(column => column.WithHeader("Integer").MapTo(t => t.IntProperty))))
                 .Map(_sheetData)
                 .To<TestModel>();
 
@@ -60,7 +62,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var testModelList = new SheetMapper()
                 .For<TestModel>(cfg => cfg
-                    .Columns(columns => columns.Add(column => column.Map("C").To(t => t.BoolProperty))))
+                    .Columns(columns => columns.Add(column => column.WithHeader("Boolean").MapTo(t => t.BoolProperty))))
                 .Map(_sheetData)
                 .To<TestModel>();
 
@@ -73,20 +75,21 @@ namespace SheetToObjects.Specs.Lib
         {
             var testModelList = new SheetMapper()
                 .For<TestModel>(cfg => cfg
-                    .Columns(columns => columns.Add(column => column.Map("D").To(t => t.EnumProperty))))
+                    .Columns(columns =>
+                        columns.Add(column => column.WithHeader("Enumeration").MapTo(t => t.EnumProperty))))
                 .Map(_sheetData)
                 .To<TestModel>();
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().EnumProperty.Should().Be(_enumValue);
         }
-        
+
         [Fact]
         public void GivenASheet_WhenMappingModelStringProperty_ItSetsPropertyOnModel()
         {
             var testModelList = new SheetMapper()
                 .For<TestModel>(cfg => cfg
-                    .Columns(columns => columns.Add(column => column.Map("E").To(t => t.StringProperty))))
+                    .Columns(columns => columns.Add(column => column.WithHeader("String").MapTo(t => t.StringProperty))))
                 .Map(_sheetData)
                 .To<TestModel>();
 

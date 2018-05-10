@@ -13,6 +13,8 @@ namespace SheetToObjects.Lib
         private readonly ValueParser _valueParser = new ValueParser();
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
+        private List<string> _headers;
+        private List<Row> _dataRows;
 
         public SheetMapper For<TModel>(Func<MappingConfigBuilder<TModel>, MappingConfig> mappingConfigFunc)
         {
@@ -25,6 +27,8 @@ namespace SheetToObjects.Lib
         public SheetMapper Map(Sheet sheet)
         {
             _sheet = sheet;
+            _headers = sheet.Rows.First().Cells.Select(c => c.Value.ToString().ToLowerInvariant()).ToList();
+            _dataRows = _sheet.Rows.Skip(1).ToList();
             return this;
         }
 
@@ -36,12 +40,8 @@ namespace SheetToObjects.Lib
             if (!_mappingConfigs.TryGetValue(typeof(T), out var mappingConfig))
                 throw new ApplicationException(
                     $"Could not find Mapping Configuration for type {typeof(T)}. Make sure to setup a configuration for the type");
-
-            var rows = mappingConfig.DataHasHeaders 
-                ? _sheet.Rows.Skip(1).ToList() 
-                : _sheet.Rows;
-
-            rows.ForEach(row =>
+            
+            _dataRows.ForEach(row =>
             {
                 var obj = new T();
                 var objType = obj.GetType();
@@ -65,7 +65,8 @@ namespace SheetToObjects.Lib
             if (columnMapping.IsNull())
                 return;
 
-            var cell = row.GetCellByColumnLetter(columnMapping.ColumnLetter);
+            var columnIndex = _headers.IndexOf(columnMapping.Header);
+            var cell = row.GetCellByColumnIndex(columnIndex);
 
             if (cell.IsNull() || cell.Value.IsNull())
                 return;

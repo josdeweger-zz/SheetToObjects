@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SheetToObjects.Lib
@@ -13,10 +12,9 @@ namespace SheetToObjects.Lib
             Cells = cells;
         }
 
-        public Cell GetCellByColumnLetter(string columnLetter)
+        public Cell GetCellByColumnIndex(int columnIndex)
         {
-            return Cells.FirstOrDefault(c =>
-                c.ColumnLetter.Equals(columnLetter, StringComparison.InvariantCultureIgnoreCase));
+            return Cells.FirstOrDefault(c =>c.ColumnIndex.Equals(columnIndex));
         }
     }
 }

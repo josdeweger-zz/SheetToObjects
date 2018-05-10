@@ -4,19 +4,19 @@ namespace SheetToObjects.Specs.Builders
 {
     public class CellBuilder
     {
-        private string _columnLetter;
-        private int _rowNumber;
+        private int _columnIndex;
+        private int _rowIndex;
         private object _value;
 
-        public CellBuilder WithColumnLetter(string columnLetter)
+        public CellBuilder WithColumnIndex(int columnIndex)
         {
-            _columnLetter = columnLetter;
+            _columnIndex = columnIndex;
             return this;
         }
 
-        public CellBuilder WithRowNumber(int rowNumber)
+        public CellBuilder WithRowIndex(int rowIndex)
         {
-            _rowNumber = rowNumber;
+            _rowIndex = rowIndex;
             return this;
         }
 
@@ -28,7 +28,7 @@ namespace SheetToObjects.Specs.Builders
 
         public Cell Build()
         {
-            return new Cell(_columnLetter, _rowNumber, _value);
+            return new Cell(_columnIndex, _rowIndex, _value);
         }
     }
 }

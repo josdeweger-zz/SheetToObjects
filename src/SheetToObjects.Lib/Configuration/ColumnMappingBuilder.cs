@@ -8,14 +8,14 @@ namespace SheetToObjects.Lib.Configuration
 {
     public class ColumnMappingBuilder<TModel>
     {
-        private string _columnLetter;
+        private string _header;
         private string _propertyName;
         private Type _propertyType;
         private readonly List<IRule> _rules = new List<IRule>();
 
-        public ColumnMappingBuilder<TModel> Map(string columnLetter)
+        public ColumnMappingBuilder<TModel> WithHeader(string header)
         {
-            _columnLetter = columnLetter;
+            _header = header;
             return this;
         }
 
@@ -37,7 +37,7 @@ namespace SheetToObjects.Lib.Configuration
             return this;
         }
 
-        public ColumnMapping To<TProperty>(Expression<Func<TModel, TProperty>> propertyLambda)
+        public ColumnMapping MapTo<TProperty>(Expression<Func<TModel, TProperty>> propertyLambda)
         {
             var type = typeof(TModel);
 
@@ -55,7 +55,7 @@ namespace SheetToObjects.Lib.Configuration
             _propertyName = propertyInfo.Name;
             _propertyType = propertyInfo.PropertyType;
 
-            var columnMapping = new ColumnMapping(_columnLetter, _propertyName, _propertyType);
+            var columnMapping = new ColumnMapping(_header, _propertyName, _propertyType);
             columnMapping.AddRules(_rules);
 
             return columnMapping;
