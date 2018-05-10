@@ -1,4 +1,4 @@
-﻿using SheetToObjects.Core;
+﻿using CSharpFunctionalExtensions;
 
 namespace SheetToObjects.Lib.Validation
 {

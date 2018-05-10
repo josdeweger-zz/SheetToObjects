@@ -10,6 +10,7 @@ namespace SheetToObjects.Specs.Lib
     public class SheetMapperSpecs
     {
         private readonly Sheet _sheetData;
+        private readonly string _stringValue = "foo";
         private readonly double _doubleValue = 42.42D;
         private readonly int _intValue = 42;
         private readonly bool _boolValue = true;
@@ -23,6 +24,7 @@ namespace SheetToObjects.Specs.Lib
                     .AddCell(c => c.WithColumnLetter("B").WithRowNumber(1).WithValue(_intValue).Build())
                     .AddCell(c => c.WithColumnLetter("C").WithRowNumber(1).WithValue(_boolValue).Build())
                     .AddCell(c => c.WithColumnLetter("D").WithRowNumber(1).WithValue(_enumValue).Build())
+                    .AddCell(c => c.WithColumnLetter("E").WithRowNumber(1).WithValue(_stringValue).Build())
                     .Build())
                 .Build();
         }
@@ -77,6 +79,19 @@ namespace SheetToObjects.Specs.Lib
 
             testModelList.Should().HaveCount(1);
             testModelList.Single().EnumProperty.Should().Be(_enumValue);
+        }
+        
+        [Fact]
+        public void GivenASheet_WhenMappingModelStringProperty_ItSetsPropertyOnModel()
+        {
+            var testModelList = new SheetMapper()
+                .For<TestModel>(cfg => cfg
+                    .Columns(columns => columns.Add(column => column.Map("E").To(t => t.StringProperty))))
+                .Map(_sheetData)
+                .To<TestModel>();
+
+            testModelList.Should().HaveCount(1);
+            testModelList.Single().StringProperty.Should().Be(_stringValue);
         }
     }
 }

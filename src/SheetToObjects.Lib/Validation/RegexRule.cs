@@ -1,6 +1,7 @@
 ﻿using SheetToObjects.Core;
 using System;
 using System.Text.RegularExpressions;
+using CSharpFunctionalExtensions;
 
 namespace SheetToObjects.Lib.Validation
 {

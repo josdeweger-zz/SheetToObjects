@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using SheetToObjects.Lib;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
@@ -19,8 +20,8 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = _valueParser.Parse<int>(null);
 
-            result.IsValid.Should().BeFalse();
-            result.Message.Should().Be($"Value of type {typeof(int)} is not set.");
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Should().Be($"Value of type {typeof(int)} is not set.");
         }
 
         [Fact]
@@ -28,8 +29,8 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = _valueParser.Parse<string>(string.Empty);
 
-            result.IsValid.Should().BeFalse();
-            result.Message.Should().Be($"Value of type {typeof(string)} is empty.");
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Should().Be($"Value of type {typeof(string)} is empty.");
         }
 
         [Fact]
@@ -37,8 +38,8 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = _valueParser.Parse<EnumModel>("SomeString");
 
-            result.IsValid.Should().BeFalse();
-            result.Message.Should().Be($"Something went wrong parsing value of type {typeof(EnumModel)}.");
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Should().Be($"Something went wrong parsing value of type {typeof(EnumModel)}.");
         }
 
         [Fact]
@@ -46,9 +47,9 @@ namespace SheetToObjects.Specs.Lib
         {
             var doubleValue = 3.3D;
 
-            var result = _valueParser.Parse<double>(doubleValue);
+            var result = _valueParser.Parse<double>(doubleValue.ToString());
 
-            result.IsValid.Should().BeTrue();
+            result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(doubleValue);
         }
 
@@ -59,7 +60,7 @@ namespace SheetToObjects.Specs.Lib
 
             var result = _valueParser.Parse<string>(stringValue);
 
-            result.IsValid.Should().BeTrue();
+            result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(stringValue);
         }
     }
