@@ -17,10 +17,9 @@ There are two ways to use SheetToObjects in your code, by immediately instantiat
 ```
 var sheetMapper = new SheetMapper()
     .For<SomeModel>(cfg => cfg
-    .HasHeaders()
     .Columns(columns => columns
-        .Add(column => column.WithLetter("A").MapTo(m => m.FirstName))
-        .Add(column => column.WithLetter("B").MapTo(m => m.LastName))));
+        .Add(column => column.WithHeader("First Name").MapTo(m => m.FirstName))
+        .Add(column => column.WithHeader("Last Name").MapTo(m => m.LastName))));
  ```
 
 The alternative is to register the `IMapSheetToObjects` interface using your favourite DI framework. An example using `Microsoft.Extensions.DependencyInjection`:
@@ -30,16 +29,15 @@ new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 {
     return new SheetMapper()
         .For<SomeModel>(cfg => cfg
-        .HasHeaders()
         .Columns(columns => columns
-            .Add(column => column.WithLetter("A").MapTo(m => m.FirstName))
-            .Add(column => column.WithLetter("B").MapTo(m => m.LastName))));
+            .Add(column => column.WithHeader("First Name").MapTo(m => m.FirstName))
+            .Add(column => column.WithHeader("Last Name").MapTo(m => m.LastName))));
 });
 ```
 
 Then using the SheetMapper is easy:
 ```
-sheetMapper.Map(sheet).To<SomeModel>();
+List<SomeModel> result = sheetMapper.Map(sheet).To<SomeModel>();
 ```
 
 For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs
@@ -52,7 +50,7 @@ This library is in an early alpha stage, some core functionalities are still mis
 - [x] Setup Cake script for simple CI build
 - [x] Create NuGet package in CI build
 - [x] Split into different projects/nuget packages: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.MicrosoftExcel etc.
-- [ ] Add columns based on header instead of columnletter
+- [x] Add columns based on header instead of columnletter
 - [ ] Add method to csv adapter to accept base64 encoded string
 - [ ] Add method to csv adapter to accept stream
 - [ ] Add validation (Required, Regex, Unique, ...) - return Result object containing validation
