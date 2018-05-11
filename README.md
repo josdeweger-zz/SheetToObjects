@@ -53,5 +53,6 @@ This library is in an early alpha stage, some core functionalities are still mis
 - [x] Add columns based on header instead of columnletter
 - [ ] Add method to csv adapter to accept base64 encoded string
 - [ ] Add method to csv adapter to accept stream
-- [ ] Add validation (Required, Regex, Unique, ...) - return Result object containing validation
+- [x] Return Result object containing successfully parsed models and parsing/validation messages
+- [ ] Add validation (Required, Regex, Unique, ...)
 - [ ] Add option to add multiple configurations by type (the SheetMapper already contains a `Dictionary<Type, MappingConfig>`, which stores `MappingConfigs` per `Type`)
