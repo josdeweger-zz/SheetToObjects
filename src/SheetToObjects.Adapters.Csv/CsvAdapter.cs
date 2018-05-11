@@ -20,5 +20,7 @@ namespace SheetToObjects.Adapters.Csv
 
             return new Sheet(cells);
         }
+
+
     }
 }
