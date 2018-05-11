@@ -11,6 +11,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         public PropertyColumnMapping(string propertyName, List<IRule> rules) : base(propertyName, rules)
         {
             ColumnName = propertyName;
+            ColumnIndex = -1;
         }
         public void SetColumnIndex(int columnIndex)
         {

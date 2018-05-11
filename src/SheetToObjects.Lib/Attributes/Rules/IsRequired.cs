@@ -20,7 +20,7 @@ namespace SheetToObjects.Lib.Attributes.Rules
 
         public IRule GetRule()
         {
-            return new RequiredRule(!AllowWhiteSpace);
+            return new RequiredRule(AllowWhiteSpace);
         }
     }
 }
