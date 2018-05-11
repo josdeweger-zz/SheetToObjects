@@ -17,16 +17,16 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenParsingInt_WhenValueIsNotSet_ResultIsNotValid()
         {
-            var result = _cellValueParser.ParseValueType<int>(null);
+            var result = _cellValueParser.ParseValueType<int>(null,0,0,true);
 
             result.IsSuccess.Should().BeFalse();
-            result.Error.ErrorMessage.Should().Be("Cell is not set");
+            result.Error.ErrorMessage.Should().Be($"Something went wrong parsing value of type {typeof(int)}.");
         }
 
         [Fact]
         public void GivenParsingEnum_WhenValueCanNotBeParsed_ResultIsNotValid()
         {
-            var result = _cellValueParser.ParseValueType<EnumModel>(new Cell(1, 1, "SomeString"));
+            var result = _cellValueParser.ParseValueType<EnumModel>("SomeString", 1, 1,true);
 
             result.IsSuccess.Should().BeFalse();
             result.Error.ErrorMessage.Should().Be($"Something went wrong parsing value of type {typeof(EnumModel)}.");
@@ -37,7 +37,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var doubleValue = 3.3D;
 
-            var result = _cellValueParser.ParseValueType<double>(new Cell(1, 1, doubleValue.ToString()));
+            var result = _cellValueParser.ParseValueType<double>(doubleValue.ToString(),1,1,true);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(doubleValue);
@@ -48,7 +48,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var stringValue = "MyString";
 
-            var result = _cellValueParser.ParseValueType<string>(new Cell(1, 1, stringValue));
+            var result = _cellValueParser.ParseValueType<string>(stringValue,1,1,true);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(stringValue);

@@ -5,6 +5,11 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
     public class ColumnMapping
     {
+        public bool IsRequired
+        {
+            get { return Rules.Exists(r => r is RequiredRule); }
+        }
+
         public int? ColumnIndex { get; protected set; }
         public string PropertyName { get; }
         public List<IRule> Rules { get; }

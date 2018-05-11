@@ -77,8 +77,10 @@ namespace SheetToObjects.Lib.Configuration
             foreach (var property in objType.GetProperties())
             {
                 var mappingConfigBuilder = new ColumnMappingBuilder<TModel>();
-
                 var attributes = property.GetCustomAttributes().ToList();
+
+                if(attributes.OfType<IgnorePropertyMapping>().Any())
+                    continue;
                 
                 foreach (var mappingAttribute in attributes.OfType<IMappingAttribute>())
                 {
