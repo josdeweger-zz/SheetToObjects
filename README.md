@@ -37,7 +37,7 @@ new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 
 Then using the SheetMapper is easy:
 ```
-List<SomeModel> result = sheetMapper.Map(sheet).To<SomeModel>();
+MappingResult result = sheetMapper.Map(sheet).To<SomeModel>(); //contains successfully parsed models and validation errors
 ```
 
 For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs
