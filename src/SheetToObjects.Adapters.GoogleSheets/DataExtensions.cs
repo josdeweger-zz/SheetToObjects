@@ -13,7 +13,7 @@ namespace SheetToObjects.Adapters.GoogleSheets
 
         public static List<Cell> RowDataToCells(this List<string> rowData, int rowIndex)
         {
-            return rowData.Select((cellData, columnIndex) => new Cell(rowIndex, columnIndex, cellData)).ToList();
+            return rowData.Select((cellData, columnIndex) => new Cell(columnIndex, rowIndex, cellData)).ToList();
         }
     }
 }
