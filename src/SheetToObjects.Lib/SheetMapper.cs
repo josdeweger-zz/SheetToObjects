@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Configuration;
@@ -10,7 +9,7 @@ namespace SheetToObjects.Lib
 {
     public class SheetMapper : IMapSheetToObjects
     {
-        private readonly ValueParser _valueParser = new ValueParser();
+        private readonly CellValueParser _cellValueParser = new CellValueParser();
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
         private List<string> _headers;
@@ -32,76 +31,60 @@ namespace SheetToObjects.Lib
             return this;
         }
 
-        public List<T> To<T>() 
-            where T : new()
+        public MappingResult<TModel> To<TModel>() 
+            where TModel : new()
         {
-            var list = new List<T>();
+            var parsedModels = new List<TModel>();
+            var validationErrors = new List<ValidationError>();
 
-            if (!_mappingConfigs.TryGetValue(typeof(T), out var mappingConfig))
+            if (!_mappingConfigs.TryGetValue(typeof(TModel), out var mappingConfig))
                 throw new ApplicationException(
-                    $"Could not find Mapping Configuration for type {typeof(T)}. Make sure to setup a configuration for the type");
+                    $"Could not find Mapping Configuration for type {typeof(TModel)}. Make sure to setup a configuration for the type");
             
-            _dataRows.ForEach(row =>
+            _dataRows.ForEach(row => 
             {
-                var obj = new T();
-                var objType = obj.GetType();
+                var obj = new TModel();
+                var properties = obj.GetType().GetProperties().ToList();
 
-                objType
-                    .GetProperties()
-                    .ToList()
-                    .ForEach(property => ParseValue(mappingConfig, property, row, obj));
+                properties.ForEach(property =>
+                {
+                    var columnMapping = mappingConfig.GetColumnMappingByPropertyName(property.Name);
 
-                list.Add(obj);
+                    if (columnMapping.IsNull())
+                        return;
+
+                    var columnIndex = _headers.IndexOf(columnMapping.Header);
+                    var cell = row.GetCellByColumnIndex(columnIndex);
+
+                    ParseValue(columnMapping.PropertyType, cell)
+                        .OnSuccess(value => property.SetValue(obj, value))
+                        .OnFailure(validationError =>
+                        {
+                            validationErrors.Add(validationError);
+                            property.SetValue(obj, columnMapping.PropertyType.GetDefault());
+                        });
+                });
+
+                parsedModels.Add(obj);
             });
 
-            return list;
+            return MappingResult<TModel>.Create(parsedModels, validationErrors);
         }
 
-        private void ParseValue<T>(MappingConfig mappingConfig, PropertyInfo property, Row row, T obj) 
-            where T : new()
+        private Result<object, ValidationError> ParseValue(Type type, Cell cell)
         {
-            var columnMapping = mappingConfig.GetColumnMappingByPropertyName(property.Name);
-
-            if (columnMapping.IsNull())
-                return;
-
-            var columnIndex = _headers.IndexOf(columnMapping.Header);
-            var cell = row.GetCellByColumnIndex(columnIndex);
-
-            if (cell.IsNull() || cell.Value.IsNull())
-                return;
-
-            var type = columnMapping.PropertyType;
-
-            var errorMessages = new List<string>();
-
             switch (true)
             {
                 case var _ when type == typeof(string):
-                    _valueParser.Parse<string>(cell.Value)
-                        .OnSuccess(parsedValue => property.SetValue(obj, parsedValue))
-                        .OnFailure(errorMessages.Add);
-                    break;
+                    return _cellValueParser.ParseValueType<string>(cell);
                 case var _ when type == typeof(int) || type == typeof(int?):
-                    _valueParser.Parse<int>(cell.Value)
-                        .OnSuccess(parsedValue => property.SetValue(obj, parsedValue))
-                        .OnFailure(errorMessages.Add);
-                    break;
+                    return _cellValueParser.ParseValueType<int>(cell);
                 case var _ when type == typeof(double) || type == typeof(double?):
-                    _valueParser.Parse<double>(cell.Value)
-                        .OnSuccess(parsedValue => property.SetValue(obj, parsedValue))
-                        .OnFailure(errorMessages.Add);
-                    break;
+                    return _cellValueParser.ParseValueType<double>(cell);
                 case var _ when type == typeof(bool) || type == typeof(bool?):
-                    _valueParser.Parse<bool>(cell.Value)
-                        .OnSuccess(parsedValue => property.SetValue(obj, parsedValue))
-                        .OnFailure(errorMessages.Add);
-                    break;
+                    return _cellValueParser.ParseValueType<bool>(cell);
                 case var _ when type.IsEnum:
-                    _valueParser.Parse(cell.Value, type)
-                        .OnSuccess(parsedValue => property.SetValue(obj, parsedValue))
-                        .OnFailure(errorMessages.Add);                    
-                    break;
+                    return _cellValueParser.ParseEnumeration(cell, type);
                 default:
                     throw new NotImplementedException($"Parser for type {type} not implemented.");
             }

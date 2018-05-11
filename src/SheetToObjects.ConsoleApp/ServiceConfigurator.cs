@@ -16,7 +16,7 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
             serviceCollection.AddTransient<IProvideCsv, CsvProvider>();
             serviceCollection.AddTransient<IConvertResponseToSheet<CsvData>, CsvAdapter>();
-            serviceCollection.AddTransient<IParseValues, ValueParser>();
+            serviceCollection.AddTransient<IParseCellValue, CellValueParser>();
             serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();

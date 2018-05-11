@@ -7,38 +7,29 @@ namespace SheetToObjects.Specs.Lib
 {
     public class ValueParserSpecs
     {
-        private readonly ValueParser _valueParser;
+        private readonly CellValueParser _cellValueParser;
 
         public ValueParserSpecs()
         {
-            _valueParser = new ValueParser();
+            _cellValueParser = new CellValueParser();
         }
 
         [Fact]
         public void GivenParsingInt_WhenValueIsNotSet_ResultIsNotValid()
         {
-            var result = _valueParser.Parse<int>(null);
+            var result = _cellValueParser.ParseValueType<int>(null);
 
             result.IsSuccess.Should().BeFalse();
-            result.Error.Should().Be($"Value of type {typeof(int)} is not set.");
-        }
-
-        [Fact]
-        public void GivenParsingString_WhenValueIsEmptyString_ResultIsNotValid()
-        {
-            var result = _valueParser.Parse<string>(string.Empty);
-
-            result.IsSuccess.Should().BeFalse();
-            result.Error.Should().Be($"Value of type {typeof(string)} is empty.");
+            result.Error.ErrorMessage.Should().Be("Cell is not set");
         }
 
         [Fact]
         public void GivenParsingEnum_WhenValueCanNotBeParsed_ResultIsNotValid()
         {
-            var result = _valueParser.Parse<EnumModel>("SomeString");
+            var result = _cellValueParser.ParseValueType<EnumModel>(new Cell(1, 1, "SomeString"));
 
             result.IsSuccess.Should().BeFalse();
-            result.Error.Should().Be($"Something went wrong parsing value of type {typeof(EnumModel)}.");
+            result.Error.ErrorMessage.Should().Be($"Something went wrong parsing value of type {typeof(EnumModel)}.");
         }
 
         [Fact]
@@ -46,7 +37,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var doubleValue = 3.3D;
 
-            var result = _valueParser.Parse<double>(doubleValue.ToString());
+            var result = _cellValueParser.ParseValueType<double>(new Cell(1, 1, doubleValue.ToString()));
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(doubleValue);
@@ -57,7 +48,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var stringValue = "MyString";
 
-            var result = _valueParser.Parse<string>(stringValue);
+            var result = _cellValueParser.ParseValueType<string>(new Cell(1, 1, stringValue));
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(stringValue);

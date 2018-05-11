@@ -43,10 +43,10 @@ namespace SheetToObjects.ConsoleApp
             var sheet = _sheetDataConverter.Convert(sheetDataResponse);
 
             //do the actual mapping
-            var epicTrackingModels = _sheetMapper.Map(sheet).To<EpicTrackingModel>();
-
-            //write response, sheet and model to console
-            WriteToConsole(sheetDataResponse, sheet, epicTrackingModels);
+            var result = _sheetMapper.Map(sheet).To<EpicTrackingModel>();
+            
+            //write csv data, sheet and model to console
+            WriteToConsole(sheetDataResponse, sheet, result.ParsedModels, result.ValidationErrors);
         }
 
         private static void WriteToConsole(params object[] objects)

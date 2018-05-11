@@ -40,8 +40,8 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.Should().HaveCount(1);
-            testModelList.Single().DoubleProperty.Should().Be(_doubleValue);
+            testModelList.ParsedModels.Should().HaveCount(1);
+            testModelList.ParsedModels.Single().DoubleProperty.Should().Be(_doubleValue);
         }
 
         [Fact]
@@ -53,8 +53,8 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.Should().HaveCount(1);
-            testModelList.Single().IntProperty.Should().Be(_intValue);
+            testModelList.ParsedModels.Should().HaveCount(1);
+            testModelList.ParsedModels.Single().IntProperty.Should().Be(_intValue);
         }
 
         [Fact]
@@ -66,8 +66,8 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.Should().HaveCount(1);
-            testModelList.Single().BoolProperty.Should().Be(_boolValue);
+            testModelList.ParsedModels.Should().HaveCount(1);
+            testModelList.ParsedModels.Single().BoolProperty.Should().Be(_boolValue);
         }
 
         [Fact]
@@ -80,8 +80,8 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.Should().HaveCount(1);
-            testModelList.Single().EnumProperty.Should().Be(_enumValue);
+            testModelList.ParsedModels.Should().HaveCount(1);
+            testModelList.ParsedModels.Single().EnumProperty.Should().Be(_enumValue);
         }
 
         [Fact]
@@ -93,8 +93,8 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.Should().HaveCount(1);
-            testModelList.Single().StringProperty.Should().Be(_stringValue);
+            testModelList.ParsedModels.Should().HaveCount(1);
+            testModelList.ParsedModels.Single().StringProperty.Should().Be(_stringValue);
         }
     }
 }

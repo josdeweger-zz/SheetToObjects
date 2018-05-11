@@ -31,10 +31,10 @@ namespace SheetToObjects.ConsoleApp
             var sheet = _csvDataConverter.Convert(csvData);
 
             //do the actual mapping
-            var profileModels = _sheetMapper.Map(sheet).To<ProfileModel>();
+            var result = _sheetMapper.Map(sheet).To<ProfileModel>();
 
             //write csv data, sheet and model to console
-            WriteToConsole(csvData, sheet, profileModels);
+            WriteToConsole(csvData, sheet, result.ParsedModels, result.ValidationErrors);
         }
         
         private static void WriteToConsole(params object[] objects)
