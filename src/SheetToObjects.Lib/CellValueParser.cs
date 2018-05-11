@@ -7,7 +7,7 @@ namespace SheetToObjects.Lib
 {
     public class CellValueParser : IParseValue
     {
-        public Result<object, ValidationError> ParseValueType<TValue>(string value, int columnIndex, int rowIndex, bool isRequired)
+        public Result<object, ValidationError> ParseValueType<TValue>(string value, int columnIndex, int rowIndex, bool isRequired, string columnName)
         {
             var type = typeof(TValue);
             
@@ -21,26 +21,26 @@ namespace SheetToObjects.Lib
                 if (isRequired)
                 {
                     return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex,
-                        $"Something went wrong parsing value of type {type}."));
+                        $"Something went wrong parsing value of type {type}.",columnName));
                 }
 
                 return Result.Ok<object, ValidationError>(default(TValue));
             }
         }
 
-        public Result<object, ValidationError> ParseEnumeration(string value, int columnIndex, int rowIndex, Type type)
+        public Result<object, ValidationError> ParseEnumeration(string value, int columnIndex, int rowIndex, Type type, string columnName)
         {
             if (!type.IsEnum)
                 return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex,
-                    $"Type {type.Name} is not an Enumeration"));
+                    $"Type {type.Name} is not an Enumeration", columnName));
 
             if (value.IsNull())
                 return Result.Fail<object, ValidationError>(new ValidationError(-1, -1,
-                    $"Cell or cell value is not set for column index -1 and row index -1"));
+                    $"Cell or cell value is not set for column index -1 and row index -1", columnName));
 
             if (value.IsNull())
                 return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex,
-                    $"Cell or cell value is not set for column index {columnIndex} and row index {rowIndex}"));
+                    $"Cell or cell value is not set for column index {columnIndex} and row index {rowIndex}", columnName));
 
             try
             {
@@ -50,7 +50,7 @@ namespace SheetToObjects.Lib
                     {
                         return Result.Ok<object, ValidationError>(intValue);
                     }
-                    return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}"));
+                    return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}", columnName));
                 }
                 else
                 {
@@ -63,10 +63,10 @@ namespace SheetToObjects.Lib
             }
             catch (Exception)
             {
-                return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}"));
+                return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}", columnName));
             }
 
-            return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}"));
+            return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}", columnName));
         }
     }
 }

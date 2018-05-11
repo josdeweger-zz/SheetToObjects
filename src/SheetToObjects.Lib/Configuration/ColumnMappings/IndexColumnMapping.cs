@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Configuration.ColumnMappings
@@ -11,5 +9,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         {
             ColumnIndex = columnIndex;
         }
+
+        public override string DisplayName => "Column (6)";
     }
 }

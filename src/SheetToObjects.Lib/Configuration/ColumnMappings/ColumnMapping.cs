@@ -3,8 +3,10 @@ using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
-    public class ColumnMapping
+    public abstract class ColumnMapping
     {
+        public abstract string DisplayName { get; }
+
         public bool IsRequired
         {
             get { return Rules.Exists(r => r is RequiredRule); }

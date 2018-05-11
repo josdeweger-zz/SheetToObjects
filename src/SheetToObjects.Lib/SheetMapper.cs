@@ -62,11 +62,11 @@ namespace SheetToObjects.Lib
 
                     var cell = row.GetCellByColumnIndex(columnMapping?.ColumnIndex ?? -1);
 
-                    columnValidationErrors =
-                        ValidateValueByColumnMapping(cell?.Value?.ToString(), columnMapping, row.RowIndex).ToList();
+                    columnValidationErrors.AddRange(
+                        ValidateValueByColumnMapping(cell?.Value?.ToString(), columnMapping, row.RowIndex).ToList());
 
                     
-                    ParseValue(property.PropertyType, cell?.Value?.ToString() ?? string.Empty, columnMapping?.ColumnIndex ?? -1, row.RowIndex, columnMapping.IsRequired)
+                    ParseValue(property.PropertyType, cell?.Value?.ToString() ?? string.Empty, columnMapping?.ColumnIndex ?? -1, row.RowIndex, columnMapping.IsRequired, columnMapping.DisplayName)
                         .OnSuccess(value => property.SetValue(obj, value))
                         .OnFailure(validationError =>
                         {
@@ -92,7 +92,7 @@ namespace SheetToObjects.Lib
                 var validationResult = rule.Validate(value);
                 if (validationResult.IsFailure)
                 {
-                    yield return new ValidationError(mapping.ColumnIndex ?? -1, rowIndex, validationResult.Error);
+                    yield return new ValidationError(mapping.ColumnIndex ?? -1, rowIndex, validationResult.Error, mapping.DisplayName);
                 }
             }
         }
@@ -109,20 +109,20 @@ namespace SheetToObjects.Lib
             }
         }
 
-        private Result<object, ValidationError> ParseValue(Type type, string value, int columnIndex, int rowIndex, bool isRequired)
+        private Result<object, ValidationError> ParseValue(Type type, string value, int columnIndex, int rowIndex, bool isRequired, string columnName)
         {
             switch (true)
             {
                 case var _ when type == typeof(string):
-                    return _cellValueParser.ParseValueType<string>(value, columnIndex, rowIndex, isRequired);
+                    return _cellValueParser.ParseValueType<string>(value, columnIndex, rowIndex, isRequired, columnName);
                 case var _ when type == typeof(int) || type == typeof(int?):
-                    return _cellValueParser.ParseValueType<int>(value, columnIndex, rowIndex, isRequired);
+                    return _cellValueParser.ParseValueType<int>(value, columnIndex, rowIndex, isRequired,columnName);
                 case var _ when type == typeof(double) || type == typeof(double?):
-                    return _cellValueParser.ParseValueType<double>(value, columnIndex, rowIndex,isRequired);
+                    return _cellValueParser.ParseValueType<double>(value, columnIndex, rowIndex,isRequired,columnName);
                 case var _ when type == typeof(bool) || type == typeof(bool?):
-                    return _cellValueParser.ParseValueType<bool>(value, columnIndex, rowIndex,isRequired);
+                    return _cellValueParser.ParseValueType<bool>(value, columnIndex, rowIndex,isRequired,columnName);
                 case var _ when type.IsEnum:
-                    return _cellValueParser.ParseEnumeration(value, columnIndex, rowIndex, type);
+                    return _cellValueParser.ParseEnumeration(value, columnIndex, rowIndex, type,columnName);
                 default:
                     throw new NotImplementedException($"Parser for type {type} not implemented.");
             }

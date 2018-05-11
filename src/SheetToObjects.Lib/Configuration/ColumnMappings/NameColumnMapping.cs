@@ -18,5 +18,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         {
             ColumnIndex = columnIndex;
         }
+
+        public override string DisplayName => ColumnName;
     }
 }

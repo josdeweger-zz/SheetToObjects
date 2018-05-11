@@ -14,5 +14,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
             ColumnName = columnLetter;
             ColumnIndex = columnLetter.ConvertExcelColumnNameToIndex();
         }
+
+        public override string DisplayName => ColumnName;
     }
 }
