@@ -24,7 +24,7 @@ namespace SheetToObjects.Lib
                         $"Something went wrong parsing value of type {type}.",columnName));
                 }
 
-                return Result.Ok<object, ValidationError>(default(TValue));
+                return Result.Ok<object, ValidationError>(typeof(TValue).GetDefault());
             }
         }
 

@@ -7,14 +7,11 @@ namespace SheetToObjects.Lib.Attributes.MappingType
     [AttributeUsage(AttributeTargets.Property)]
     public class MappingByLetter : Attribute, IMappingAttribute
     {
-        public string ColumnLetter { get; set; }
-
-        public string PropertyName { get; set; }
-
-        public MappingByLetter(string columnLetter, [CallerMemberName]string propertyName = "")
+        public string ColumnLetter { get;  }
+        
+        public MappingByLetter(string columnLetter)
         {
             ColumnLetter = columnLetter;
-            PropertyName = propertyName;
         }
 
         public void SetColumnMapping<TModel>(ColumnMappingBuilder<TModel> builder)

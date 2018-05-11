@@ -31,16 +31,6 @@ namespace SheetToObjects.Specs.Lib
         }
 
         [Fact]
-        public void GivenCreatingMappingConfiguration_WhenAddingProperty_PropertyTypeIsSet()
-        {
-            var result = new MappingConfigBuilder<TestModel>()
-                .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
-
-            //result.ColumnMappings.Single().Should().Be<string>();
-        }
-
-        [Fact]
         public void GivenCreatingMappingConfiguration_WhenAddingProperty_PropertyNameIsSet()
         {
             var result = new MappingConfigBuilder<TestModel>()
@@ -83,5 +73,41 @@ namespace SheetToObjects.Specs.Lib
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
         }
+
+        [Fact]
+        void GivenAModelWithAttributes_AttributesAreSetInConfig()
+        {
+            var result = new MappingConfigBuilder<AttributeTestModel>().Object();
+
+            result.HasHeaders.Should().BeTrue();
+            result.ColumnMappings.Single().Should().BeOfType<IndexColumnMapping>()
+                .Which.ColumnIndex.Value.Should().Be(3);
+
+            result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Should().NotBeNull();
+            result.ColumnMappings.Single().Rules.OfType<RegexRule>().Should().NotBeNull();
+        }
+
+        [Fact]
+        void GivenAModelWithMappingByLetterAttribute_LetterAttributeIsSetInConfig()
+        {
+            var result = new MappingConfigBuilder<LetterAttributeTestModel>().Object();
+
+            result.ColumnMappings.Single().Should().BeOfType<LetterColumnMapping>()
+                .Which.ColumnIndex.Value.Should().Be(2);
+        }
+
+        [Fact]
+        void GivenAModelWithMappingByNameAttributeAndRequiredSettingWithWhitespace_NameAttributeIsSetInConfig()
+        {
+            var result = new MappingConfigBuilder<ColumnNameAttributeTestModel>().Object();
+
+            result.ColumnMappings.Single().Should().BeOfType<NameColumnMapping>()
+                .Which.ColumnName.Should().Be("stringcolumn");
+
+            result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Single().DoTrimValue.Should().BeFalse();
+
+        }
+
+
     }
 }

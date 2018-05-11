@@ -5,7 +5,7 @@ namespace SheetToObjects.Lib.Validation
 {
     public class RequiredRule : IRule
     {
-        private readonly bool _doTrimValue;
+        public bool DoTrimValue { get; }
 
         public RequiredRule()
         {
@@ -13,7 +13,7 @@ namespace SheetToObjects.Lib.Validation
 
         public RequiredRule(bool doTrimValue)
         {
-            _doTrimValue = doTrimValue;
+            DoTrimValue = doTrimValue;
         }
 
 
@@ -22,7 +22,7 @@ namespace SheetToObjects.Lib.Validation
             if(value.IsNullOrEmpty())
                 return Result.Fail("Value is required");
 
-            if(_doTrimValue && value.IsNullOrWhiteSpace())
+            if(DoTrimValue && value.IsNullOrWhiteSpace())
                 return Result.Fail("Value is required");
 
             return Result.Ok();
