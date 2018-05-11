@@ -11,12 +11,6 @@ namespace SheetToObjects.Specs.Builders
         private readonly List<Row> _rows = new List<Row>();
         private readonly List<Func<RowBuilder, Row>> _rowBuilderFuncs = new List<Func<RowBuilder, Row>>();
 
-        public SheetBuilder AddRow(Row row)
-        {
-            _rows.Add(row);
-            return this;
-        }
-
         public SheetBuilder AddRow(Func<RowBuilder, Row> rowBuilderFuncs)
         {
             _rowBuilderFuncs.Add(rowBuilderFuncs);

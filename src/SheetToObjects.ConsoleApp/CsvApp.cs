@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using SheetToObjects.Adapters.Csv;
 using SheetToObjects.ConsoleApp.Models;
@@ -24,10 +25,9 @@ namespace SheetToObjects.ConsoleApp
 
         public void Run()
         {
-            //get data from csv
-            var csvData = _csvProvider.Get(@"./example.csv", ';');
-
-            //convert to generic sheet model
+            
+            var fileStream = File.Open(@"C:\Users\frank.vanderlinden\Documents\Landal\homeownerimport csv\account_2.csv", FileMode.Open);
+            var csvData = _csvProvider.Get(fileStream, ';');
             var sheet = _csvDataConverter.Convert(csvData);
 
             //do the actual mapping

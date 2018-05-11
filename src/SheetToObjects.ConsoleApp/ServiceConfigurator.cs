@@ -1,6 +1,4 @@
-﻿using System.IO;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SheetToObjects.Adapters.Csv;
 using SheetToObjects.Adapters.GoogleSheets;
 using SheetToObjects.ConsoleApp.Models;
@@ -10,9 +8,11 @@ namespace SheetToObjects.ConsoleApp
 {
     public static class ServiceConfigurator
     {
+        public const string EMAIL_REGEX =  @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+        @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
+
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<IGenerateColumnLetters, ColumnLetterGenerator>();
             serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
             serviceCollection.AddTransient<IProvideCsv, CsvProvider>();
             serviceCollection.AddTransient<IConvertResponseToSheet<CsvData>, CsvAdapter>();
@@ -20,43 +20,30 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();
-
+                /*
                 sheetMapper.For<EpicTrackingModel>(cfg => cfg
                     .Columns(columns => columns
-                        .Add(column => column.WithHeader("Sprint #").MapTo(m => m.SprintNumber))
-                        .Add(column => column.WithHeader("Sprint Naam").MapTo(m => m.SprintName))
-                        .Add(column => column.WithHeader("Story Points Completed").MapTo(m => m.StoryPointsCompleted))
-                        .Add(column => column.WithHeader("Total Completed").MapTo(m => m.TotalCompleted))
-                        .Add(column => column.WithHeader("Forecast Normal").MapTo(m => m.ForecastNormal))
-                        .Add(column => column.WithHeader("Forecast High").MapTo(m => m.ForecastHigh))
-                        .Add(column => column.WithHeader("Forecast Low").MapTo(m => m.ForecastLow))
-                        .Add(column => column.WithHeader("Scope").MapTo(m => m.Scope))));
+                        .Add(column => column.MapLetter("A").To(m => m.SprintNumber))
+                        .Add(column => column.MapLetter("B").To(m => m.SprintName))
+                        .Add(column => column.MapLetter("C").To(m => m.StoryPointsCompleted))
+                        .Add(column => column.MapLetter("D").To(m => m.TotalCompleted))
+                        .Add(column => column.MapLetter("E").To(m => m.ForecastNormal))
+                        .Add(column => column.MapLetter("F").To(m => m.ForecastHigh))
+                        .Add(column => column.MapLetter("G").To(m => m.ForecastLow))
+                        .Add(column => column.MapLetter("H").To(m => m.Scope)))); */
 
                 sheetMapper.For<ProfileModel>(cfg => cfg
                     .Columns(columns => columns
-                        .Add(column => column.WithHeader("Email").IsRequired().MapTo(m => m.Email))
-                        .Add(column => column.WithHeader("Gender").IsRequired().MapTo(m => m.Gender))
-                        .Add(column => column.WithHeader("FirstName").IsRequired().MapTo(m => m.FirstName))
-                        .Add(column => column.WithHeader("MiddleName").MapTo(m => m.MiddleName))
-                        .Add(column => column.WithHeader("LastName").IsRequired().MapTo(m => m.LastName))
-                        .Add(column => column.WithHeader("RelationNumber").IsRequired().MapTo(m => m.RelationNumber))
-                        .Add(column => column.WithHeader("Language").IsRequired().MapTo(m => m.LanguageCode))
-                        .Add(column => column.WithHeader("Label").IsRequired().MapTo(m => m.Label))
-                        .Add(column => column.WithHeader("Terms").IsRequired().MapTo(m => m.Terms))
-                        .Add(column => column.WithHeader("ProfileType").IsRequired().MapTo(m => m.ProfileType))
-                        .Add(column => column.WithHeader("IsVerified").IsRequired().MapTo(m => m.IsVerified))
-                        .Add(column => column.WithHeader("RegistrationSource").IsRequired().MapTo(m => m.RegistrationSource))));
+                        .Add(column => column.MapColumnName("emailaddress").To(m => m.Email))
+                    ));
 
                 return sheetMapper;
             });
 
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("app-settings.json", false)
-                .Build();
+
 
             serviceCollection.AddOptions();
-            serviceCollection.Configure<AppSettings>(configuration.GetSection("Configuration"));
+            
 
             serviceCollection.AddTransient<GoogleSheetsApp>();
             serviceCollection.AddTransient<CsvApp>();

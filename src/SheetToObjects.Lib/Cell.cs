@@ -11,6 +11,7 @@
             ColumnIndex = columnIndex;
             RowIndex = rowIndex;
             Value = value;
+            ColumnIndex = columnIndex;
         }
     }
 }
