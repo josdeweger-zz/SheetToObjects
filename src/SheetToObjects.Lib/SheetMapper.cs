@@ -51,6 +51,8 @@ namespace SheetToObjects.Lib
                 var obj = new TModel();
                 var properties = obj.GetType().GetProperties().ToList();
 
+                bool hasValidationErrors = false;
+
                 properties.ForEach(property =>
                 {
                     var columnMapping = mappingConfig.GetColumnMappingByPropertyName(property.Name);
@@ -66,10 +68,15 @@ namespace SheetToObjects.Lib
                         {
                             validationErrors.Add(validationError);
                             property.SetValue(obj, property.PropertyType.GetDefault());
+                            hasValidationErrors = true;
+
                         });
                 });
 
-                parsedModels.Add(obj);
+                if (!hasValidationErrors)
+                {
+                    parsedModels.Add(obj);
+                }
             });
 
             return MappingResult<TModel>.Create(parsedModels, validationErrors);
