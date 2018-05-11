@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
-using SheetToObjects.Core;
+using CSharpFunctionalExtensions;
 
 namespace SheetToObjects.Lib
 {
-    public class EnumValueParser : IParseValues
+    public class EnumValueParser 
     {
         public Result Parse<T>(object value)
         {

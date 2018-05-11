@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using SheetToObjects.Lib.Configuration;
-using SheetToObjects.Lib.Validation;
+using SheetToObjects.Lib.Configuration.ColumnMappings;
 
 namespace SheetToObjects.Lib.Attributes.MappingType
 {
@@ -19,9 +17,9 @@ namespace SheetToObjects.Lib.Attributes.MappingType
             PropertyName = propertyName;
         }
 
-        public ColumnMapping GetColumnMapping(List<IRule> rules)
+        public void SetColumnMapping<TModel>(ColumnMappingBuilder<TModel> builder)
         {
-            return new LetterColumnMapping(ColumnLetter, PropertyName, rules);
+            builder.WithColumnLetter(ColumnLetter);
         }
     }
 }

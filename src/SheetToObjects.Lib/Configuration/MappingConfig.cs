@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SheetToObjects.Lib.Configuration.ColumnMappings;
 
 namespace SheetToObjects.Lib.Configuration
 {
     public class MappingConfig
     {
+        public bool HasHeaders { get; set; }
+
         public List<ColumnMapping> ColumnMappings = new List<ColumnMapping>();
         
         public ColumnMapping GetColumnMappingByPropertyName(string propertyName)

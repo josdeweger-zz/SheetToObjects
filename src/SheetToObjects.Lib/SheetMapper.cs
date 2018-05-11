@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Core;
-using SheetToObjects.Lib.Attributes;
-using SheetToObjects.Lib.Attributes.MappingType;
-using SheetToObjects.Lib.Attributes.Rules;
 using SheetToObjects.Lib.Configuration;
+using SheetToObjects.Lib.Configuration.ColumnMappings;
 
 namespace SheetToObjects.Lib
 {
@@ -15,8 +13,6 @@ namespace SheetToObjects.Lib
         private readonly CellValueParser _cellValueParser = new CellValueParser();
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
-        private List<string> _headers;
-        private List<Row> _dataRows;
 
         public SheetMapper For<TModel>(Func<MappingConfigBuilder<TModel>, MappingConfig> mappingConfigFunc)
         {
@@ -29,8 +25,6 @@ namespace SheetToObjects.Lib
         public SheetMapper Map(Sheet sheet)
         {
             _sheet = sheet;
-            _headers = sheet.Rows.First().Cells.Select(c => c.Value.ToString().ToLowerInvariant()).ToList();
-            _dataRows = _sheet.Rows.Skip(1).ToList();
             return this;
         }
 
@@ -41,10 +35,18 @@ namespace SheetToObjects.Lib
             var validationErrors = new List<ValidationError>();
 
             if (!_mappingConfigs.TryGetValue(typeof(TModel), out var mappingConfig))
-                throw new ApplicationException(
-                    $"Could not find Mapping Configuration for type {typeof(TModel)}. Make sure to setup a configuration for the type");
-            
-            _dataRows.ForEach(row => 
+            {
+                mappingConfig = new MappingConfigBuilder<TModel>().Object();
+            }
+                
+
+            if(mappingConfig.HasHeaders)
+                SetHeaderIndexesInColumnMappings(_sheet.Rows.FirstOrDefault(), mappingConfig);
+
+            List<Row> dataRows = mappingConfig.HasHeaders ? _sheet.Rows.Skip(1).ToList() : _sheet.Rows; 
+
+
+            dataRows.ForEach(row => 
             {
                 var obj = new TModel();
                 var properties = obj.GetType().GetProperties().ToList();
@@ -56,15 +58,14 @@ namespace SheetToObjects.Lib
                     if (columnMapping.IsNull())
                         return;
 
-                    var columnIndex = _headers.IndexOf(columnMapping.Header);
-                    var cell = row.GetCellByColumnIndex(columnIndex);
+                    var cell = row.GetCellByColumnIndex(columnMapping?.ColumnIndex ?? -1);
 
-                    ParseValue(columnMapping.PropertyType, cell)
+                    ParseValue(property.PropertyType, cell)
                         .OnSuccess(value => property.SetValue(obj, value))
                         .OnFailure(validationError =>
                         {
                             validationErrors.Add(validationError);
-                            property.SetValue(obj, columnMapping.PropertyType.GetDefault());
+                            property.SetValue(obj, property.PropertyType.GetDefault());
                         });
                 });
 
@@ -74,6 +75,17 @@ namespace SheetToObjects.Lib
             return MappingResult<TModel>.Create(parsedModels, validationErrors);
         }
 
+        private void SetHeaderIndexesInColumnMappings(Row firstRow, MappingConfig mappingConfig)
+        {
+            foreach (var columnMapping in mappingConfig.ColumnMappings.OfType<IUseHeaderRow>())
+            {
+                var headerCell = firstRow.Cells.FirstOrDefault(c => c.Value.ToString().Equals(columnMapping.ColumnName.ToString(), StringComparison.OrdinalIgnoreCase));
+                if (headerCell != null)
+                {
+                    columnMapping.SetColumnIndex(headerCell.ColumnIndex);
+                }
+            }
+        }
 
         private Result<object, ValidationError> ParseValue(Type type, Cell cell)
         {

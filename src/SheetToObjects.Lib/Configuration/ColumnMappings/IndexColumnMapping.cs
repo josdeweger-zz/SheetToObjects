@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.Configuration
+namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
     public class IndexColumnMapping : ColumnMapping
     {

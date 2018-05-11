@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using SheetToObjects.Lib.Configuration;
+using SheetToObjects.Lib.Configuration.ColumnMappings;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Attributes.MappingType
@@ -19,9 +19,9 @@ namespace SheetToObjects.Lib.Attributes.MappingType
             PropertyName = propertyName;
         }
 
-        public ColumnMapping GetColumnMapping(List<IRule> rules)
+        public void SetColumnMapping<TModel>(ColumnMappingBuilder<TModel> builder)
         {
-            return new IndexColumnMapping(ColumnIndex, PropertyName, rules);
+            builder.WithColumnIndex(ColumnIndex);
         }
     }
 }

@@ -44,8 +44,8 @@ namespace SheetToObjects.Lib
                     $"Type {type.Name} is not an Enumeration"));
 
             if (cell.IsNull())
-                return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex,
-                    $"Cell or cell value is not set for column index {cell.ColumnIndex} and row index {cell.RowIndex}"));
+                return Result.Fail<object, ValidationError>(new ValidationError(-1, -1,
+                    $"Cell or cell value is not set for column index -1 and row index -1"));
 
             if (cell.Value.IsNull())
                 return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex,

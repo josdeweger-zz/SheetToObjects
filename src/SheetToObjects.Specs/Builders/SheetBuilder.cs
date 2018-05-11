@@ -31,7 +31,7 @@ namespace SheetToObjects.Specs.Builders
                     .Select((headerValue, columnIndex) => new Cell(columnIndex, 0, headerValue))
                     .ToList();
 
-                _rows.Add(new Row(headerCells));
+                _rows.Add(new Row(headerCells,0));
             }
 
             foreach (var rowBuilderFunc in _rowBuilderFuncs)

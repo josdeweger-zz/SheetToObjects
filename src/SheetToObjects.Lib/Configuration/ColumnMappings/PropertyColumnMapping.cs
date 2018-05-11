@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.Configuration
+namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
     public class PropertyColumnMapping : ColumnMapping, IUseHeaderRow
     {

@@ -32,10 +32,7 @@ namespace SheetToObjects.ConsoleApp
                         .Add(column => column.MapLetter("G").To(m => m.ForecastLow))
                         .Add(column => column.MapLetter("H").To(m => m.Scope)))); */
 
-                sheetMapper.For<ProfileModel>(cfg => cfg
-                    .Columns(columns => columns
-                        .Add(column => column.MapColumnName("emailaddress").To(m => m.Email))
-                    ));
+                //sheetMapper.For<ProfileModel>(cfg => cfg.Columns));
 
                 return sheetMapper;
             });
@@ -45,7 +42,7 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddOptions();
             
 
-            serviceCollection.AddTransient<GoogleSheetsApp>();
+            //serviceCollection.AddTransient<GoogleSheetsApp>();
             serviceCollection.AddTransient<CsvApp>();
 
             return serviceCollection;

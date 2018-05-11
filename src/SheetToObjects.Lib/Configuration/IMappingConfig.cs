@@ -1,4 +1,6 @@
-﻿namespace SheetToObjects.Lib.Configuration
+﻿using SheetToObjects.Lib.Configuration.ColumnMappings;
+
+namespace SheetToObjects.Lib.Configuration
 {
     public interface IMappingConfig
     {

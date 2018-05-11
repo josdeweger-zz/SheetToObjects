@@ -18,7 +18,7 @@ namespace SheetToObjects.Lib
 
         public Cell GetCellByColumnIndex(int columnIndex)
         {
-            return Cells.FirstOrDefault(c =>c.ColumnIndex.Equals(columnIndex));
+            return Cells.FirstOrDefault(c =>c.ColumnIndex == columnIndex);
         }
     }
 }
