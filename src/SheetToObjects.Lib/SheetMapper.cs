@@ -50,9 +50,7 @@ namespace SheetToObjects.Lib
             {
                 var obj = new TModel();
                 var properties = obj.GetType().GetProperties().ToList();
-
-                bool hasValidationErrors = false;
-
+                
                 properties.ForEach(property =>
                 {
                     var columnMapping = mappingConfig.GetColumnMappingByPropertyName(property.Name);
@@ -61,22 +59,17 @@ namespace SheetToObjects.Lib
                         return;
 
                     var cell = row.GetCellByColumnIndex(columnMapping?.ColumnIndex ?? -1);
-
+                    
                     ParseValue(property.PropertyType, cell)
                         .OnSuccess(value => property.SetValue(obj, value))
                         .OnFailure(validationError =>
                         {
-                            validationErrors.Add(validationError);
                             property.SetValue(obj, property.PropertyType.GetDefault());
-                            hasValidationErrors = true;
-
                         });
                 });
 
-                if (!hasValidationErrors)
-                {
-                    parsedModels.Add(obj);
-                }
+                parsedModels.Add(obj);
+                
             });
 
             return MappingResult<TModel>.Create(parsedModels, validationErrors);
