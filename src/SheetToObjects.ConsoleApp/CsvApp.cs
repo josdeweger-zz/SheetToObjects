@@ -26,7 +26,7 @@ namespace SheetToObjects.ConsoleApp
         public void Run()
         {
             
-            var fileStream = File.Open(@"C:\Users\frank.vanderlinden\Documents\Landal\homeownerimport csv\account_2.csv", FileMode.Open);
+            var fileStream = File.Open(@"Enter Filename here", FileMode.Open);
             var csvData = _csvProvider.Get(fileStream, ';');
             var sheet = _csvDataConverter.Convert(csvData);
 

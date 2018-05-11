@@ -32,7 +32,11 @@ namespace SheetToObjects.ConsoleApp
                         .Add(column => column.MapLetter("G").To(m => m.ForecastLow))
                         .Add(column => column.MapLetter("H").To(m => m.Scope)))); */
 
-                //sheetMapper.For<ProfileModel>(cfg => cfg.Columns));
+                //sheetMapper.For<ProfileModel>(cfg => cfg.HasHeaders().Columns()
+                
+                
+             //   ));
+
 
                 return sheetMapper;
             });
