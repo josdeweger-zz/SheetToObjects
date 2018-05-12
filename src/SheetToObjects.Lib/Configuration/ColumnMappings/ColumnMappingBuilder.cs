@@ -66,7 +66,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
             if (type != propertyInfo.ReflectedType && !type.IsSubclassOf(propertyInfo.ReflectedType))
                 throw new ArgumentException($"Expression '{propertyLambda}' refers to a property that is not from type {type}.");
 
-            return this.MapTo(propertyInfo);
+            return MapTo(propertyInfo);
         }
 
         public ColumnMapping MapTo(PropertyInfo property)

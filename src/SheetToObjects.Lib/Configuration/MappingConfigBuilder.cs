@@ -14,8 +14,7 @@ namespace SheetToObjects.Lib.Configuration
 
         public MappingConfigBuilder()
         {
-            InitByAttributes();
-            var columnsBuilder = new ColumnsMappingBuilder<TModel>(_mappingConfig);
+            InitByAtributes();
         }
 
 
@@ -30,13 +29,13 @@ namespace SheetToObjects.Lib.Configuration
             columnMappingBuilderFunc(new ColumnsMappingBuilder<TModel>(_mappingConfig));
             return this;
         }
-
-        public MappingConfig Object()
+        
+        public MappingConfig BuildConfig()
         {
             return _mappingConfig;
         }
 
-        private void InitByAttributes()
+        private void InitByAtributes()
         {
             Type objType = typeof(TModel);
 
@@ -44,14 +43,16 @@ namespace SheetToObjects.Lib.Configuration
             if (sheetToConfigAttribute != null)
             {
                 _mappingConfig.HasHeaders = sheetToConfigAttribute.SheetHasHeaders;
+                _mappingConfig.AutoMapProperties = sheetToConfigAttribute.AutoMapProperties;
             }
+
+            new ColumnsMappingBuilder<TModel>(_mappingConfig);
         }
     }
 
     public class ColumnsMappingBuilder<TModel>
     {
         private readonly MappingConfig _mappingConfig;
-
 
         public ColumnsMappingBuilder(MappingConfig mappingConfig)
         {
@@ -66,7 +67,6 @@ namespace SheetToObjects.Lib.Configuration
             _mappingConfig.ColumnMappings.RemoveAll(c => c.PropertyName == columnMapping.PropertyName);
             _mappingConfig.ColumnMappings.Add(columnMapping);
 
-
             return this;
         }
 
@@ -76,6 +76,7 @@ namespace SheetToObjects.Lib.Configuration
 
             foreach (var property in objType.GetProperties())
             {
+                bool columnIsMappedByAttribute = false;
                 var mappingConfigBuilder = new ColumnMappingBuilder<TModel>();
                 var attributes = property.GetCustomAttributes().ToList();
 
@@ -85,6 +86,7 @@ namespace SheetToObjects.Lib.Configuration
                 foreach (var mappingAttribute in attributes.OfType<IMappingAttribute>())
                 {
                     mappingAttribute.SetColumnMapping<TModel>(mappingConfigBuilder);
+                    columnIsMappedByAttribute = true;
                 }
                 
                 foreach (var attribute in attributes)
@@ -95,7 +97,10 @@ namespace SheetToObjects.Lib.Configuration
                     }
                 }
 
-                _mappingConfig.ColumnMappings.Add(mappingConfigBuilder.MapTo(property));
+                if (columnIsMappedByAttribute || _mappingConfig.AutoMapProperties)
+                {
+                    _mappingConfig.ColumnMappings.Add(mappingConfigBuilder.MapTo(property));
+                }
             }
 
         }

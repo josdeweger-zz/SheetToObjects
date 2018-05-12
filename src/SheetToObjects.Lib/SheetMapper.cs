@@ -10,7 +10,7 @@ namespace SheetToObjects.Lib
 {
     public class SheetMapper : IMapSheetToObjects
     {
-        private readonly CellValueParser _cellValueParser = new CellValueParser();
+        private readonly ValueParser _cellValueParser = new ValueParser();
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
@@ -36,7 +36,7 @@ namespace SheetToObjects.Lib
 
             if (!_mappingConfigs.TryGetValue(typeof(TModel), out var mappingConfig))
             {
-                mappingConfig = new MappingConfigBuilder<TModel>().Object();
+                mappingConfig = new MappingConfigBuilder<TModel>().BuildConfig();
             }
                 
 
@@ -48,7 +48,7 @@ namespace SheetToObjects.Lib
 
             dataRows.ForEach(row =>
             {
-                List<ValidationError> columnValidationErrors = new List<ValidationError>();
+                List<ValidationError> rowValidationErrors = new List<ValidationError>();
                 var obj = new TModel();
                 var properties = obj.GetType().GetProperties().ToList();
                 
@@ -61,21 +61,28 @@ namespace SheetToObjects.Lib
 
                     var cell = row.GetCellByColumnIndex(columnMapping?.ColumnIndex ?? -1);
 
-                    columnValidationErrors.AddRange(
-                        ValidateValueByColumnMapping(cell?.Value?.ToString(), columnMapping, row.RowIndex).ToList());
+                    if (cell == null)
+                    {
+                        var validationError = new ValidationError(columnMapping?.ColumnIndex, row.RowIndex, "Cell not found", columnMapping?.DisplayName, null, property.Name);
+                        CheckToAddValidationErrorToList(rowValidationErrors, columnMapping, validationError);
+                        return;
+                    }
+                    
+                    rowValidationErrors.AddRange(
+                        ValidateValueByColumnMapping(cell.Value.ToString(), columnMapping, row.RowIndex, property.Name).ToList());
 
                     
-                    ParseValue(property.PropertyType, cell?.Value?.ToString() ?? string.Empty, columnMapping?.ColumnIndex ?? -1, row.RowIndex, columnMapping.IsRequired, columnMapping.DisplayName)
+                    ParseValue(property.PropertyType, cell?.Value?.ToString() ?? string.Empty)
                         .OnSuccess(value => property.SetValue(obj, value))
-                        .OnFailure(validationError =>
+                        .OnFailure(parseErrorMessage =>
                         {
-                            columnValidationErrors.Add(validationError);
-                            property.SetValue(obj, property.PropertyType.GetDefault());
+                            var validationError = new ValidationError(columnMapping?.ColumnIndex, row.RowIndex, parseErrorMessage, columnMapping?.DisplayName, cell?.Value?.ToString(), property.Name);
+                            CheckToAddValidationErrorToList(rowValidationErrors, columnMapping, validationError);
                         });
                 });
 
-                if(columnValidationErrors?.Any() == true)
-                    validationErrors.AddRange(columnValidationErrors);
+                if(rowValidationErrors?.Any() == true)
+                    validationErrors.AddRange(rowValidationErrors);
                 else 
                     parsedModels.Add(obj);
                 
@@ -84,14 +91,24 @@ namespace SheetToObjects.Lib
             return MappingResult<TModel>.Create(parsedModels, validationErrors);
         }
 
-        private IEnumerable<ValidationError> ValidateValueByColumnMapping(string value, ColumnMapping mapping, int rowIndex)
+
+        private void CheckToAddValidationErrorToList(List<ValidationError> validationErrorList, ColumnMapping columnMapping, 
+            ValidationError validationError)
+        {
+            if (columnMapping.IsRequired)
+            {
+                validationErrorList.Add(validationError);
+            }
+        }
+
+        private IEnumerable<ValidationError> ValidateValueByColumnMapping(string value, ColumnMapping mapping, int rowIndex, string propertyName)
         {
             foreach (var rule in mapping.Rules)
             {
                 var validationResult = rule.Validate(value);
                 if (validationResult.IsFailure)
                 {
-                    yield return new ValidationError(mapping.ColumnIndex ?? -1, rowIndex, validationResult.Error, mapping.DisplayName);
+                    yield return new ValidationError(mapping.ColumnIndex, rowIndex, validationResult.Error, mapping.DisplayName, value, propertyName);
                 }
             }
         }
@@ -108,20 +125,20 @@ namespace SheetToObjects.Lib
             }
         }
 
-        private Result<object, ValidationError> ParseValue(Type type, string value, int columnIndex, int rowIndex, bool isRequired, string columnName)
+        private Result<object, string> ParseValue(Type type, string value)
         {
             switch (true)
             {
                 case var _ when type == typeof(string):
-                    return _cellValueParser.ParseValueType<string>(value, columnIndex, rowIndex, isRequired, columnName);
+                    return _cellValueParser.ParseValueType<string>(value);
                 case var _ when type == typeof(int) || type == typeof(int?):
-                    return _cellValueParser.ParseValueType<int>(value, columnIndex, rowIndex, isRequired,columnName);
+                    return _cellValueParser.ParseValueType<int>(value);
                 case var _ when type == typeof(double) || type == typeof(double?):
-                    return _cellValueParser.ParseValueType<double>(value, columnIndex, rowIndex,isRequired,columnName);
+                    return _cellValueParser.ParseValueType<double>(value);
                 case var _ when type == typeof(bool) || type == typeof(bool?):
-                    return _cellValueParser.ParseValueType<bool>(value, columnIndex, rowIndex,isRequired,columnName);
+                    return _cellValueParser.ParseValueType<bool>(value);
                 case var _ when type.IsEnum:
-                    return _cellValueParser.ParseEnumeration(value, columnIndex, rowIndex, type,columnName);
+                    return _cellValueParser.ParseEnumeration(value, type);
                 default:
                     throw new NotImplementedException($"Parser for type {type} not implemented.");
             }

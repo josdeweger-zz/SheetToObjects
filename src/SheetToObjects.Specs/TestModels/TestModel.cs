@@ -21,5 +21,11 @@ namespace SheetToObjects.Specs.TestModels
 
         [IgnorePropertyMapping]
         public EnumModel EnumProperty { get; set; }
+
+        [IgnorePropertyMapping]
+        public string PropertyWithBody
+        {
+            get { return string.Empty; }
+        }
     }
 }

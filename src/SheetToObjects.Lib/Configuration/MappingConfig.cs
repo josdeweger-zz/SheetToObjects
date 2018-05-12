@@ -7,7 +7,15 @@ namespace SheetToObjects.Lib.Configuration
 {
     public class MappingConfig
     {
+        public bool AutoMapProperties { get; set; }
+
         public bool HasHeaders { get; set; }
+
+        public MappingConfig(bool hasHeaders = true, bool autoMapProperties = true)
+        {
+            HasHeaders = hasHeaders;
+            AutoMapProperties = autoMapProperties;
+        }
 
         public List<ColumnMapping> ColumnMappings = new List<ColumnMapping>();
         

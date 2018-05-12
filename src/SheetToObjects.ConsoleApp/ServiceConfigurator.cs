@@ -16,7 +16,7 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
             serviceCollection.AddTransient<IProvideCsv, CsvProvider>();
             serviceCollection.AddTransient<IConvertResponseToSheet<CsvData>, CsvAdapter>();
-            serviceCollection.AddTransient<IParseValue, CellValueParser>();
+            serviceCollection.AddTransient<IParseValue, ValueParser>();
             serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();
@@ -30,7 +30,9 @@ namespace SheetToObjects.ConsoleApp
                         .Add(column => column.WithColumnLetter("E").MapTo(m => m.ForecastNormal))
                         .Add(column => column.WithColumnLetter("F").MapTo(m => m.ForecastHigh))
                         .Add(column => column.WithColumnLetter("G").MapTo(m => m.ForecastLow))
-                        .Add(column => column.WithColumnLetter("H").MapTo(m => m.Scope))).Object());
+                        .Add(column => column.WithColumnLetter("H").MapTo(m => m.Scope)))
+                    .BuildConfig()
+                );
 
                 return sheetMapper;
             });

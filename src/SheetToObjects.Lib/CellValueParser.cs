@@ -5,38 +5,35 @@ using SheetToObjects.Core;
 
 namespace SheetToObjects.Lib
 {
-    public class CellValueParser : IParseValue
+    public class ValueParser : IParseValue
     {
-        public Result<object, ValidationError> ParseValueType<TValue>(string value, int columnIndex, int rowIndex, bool isRequired, string columnName)
+        public Result<object, string> ParseValueType<TValue>(string value)
         {
             var type = typeof(TValue);
             
             try
             {
                 var parsedValue = (TValue) Convert.ChangeType(value, type);
-                return Result.Ok<object, ValidationError>(parsedValue);
+                return Result.Ok<object, string>(parsedValue);
             }
             catch (Exception)
             {
-                if (isRequired)
-                {
-                    return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex,
-                        $"Something went wrong parsing value of type {type}.",columnName));
-                }
-
-                return Result.Ok<object, ValidationError>(typeof(TValue).GetDefault());
+                return Result.Fail<object, string>($"Cannot parse value '{value}' to type '{type.Name}'");
             }
         }
 
-        public Result<object, ValidationError> ParseEnumeration(string value, int columnIndex, int rowIndex, Type type, string columnName)
+        public Result<object, string> ParseEnumeration(string value, Type type)
         {
+            string errorMessage = $"Cannot parse value '{value}' to type '{type?.Name}'";
+
+            if(type.IsNull())
+                return Result.Fail<object, string>(errorMessage);
+
             if (!type.IsEnum)
-                return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex,
-                    $"Type {type.Name} is not an Enumeration", columnName));
+                return Result.Fail<object, string>(errorMessage);
 
             if (value.IsNull())
-                return Result.Fail<object, ValidationError>(new ValidationError(-1, -1,
-                    $"Cell or cell value is not set for column index -1 and row index -1", columnName));
+                return Result.Fail<object, string>(errorMessage);
 
             try
             {
@@ -44,25 +41,21 @@ namespace SheetToObjects.Lib
                 {
                     if (type.IsEnumDefined(intValue))
                     {
-                        return Result.Ok<object, ValidationError>(intValue);
+                        return Result.Ok<object, string>(Enum.ToObject(type, intValue));
                     }
-                    return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}", columnName));
-                }
-                else
-                {
-                    var enumValue = Enum.Parse(type, value.ToString(), ignoreCase: true);
-                    if (enumValue.IsNotNull())
-                    {
-                        return Result.Ok<object, ValidationError>(enumValue);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}", columnName));
-            }
 
-            return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex, $"Could not parse value to {type}", columnName));
+                    return Result.Fail<object, string>(errorMessage);
+                }
+
+                var enumValue = Enum.Parse(type, value.ToString(), ignoreCase: true);
+                if (enumValue.IsNotNull())
+                {
+                    return Result.Ok<object, string>(enumValue);
+                }
+            }
+            catch (Exception) { }
+
+            return Result.Fail<object, string>(errorMessage);
         }
     }
 }

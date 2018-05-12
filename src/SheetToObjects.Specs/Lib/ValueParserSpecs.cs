@@ -7,29 +7,27 @@ namespace SheetToObjects.Specs.Lib
 {
     public class ValueParserSpecs
     {
-        private readonly CellValueParser _cellValueParser;
+        private readonly ValueParser _cellValueParser;
 
         public ValueParserSpecs()
         {
-            _cellValueParser = new CellValueParser();
+            _cellValueParser = new ValueParser();
         }
 
         [Fact]
         public void GivenParsingInt_WhenValueIsNotSet_ResultIsNotValid()
         {
-            var result = _cellValueParser.ParseValueType<int>(null,0,0,true,"integer");
+            var result = _cellValueParser.ParseValueType<int>(null);
 
             result.IsSuccess.Should().BeFalse();
-            result.Error.ColumnName.Should().Be("integer");
         }
 
         [Fact]
         public void GivenParsingEnum_WhenValueCanNotBeParsed_ResultIsNotValid()
         {
-            var result = _cellValueParser.ParseValueType<EnumModel>("SomeString", 1, 1,true,"enumColumn");
+            var result = _cellValueParser.ParseValueType<EnumModel>("SomeString");
 
             result.IsSuccess.Should().BeFalse();
-            result.Error.ColumnName.Should().Be($"enumColumn");
         }
 
         [Fact]
@@ -37,7 +35,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var doubleValue = 3.3D;
 
-            var result = _cellValueParser.ParseValueType<double>(doubleValue.ToString(),1,1,true,"doubleColumn");
+            var result = _cellValueParser.ParseValueType<double>(doubleValue.ToString());
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(doubleValue);
@@ -48,10 +46,82 @@ namespace SheetToObjects.Specs.Lib
         {
             var stringValue = "MyString";
 
-            var result = _cellValueParser.ParseValueType<string>(stringValue,1,1,true,"StringColumns");
+            var result = _cellValueParser.ParseValueType<string>(stringValue);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(stringValue);
         }
+
+        [Fact]
+        public void GivenParsingString_WhenValueCanBeParsedToEnum_ResultIsValid()
+        {
+            var value = "Second";
+
+            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(EnumModel.Second);
+        }
+
+        [Fact]
+        public void GivenParsingStringNumber_WhenValueCanBeParsedToEnum_ResultIsValid()
+        {
+            var value = "2";
+
+            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(EnumModel.Second);
+        }
+
+        [Fact]
+        public void GivenParsingStringNumber_WhenValueDoesNotExistInEnum_ResultIsInValid()
+        {
+            var value = "12";
+
+            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+
+            result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GivenParsingString_WhenValueCantBeParsedToEnum_ResultIsInvalid()
+        {
+            var value = "notexisting";
+
+            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+
+            result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GivenParsingString_WhenValueIsEmpty_ResultIsInvalid()
+        {
+            string value = null;
+
+            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+
+            result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GivenParsingString_WhenTypeIsNull_ResultIsInvalid()
+        {
+            var value = "second";
+            var result = _cellValueParser.ParseEnumeration(value, null);
+
+            result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GivenParsingString_WhenTypeIsNoEnum_ResultIsInvalid()
+        {
+            var value = "second";
+            var result = _cellValueParser.ParseEnumeration(value, typeof(double));
+
+            result.IsSuccess.Should().BeFalse();
+        }
+
+
     }
 }
