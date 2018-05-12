@@ -96,3 +96,5 @@ This library is in an early alpha stage, some core functionalities are still mis
 - [ ] Add validation (Required, Regex, Unique, ...)
 - [ ] Add option to add multiple configurations by type (the SheetMapper already contains a `Dictionary<Type, MappingConfig>`, which stores `MappingConfigs` per `Type`)
 - [ ] Nested objects support
+- [ ] Add comments to MappingConfigBuilder and underlying methods for better Intellisense experience
+
