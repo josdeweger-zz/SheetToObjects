@@ -20,33 +20,22 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();
-                /*
+
                 sheetMapper.For<EpicTrackingModel>(cfg => cfg
                     .Columns(columns => columns
-                        .Add(column => column.MapLetter("A").To(m => m.SprintNumber))
-                        .Add(column => column.MapLetter("B").To(m => m.SprintName))
-                        .Add(column => column.MapLetter("C").To(m => m.StoryPointsCompleted))
-                        .Add(column => column.MapLetter("D").To(m => m.TotalCompleted))
-                        .Add(column => column.MapLetter("E").To(m => m.ForecastNormal))
-                        .Add(column => column.MapLetter("F").To(m => m.ForecastHigh))
-                        .Add(column => column.MapLetter("G").To(m => m.ForecastLow))
-                        .Add(column => column.MapLetter("H").To(m => m.Scope)))); */
-
-                //sheetMapper.For<ProfileModel>(cfg => cfg.HasHeaders().Columns()
-                
-                
-             //   ));
-
+                        .Add(column => column.WithColumnLetter("A").MapTo(m => m.SprintNumber))
+                        .Add(column => column.WithColumnLetter("B").MapTo(m => m.SprintName))
+                        .Add(column => column.WithColumnLetter("C").MapTo(m => m.StoryPointsCompleted))
+                        .Add(column => column.WithColumnLetter("D").MapTo(m => m.TotalCompleted))
+                        .Add(column => column.WithColumnLetter("E").MapTo(m => m.ForecastNormal))
+                        .Add(column => column.WithColumnLetter("F").MapTo(m => m.ForecastHigh))
+                        .Add(column => column.WithColumnLetter("G").MapTo(m => m.ForecastLow))
+                        .Add(column => column.WithColumnLetter("H").MapTo(m => m.Scope))).Object());
 
                 return sheetMapper;
             });
-
-
-
-            serviceCollection.AddOptions();
             
-
-            //serviceCollection.AddTransient<GoogleSheetsApp>();
+            serviceCollection.AddOptions();
             serviceCollection.AddTransient<CsvApp>();
 
             return serviceCollection;
