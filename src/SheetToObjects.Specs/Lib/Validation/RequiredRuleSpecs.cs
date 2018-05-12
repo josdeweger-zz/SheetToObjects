@@ -33,7 +33,7 @@ namespace SheetToObjects.Specs.Lib.Validation
         {
             string value = " ";
 
-            var result = new RequiredRule(true).Validate(value);
+            var result = new RequiredRule().AllowWhiteSpace().Validate(value);
 
             result.IsSuccess.Should().BeTrue();
         }

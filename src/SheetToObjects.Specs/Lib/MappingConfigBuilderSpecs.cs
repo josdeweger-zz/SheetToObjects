@@ -104,7 +104,7 @@ namespace SheetToObjects.Specs.Lib
             result.ColumnMappings.Single().Should().BeOfType<NameColumnMapping>()
                 .Which.ColumnName.Should().Be("stringcolumn");
 
-            result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Single().AllowWhiteSpace.Should().BeTrue();
+            result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Single().WhiteSpaceAllowed.Should().BeTrue();
 
         }
 

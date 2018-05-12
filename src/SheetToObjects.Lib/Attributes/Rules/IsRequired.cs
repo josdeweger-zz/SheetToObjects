@@ -6,21 +6,21 @@ namespace SheetToObjects.Lib.Attributes.Rules
     [AttributeUsage(AttributeTargets.Property)]
     public class IsRequired : Attribute, IRuleAttribute
     {
-        public bool AllowWhiteSpace { get; }
-        
-        public IsRequired()
-        {
+        private bool _allowWhiteSpace;
 
-        }
-
-        public IsRequired(bool allowWhiteSpace)
+        public IsRequired(bool allowWhiteSpace = false)
         {
-            AllowWhiteSpace = allowWhiteSpace;
+            _allowWhiteSpace = allowWhiteSpace;
         }
 
         public IRule GetRule()
         {
-            return new RequiredRule(AllowWhiteSpace);
+            var requireRule = new RequiredRule();
+
+            if(_allowWhiteSpace)
+                requireRule.AllowWhiteSpace();
+
+            return requireRule;
         }
     }
 }

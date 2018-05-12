@@ -5,16 +5,15 @@ namespace SheetToObjects.Lib.Validation
 {
     public class RequiredRule : IRule
     {
-        public bool AllowWhiteSpace { get; }
+        public bool WhiteSpaceAllowed { get; private set; }
 
-        public RequiredRule()
+
+        public RequiredRule AllowWhiteSpace()
         {
+            WhiteSpaceAllowed = true;
+            return this;
         }
 
-        public RequiredRule(bool allowWhiteSpace)
-        {
-            AllowWhiteSpace = allowWhiteSpace;
-        }
 
 
         public Result Validate(string value)
@@ -22,7 +21,7 @@ namespace SheetToObjects.Lib.Validation
             if(value.IsNullOrEmpty())
                 return Result.Fail("Value is required");
 
-            if(!AllowWhiteSpace && value.IsNullOrWhiteSpace())
+            if(!WhiteSpaceAllowed && value.IsNullOrWhiteSpace())
                 return Result.Fail("Value is required");
 
             return Result.Ok();
