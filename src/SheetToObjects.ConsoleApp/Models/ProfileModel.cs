@@ -44,18 +44,9 @@ namespace SheetToObjects.ConsoleApp.Models
         F
     }
 
-
-
     public enum ProfileType
     {
         Profile = 2
-    }
-
-    public enum RegistrationSource
-    {
-        Import,
-        Other
-
     }
 
     public enum YesNo
