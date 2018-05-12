@@ -21,4 +21,10 @@
     <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="test.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

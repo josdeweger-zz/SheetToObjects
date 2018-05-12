@@ -21,10 +21,5 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
             PropertyName = propertyName;
             Rules = rules ?? new List<IRule>();
         }
-
-        public void AddRules(List<IRule> rules)
-        {
-            Rules.AddRange(rules);
-        }
     }
 }

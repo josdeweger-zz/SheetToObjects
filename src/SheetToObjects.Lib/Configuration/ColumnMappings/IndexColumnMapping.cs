@@ -10,6 +10,6 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
             ColumnIndex = columnIndex;
         }
 
-        public override string DisplayName => "Column (6)";
+        public override string DisplayName => $"Column with index {ColumnIndex}";
     }
 }
