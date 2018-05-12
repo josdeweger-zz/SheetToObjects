@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using SheetToObjects.Lib.Configuration.ColumnMappings;
-using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Attributes.MappingType
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class MappingByColumnName : Attribute, IMappingAttribute
+    public class MappingByHeader : Attribute, IMappingAttribute
     {
         public string ColumnName { get;  }
         
-        public MappingByColumnName(string columnName)
+        public MappingByHeader(string columnName)
         {
             ColumnName = columnName;
         }

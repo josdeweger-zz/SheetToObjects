@@ -8,7 +8,7 @@ namespace SheetToObjects.Lib.Attributes
     {
         public bool SheetHasHeaders { get; }
 
-        public SheetToObjectConfig(bool sheetHasHeaders)
+        public SheetToObjectConfig(bool sheetHasHeaders = true)
         {
             SheetHasHeaders = sheetHasHeaders;
         }

@@ -38,10 +38,6 @@ namespace SheetToObjects.Lib
                 return Result.Fail<object, ValidationError>(new ValidationError(-1, -1,
                     $"Cell or cell value is not set for column index -1 and row index -1", columnName));
 
-            if (value.IsNull())
-                return Result.Fail<object, ValidationError>(new ValidationError(columnIndex, rowIndex,
-                    $"Cell or cell value is not set for column index {columnIndex} and row index {rowIndex}", columnName));
-
             try
             {
                 if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))

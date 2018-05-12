@@ -12,7 +12,7 @@ The overall idea is to create a `SheetMapper` which is provided with a `MappingC
 Having solved the problem of creating a custom csv/excel import (including upload, validation, mapping etc.) a couple of times, it seemed about time to make something generic and reusable.
 
 ## Getting Started
-There are two ways to use SheetToObjects in your code, by immediately instantiating and configuring the SheetMapper:
+There are multiple ways to use SheetToObjects in your code, by immediately instantiating and configuring the SheetMapper:
 
 ```
 var sheetMapper = new SheetMapper()
@@ -22,7 +22,7 @@ var sheetMapper = new SheetMapper()
         .Add(column => column.WithHeader("Last Name").MapTo(m => m.LastName))));
  ```
 
-The alternative is to register the `IMapSheetToObjects` interface using your favourite DI framework. An example using `Microsoft.Extensions.DependencyInjection`:
+An alternative is to register the `IMapSheetToObjects` interface using your favourite DI framework. An example using `Microsoft.Extensions.DependencyInjection`:
 
 ```
 new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
@@ -35,7 +35,46 @@ new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 });
 ```
 
-Then using the SheetMapper is easy:
+Another way to map configuration to model is by DataAtributes see:
+
+```
+[SheetToObjectConfig(sheetHasHeaders:true)]
+public class ToModel
+{
+
+	[MappingByHeader("StringValue")]
+	[IsRequired]
+	[Regex(@"/^[a-z]+[0-9_\/\s,.-]+$", true)]
+	public string StringProperty { get; set; }
+}
+```
+At the moment there is only one class attribute: SheetToObjectConfig. With this attribute u can set the default settings to map this model.
+
+The following default validation attributes are available as attributes;
+[IsRequired]
+[Regex]
+
+The model attributes can be overwritten by configuring a config for the model on the used SheetMapper
+
+## Column Mapping
+
+There are multiple ways to map a column in the datasource to the model property
+
+###### By Index
+
+Use the .WithColumnIndex or [MappingByIndex] attribute to map the property based on Index. The index is 0-based
+
+###### By Letter
+Use the .WithColumnLetter() or [MappingByLetter] attribute to map the attribute base on "Excel-style" column naming. column "A" is the first column and "D" the fourth.
+
+###### By ColumnName
+When the datasource contains a first row with headers it's possible to map by name. Use the .WithHeader() or [MappingByHeader] to map by the name that is used on the first row
+
+###### AutoMapping property
+It's also possible to automap the properties based on their name without configuring anything. A headerrow is required for this feature. 
+When u don't want to property to be mapped use the [IgnorePropertyMapping] attribute on the property.
+
+## With this info using the SheetMapper is easy:
 ```
 MappingResult result = sheetMapper.Map(sheet).To<SomeModel>(); //contains successfully parsed models and validation errors
 ```
@@ -56,3 +95,4 @@ This library is in an early alpha stage, some core functionalities are still mis
 - [x] Return Result object containing successfully parsed models and parsing/validation messages
 - [ ] Add validation (Required, Regex, Unique, ...)
 - [ ] Add option to add multiple configurations by type (the SheetMapper already contains a `Dictionary<Type, MappingConfig>`, which stores `MappingConfigs` per `Type`)
+- [ ] Nested objects support

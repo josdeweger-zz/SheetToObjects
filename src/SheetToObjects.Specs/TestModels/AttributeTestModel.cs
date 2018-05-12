@@ -4,7 +4,7 @@ using SheetToObjects.Lib.Attributes.Rules;
 
 namespace SheetToObjects.Specs.TestModels
 {
-    [SheetToObjectConfig(true)]
+    [SheetToObjectConfig(sheetHasHeaders:true)]
     public class AttributeTestModel
     {
 
@@ -12,6 +12,5 @@ namespace SheetToObjects.Specs.TestModels
         [IsRequired]
         [Regex(@"/^[a-z]+[0-9_\/\s,.-]+$", true)]
         public string StringProperty { get; set; }
-       
     }
 }

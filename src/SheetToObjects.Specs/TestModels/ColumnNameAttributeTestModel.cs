@@ -5,7 +5,7 @@ namespace SheetToObjects.Specs.TestModels
 {
     public class ColumnNameAttributeTestModel
     {
-        [MappingByColumnName("StringColumn")]
+        [MappingByHeader("StringColumn")]
         [IsRequired(true)]
         public string StringProperty { get; set; }
        
