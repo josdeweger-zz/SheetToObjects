@@ -2,7 +2,7 @@
 
 namespace SheetToObjects.Adapters.GoogleSheets
 {
-    public class GoogleSheetResponse
+    internal class GoogleSheetResponse
     {
         public string Range { get; set; }
         public string MajorDimension { get; set; }

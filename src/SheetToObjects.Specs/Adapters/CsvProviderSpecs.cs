@@ -10,7 +10,7 @@ namespace SheetToObjects.Specs.Adapters
     public class CsvProviderSpecs
     {
         [Fact]
-        public void GivenACsvFileOnDisk_whenLoadingCsvData_ThenCsvDataShouldContainData()
+        public void GivenACsvFileOnDisk_WhenLoadingCsvData_ThenSheetShouldContainData()
         {
             var provider = new SheetProvider(new CsvAdapter());
 
@@ -21,7 +21,7 @@ namespace SheetToObjects.Specs.Adapters
         }
 
         [Fact]
-        public void GivenAStream_whenLoadingCsvData_thenCsvDatashouldContainData()
+        public void GivenAStream_WhenLoadingCsvData_thenSheetShouldContainData()
         {
             using (var memoryStream = new MemoryStream())
             {

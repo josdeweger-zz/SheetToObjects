@@ -1,6 +1,6 @@
 ﻿namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
-    public interface IUseHeaderRow
+    internal interface IUseHeaderRow
     {
         string ColumnName { get; }
 

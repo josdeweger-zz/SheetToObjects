@@ -26,7 +26,10 @@ namespace SheetToObjects.ConsoleApp
 
         public async Task Run()
         {
-            var sheet = await _sheetProvider.GetAsync(_appSettings.SheetId, "'Herstructurering Filters Data'!A1:H9", _appSettings.ApiKey);
+            var sheet = await _sheetProvider.GetAsync(
+                _appSettings.SheetId, 
+                "'Herstructurering Filters Data'!A1:H9", 
+                _appSettings.ApiKey);
 
             var result = _sheetMapper.Map(sheet).To<EpicTrackingModel>();
 

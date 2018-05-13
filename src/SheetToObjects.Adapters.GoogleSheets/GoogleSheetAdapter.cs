@@ -6,7 +6,7 @@ using SheetToObjects.Lib;
 
 namespace SheetToObjects.Adapters.GoogleSheets
 {
-    public class GoogleSheetAdapter : IConvertResponseToSheet<GoogleSheetResponse>
+    internal class GoogleSheetAdapter : IConvertResponseToSheet<GoogleSheetResponse>
     {
         public Sheet Convert(GoogleSheetResponse googleSheetData)
         {

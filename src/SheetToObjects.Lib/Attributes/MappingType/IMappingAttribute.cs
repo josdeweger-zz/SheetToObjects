@@ -3,7 +3,7 @@
 
 namespace SheetToObjects.Lib.Attributes.MappingType
 {
-    interface IMappingAttribute
+    internal interface IMappingAttribute
     {
         void SetColumnMapping<TModel>(ColumnMappingBuilder<TModel> builder);
     }

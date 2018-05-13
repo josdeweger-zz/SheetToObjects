@@ -9,10 +9,12 @@ namespace SheetToObjects.Adapters.Csv
     {
         private readonly IConvertResponseToSheet<CsvData> _csvDataConverter;
 
-        public SheetProvider(IConvertResponseToSheet<CsvData> csvDataConverter)
+        internal SheetProvider(IConvertResponseToSheet<CsvData> csvDataConverter)
         {
             _csvDataConverter = csvDataConverter;
         }
+
+        public SheetProvider() : this(new CsvAdapter()) { }
 
         public Sheet Get(string csvPath, char delimiter)
         {

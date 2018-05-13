@@ -6,7 +6,7 @@ using SheetToObjects.Lib;
 
 namespace SheetToObjects.Adapters.Csv
 {
-    public class CsvAdapter : IConvertResponseToSheet<CsvData>
+    internal class CsvAdapter : IConvertResponseToSheet<CsvData>
     {
         public Sheet Convert(CsvData csvData)
         {

@@ -5,7 +5,7 @@ using CSharpFunctionalExtensions;
 
 namespace SheetToObjects.Lib.Validation
 {
-    public class RegexRule : IRule
+    internal class RegexRule : IRule
     {
         private readonly string _pattern;
         private readonly bool _isCaseSensitive;

@@ -2,7 +2,7 @@
 
 namespace SheetToObjects.Lib.Configuration
 {
-    public interface IMappingConfig
+    internal interface IMappingConfig
     {
         ColumnMapping For<TModel>();
         ColumnMapping GetColumnMappingByPropertyName(string propertyName);
