@@ -12,32 +12,38 @@ namespace SheetToObjects.Specs.Adapters
 {
     public class GoogleSheetProviderSpecs
     {
-        [Fact]
-        public async void GivenGettingSheet_WhenGettingData_ThenConvertedDataIsReturned()
-        {
-            var googleSheetApiMock = new Mock<IGoogleSheetApi>();
+        private readonly Mock<IGoogleSheetApi> _googleSheetApiMock;
+        private readonly Mock<IConvertResponseToSheet<GoogleSheetResponse>> _sheetConverterMock;
 
-            googleSheetApiMock
+        public GoogleSheetProviderSpecs()
+        {
+            _googleSheetApiMock = new Mock<IGoogleSheetApi>();
+
+            _googleSheetApiMock
                 .Setup(g => g.GetSheetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new GoogleSheetResponse()));
 
             var sheetData = new SheetBuilder()
                 .AddHeaders("header1", "header2")
                 .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue("FirstRowFirstColumn").Build())
-                    .AddCell(c => c.WithColumnIndex(1).WithRowIndex(0).WithValue("FirstRowSecondColumn").Build())
+                    .AddCell(c => c.WithValue("FirstRowFirstColumn").Build())
+                    .AddCell(c => c.WithValue("FirstRowSecondColumn").Build())
                     .Build(0))
                 .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue("SecondRowFirstColumn").Build())
-                    .AddCell(c => c.WithColumnIndex(1).WithRowIndex(0).WithValue("SecondRowSecondColumn").Build())
+                    .AddCell(c => c.WithValue("SecondRowFirstColumn").Build())
+                    .AddCell(c => c.WithValue("SecondRowSecondColumn").Build())
                     .Build(1))
                 .Build();
 
-            var sheetConverterMock = new Mock<IConvertResponseToSheet<GoogleSheetResponse>>();
+            _sheetConverterMock = new Mock<IConvertResponseToSheet<GoogleSheetResponse>>();
 
-            sheetConverterMock.Setup(s => s.Convert(It.IsAny<GoogleSheetResponse>())).Returns(sheetData);
+            _sheetConverterMock.Setup(s => s.Convert(It.IsAny<GoogleSheetResponse>())).Returns(sheetData);
+        }
 
-            var provider = new SheetProvider(googleSheetApiMock.Object, sheetConverterMock.Object);
+        [Fact]
+        public async void GivenGettingSheet_WhenGettingData_ThenConvertedDataIsReturned()
+        {
+            var provider = new SheetProvider(_googleSheetApiMock.Object, _sheetConverterMock.Object);
 
             var sheet = await provider.GetAsync("1", "A1:A2", "someKey");
 
