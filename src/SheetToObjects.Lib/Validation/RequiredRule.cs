@@ -6,15 +6,12 @@ namespace SheetToObjects.Lib.Validation
     public class RequiredRule : IRule
     {
         public bool WhiteSpaceAllowed { get; private set; }
-
-
+        
         public RequiredRule AllowWhiteSpace()
         {
             WhiteSpaceAllowed = true;
             return this;
         }
-
-
 
         public Result Validate(string value)
         {

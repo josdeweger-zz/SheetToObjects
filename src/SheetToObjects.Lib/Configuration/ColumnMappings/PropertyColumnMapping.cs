@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Configuration.ColumnMappings

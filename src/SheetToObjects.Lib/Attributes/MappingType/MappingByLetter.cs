@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using SheetToObjects.Lib.Configuration.ColumnMappings;
 
 namespace SheetToObjects.Lib.Attributes.MappingType
