@@ -32,5 +32,27 @@ namespace SheetToObjects.Specs.Lib.Validation
 
             result.IsSuccess.Should().BeTrue();
         }
+
+        [Fact]
+        public void GivenValidatingRegex_WhenValueAndPatterIsNull_ValidationFails()
+        {
+            string value = null;
+            string pattern = null;
+
+            var result = new RegexRule(pattern).Validate(value);
+
+            result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GivenValidatingRegex_WhenPatternIsNull_ValidationFails()
+        {
+            var value = "SomeValue";
+            string pattern = null;
+
+            var result = new RegexRule(pattern).Validate(value);
+
+            result.IsSuccess.Should().BeFalse();
+        }
     }
 }

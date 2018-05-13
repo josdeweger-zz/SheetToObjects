@@ -1,0 +1,5 @@
+emailaddress;relationnumber;firstname;middlename;lastname;gender;language;terms;profiletype
+import1@mail.com;12345678a;Ferry;;test;M;nl-NL;yes;2
+import1@mail;1234567a;Jan;van;test;F;nl-NL;no;2
+import1@mail.com;1234567aa;Jan;van;test;V;nl-NL;hmmm;1
+import1@mail.com;1234567aa;Jan;van;test;M;nl-NL;yes2

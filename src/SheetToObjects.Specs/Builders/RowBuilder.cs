@@ -9,19 +9,13 @@ namespace SheetToObjects.Specs.Builders
         private readonly List<Cell> _cells = new List<Cell>();
         private readonly List<Func<CellBuilder, Cell>> _cellBuilderFuncs = new List<Func<CellBuilder, Cell>>();
 
-        public RowBuilder AddCell(Cell cell)
-        {
-            _cells.Add(cell);
-            return this;
-        }
-
         public RowBuilder AddCell(Func<CellBuilder, Cell> cellBuilderFunc)
         {
             _cellBuilderFuncs.Add(cellBuilderFunc);
             return this;
         }
 
-        public Row Build()
+        public Row Build(int index)
         {
             foreach (var cellBuilderFunc in _cellBuilderFuncs)
             {
@@ -29,7 +23,7 @@ namespace SheetToObjects.Specs.Builders
                 _cells.Add(cell);
             }
 
-            return new Row(_cells);
+            return new Row(_cells, index);
         }
     }
 }

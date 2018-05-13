@@ -1,70 +1,61 @@
 ﻿using System;
+using System.Globalization;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Core;
 
 namespace SheetToObjects.Lib
 {
-    public class CellValueParser : IParseCellValue
+    public class ValueParser
     {
-        public Result<object, ValidationError> ParseValueType<TValue>(Cell cell)
+        public Result<object, string> ParseValueType<TValue>(string value)
         {
             var type = typeof(TValue);
             
-            if (cell.IsNull())
-                return Result.Fail<object, ValidationError>(new ValidationError(-1, -1, "Cell is not set"));
-
-            if (cell.Value.IsNull())
-                return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex, $"Value of type {type} is empty."));
-
             try
             {
-                if(cell.Value.ToString().IsNullOrEmpty())
-                    return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex, $"Value of type {type} is empty."));
+                var parsedValue = (TValue) Convert.ChangeType(value, type);
+                return Result.Ok<object, string>(parsedValue);
             }
             catch (Exception)
             {
-            }
-
-            try
-            {
-                var parsedValue = (TValue) Convert.ChangeType(cell.Value, type);
-                return Result.Ok<object, ValidationError>(parsedValue);
-            }
-            catch (Exception)
-            {
-                return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex,
-                    $"Something went wrong parsing value of type {type}."));
+                return Result.Fail<object, string>($"Cannot parse value '{value}' to type '{type.Name}'");
             }
         }
 
-        public Result<object, ValidationError> ParseEnumeration(Cell cell, Type type)
+        public Result<object, string> ParseEnumeration(string value, Type type)
         {
+            var errorMessage = $"Cannot parse value '{value}' to type '{type?.Name}'";
+
+            if(type.IsNull())
+                return Result.Fail<object, string>(errorMessage);
+
             if (!type.IsEnum)
-                return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex,
-                    $"Type {type.Name} is not an Enumeration"));
+                return Result.Fail<object, string>(errorMessage);
 
-            if (cell.IsNull())
-                return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex,
-                    $"Cell or cell value is not set for column index {cell.ColumnIndex} and row index {cell.RowIndex}"));
-
-            if (cell.Value.IsNull())
-                return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex,
-                    $"Cell or cell value is not set for column index {cell.ColumnIndex} and row index {cell.RowIndex}"));
+            if (value.IsNull())
+                return Result.Fail<object, string>(errorMessage);
 
             try
             {
-                var enumValue = Enum.Parse(type, cell.Value.ToString(), ignoreCase: true);
+                if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
+                {
+                    if (type.IsEnumDefined(intValue))
+                    {
+                        return Result.Ok<object, string>(Enum.ToObject(type, intValue));
+                    }
+
+                    return Result.Fail<object, string>(errorMessage);
+                }
+
+                var enumValue = Enum.Parse(type, value.ToString(), ignoreCase: true);
                 if (enumValue.IsNotNull())
                 {
-                    return Result.Ok<object, ValidationError>(enumValue);
+                    return Result.Ok<object, string>(enumValue);
                 }
             }
-            catch (Exception)
-            {
-                return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex, $"Could not parse value to {type}"));
-            }
+            catch (Exception) { }
 
-            return Result.Fail<object, ValidationError>(new ValidationError(cell.ColumnIndex, cell.RowIndex, $"Could not parse value to {type}"));
+            return Result.Fail<object, string>(errorMessage);
         }
     }
 }

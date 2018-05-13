@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using SheetToObjects.Lib.Configuration;
+using SheetToObjects.Lib.Configuration.ColumnMappings;
 using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
@@ -14,9 +15,10 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)))
+                .BuildConfig();
 
-            result.ColumnMappings.Should().HaveCount(1);
+            result.ColumnMappings.OfType<NameColumnMapping>().Should().HaveCount(1);
         }
 
         [Fact]
@@ -24,19 +26,10 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)))
+                .BuildConfig();
 
-            result.ColumnMappings.Single().Header.Should().Be("firstname");
-        }
-
-        [Fact]
-        public void GivenCreatingMappingConfiguration_WhenAddingProperty_PropertyTypeIsSet()
-        {
-            var result = new MappingConfigBuilder<TestModel>()
-                .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
-
-            result.ColumnMappings.Single().PropertyType.Should().Be<string>();
+            result.ColumnMappings.OfType<NameColumnMapping>().Single().ColumnName.Should().Be("firstname");
         }
 
         [Fact]
@@ -44,9 +37,10 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)))
+                .BuildConfig();
 
-            result.ColumnMappings.Single().PropertyName.Should().Be("StringProperty");
+            result.ColumnMappings.OfType<NameColumnMapping>().Single().PropertyName.Should().Be("StringProperty");
         }
 
         [Fact]
@@ -54,9 +48,10 @@ namespace SheetToObjects.Specs.Lib
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").IsRequired().MapTo(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").IsRequired().MapTo(m => m.StringProperty)))
+                .BuildConfig();
 
-            result.ColumnMappings.Single().Rules.Single().Should().BeOfType<RequiredRule>();
+            result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RequiredRule>();
         }
 
         [Fact]
@@ -66,9 +61,10 @@ namespace SheetToObjects.Specs.Lib
 
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").Matches(emailRegex).MapTo(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").Matches(emailRegex).MapTo(m => m.StringProperty)))
+                .BuildConfig();
 
-            result.ColumnMappings.Single().Rules.Single().Should().BeOfType<RegexRule>();
+            result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
         }
 
         [Fact]
@@ -78,9 +74,56 @@ namespace SheetToObjects.Specs.Lib
 
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").Matches(emailRegex).MapTo(m => m.StringProperty)));
+                    .Add(column => column.WithHeader("FirstName").Matches(emailRegex).MapTo(m => m.StringProperty)))
+                .BuildConfig();
 
-            result.ColumnMappings.Single().Rules.Single().Should().BeOfType<RegexRule>();
+            result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
         }
+
+        [Fact]
+        void GivenAModelWithAttributes_AttributesAreSetInConfig()
+        {
+            var result = new MappingConfigBuilder<AttributeTestModel>().BuildConfig();
+
+            result.HasHeaders.Should().BeTrue();
+            result.ColumnMappings.Single().Should().BeOfType<IndexColumnMapping>()
+                .Which.ColumnIndex.Should().Be(3);
+
+            result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Should().NotBeNull();
+            result.ColumnMappings.Single().Rules.OfType<RegexRule>().Should().NotBeNull();
+        }
+
+        [Fact]
+        void GivenAModelWithMappingByLetterAttribute_LetterAttributeIsSetInConfig()
+        {
+            var result = new MappingConfigBuilder<LetterAttributeTestModel>().BuildConfig();
+
+            result.ColumnMappings.Single().Should().BeOfType<LetterColumnMapping>()
+                .Which.ColumnIndex.Should().Be(2);
+        }
+
+        [Fact]
+        void GivenAModelWithMappingByNameAttributeAndRequiredSettingWithWhitespace_NameAttributeIsSetInConfig()
+        {
+            var result = new MappingConfigBuilder<ColumnNameAttributeTestModel>().BuildConfig();
+
+            result.ColumnMappings.Single().Should().BeOfType<NameColumnMapping>()
+                .Which.ColumnName.Should().Be("stringcolumn");
+
+            result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Single().WhiteSpaceAllowed.Should().BeTrue();
+
+        }
+
+        [Fact]
+        void GivenAModelWithOutAttributes_CheckIfPropertyIsAutoMapped()
+        {
+            var result = new MappingConfigBuilder<AutoMapTestModel>().BuildConfig();
+
+            result.HasHeaders.Should().BeTrue();
+            result.ColumnMappings.Single().Should().BeOfType<PropertyColumnMapping>()
+                .Which.ColumnName.Should().Be("AutoMap");
+        }
+
+
     }
 }

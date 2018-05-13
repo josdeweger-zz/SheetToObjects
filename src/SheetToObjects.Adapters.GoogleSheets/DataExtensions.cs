@@ -8,7 +8,7 @@ namespace SheetToObjects.Adapters.GoogleSheets
     {
         public static List<Row> ToRows(this List<List<string>> sheetData)
         {
-            return sheetData.Select((rowData, rowIndex) => new Row(RowDataToCells(rowData, rowIndex))).ToList();
+            return sheetData.Select((rowData, rowIndex) => new Row(RowDataToCells(rowData, rowIndex), rowIndex)).ToList();
         }
 
         public static List<Cell> RowDataToCells(this List<string> rowData, int rowIndex)

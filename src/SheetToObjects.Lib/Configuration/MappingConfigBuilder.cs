@@ -1,35 +1,49 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
+using SheetToObjects.Lib.Attributes;
 
 namespace SheetToObjects.Lib.Configuration
 {
     public class MappingConfigBuilder<TModel>
     {
         private readonly MappingConfig _mappingConfig = new MappingConfig();
-        
-        public MappingConfig Columns(
-            Func<ColumnsMappingBuilder<TModel>, ColumnsMappingBuilder<TModel>> columnMappingBuilderFunc)
+
+        public MappingConfigBuilder()
         {
-            var columnsMappingBuilder = new ColumnsMappingBuilder<TModel>(_mappingConfig);
-            columnMappingBuilderFunc(columnsMappingBuilder);
+            InitByAtributes();
+        }
+
+
+        public MappingConfigBuilder<TModel> HasHeaders()
+        {
+            _mappingConfig.HasHeaders = true;
+            return this;
+        }
+        
+        public MappingConfigBuilder<TModel> Columns(Func<ColumnsMappingBuilder<TModel>, ColumnsMappingBuilder<TModel>> columnMappingBuilderFunc)
+        {
+            columnMappingBuilderFunc(new ColumnsMappingBuilder<TModel>(_mappingConfig));
+            return this;
+        }
+        
+        public MappingConfig BuildConfig()
+        {
             return _mappingConfig;
         }
-    }
 
-    public class ColumnsMappingBuilder<TModel>
-    {
-        private readonly MappingConfig _mappingConfig;
-
-        public ColumnsMappingBuilder(MappingConfig mappingConfig)
+        private void InitByAtributes()
         {
-            _mappingConfig = mappingConfig;
-        }
+            var objType = typeof(TModel);
 
-        public ColumnsMappingBuilder<TModel> Add(Func<ColumnMappingBuilder<TModel>, ColumnMapping> columnMappingBuilderFunc)
-        {
-            var columnMappingBuilder = new ColumnMappingBuilder<TModel>();
-            var columnMapping = columnMappingBuilderFunc(columnMappingBuilder);
-            _mappingConfig.ColumnMappings.Add(columnMapping);
-            return this;
+            var sheetToConfigAttribute = objType.GetCustomAttributes().OfType<SheetToObjectConfig>().FirstOrDefault();
+            if (sheetToConfigAttribute != null)
+            {
+                _mappingConfig.HasHeaders = sheetToConfigAttribute.SheetHasHeaders;
+                _mappingConfig.AutoMapProperties = sheetToConfigAttribute.AutoMapProperties;
+            }
+
+            new ColumnsMappingBuilder<TModel>(_mappingConfig);
         }
     }
 }

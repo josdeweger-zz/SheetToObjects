@@ -20,7 +20,28 @@ namespace SheetToObjects.Specs.Lib.Validation
         [Fact]
         public void GivenValidatingRequiredValue_WhenValueIsEmpty_ValidationFails()
         {
-            string value = string.Empty;
+            var value = string.Empty;
+
+            var result = new RequiredRule().Validate(value);
+
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Should().Be("Value is required");
+        }
+
+        [Fact]
+        public void GivenValidatingRequiredValueWithAllowedWhitespace_WhenValueIsWhiteSpace_ValidationFails()
+        {
+            var value = " ";
+
+            var result = new RequiredRule().AllowWhiteSpace().Validate(value);
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenValidatingRequiredValueWithoutAllowedWhitespace_WhenValueIsWhiteSpace_ValidationFails()
+        {
+            var value = " ";
 
             var result = new RequiredRule().Validate(value);
 
@@ -31,7 +52,7 @@ namespace SheetToObjects.Specs.Lib.Validation
         [Fact]
         public void GivenValidatingRequiredValue_WhenValueIsSet_ValidationIsSuccessful()
         {
-            int value = 42;
+            var value = 42;
 
             var result = new RequiredRule().Validate(value.ToString());
 
