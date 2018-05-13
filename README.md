@@ -48,6 +48,7 @@ public class ToModel
 	public string StringProperty { get; set; }
 }
 ```
+
 At the moment there is only one class attribute: SheetToObjectConfig. With this attribute u can set the default settings to map this model.
 
 The following default validation attributes are available as attributes;
@@ -57,11 +58,9 @@ The following default validation attributes are available as attributes;
 The model attributes can be overwritten by configuring a config for the model on the used SheetMapper
 
 ## Column Mapping
-
 There are multiple ways to map a column in the datasource to the model property
 
 ###### By Index
-
 Use the .WithColumnIndex or [MappingByIndex] attribute to map the property based on Index. The index is 0-based
 
 ###### By Letter
@@ -90,11 +89,16 @@ This library is in an early alpha stage, some core functionalities are still mis
 - [x] Create NuGet package in CI build
 - [x] Split into different projects/nuget packages: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.MicrosoftExcel etc.
 - [x] Add columns based on header instead of columnletter
-- [ ] Add method to csv adapter to accept base64 encoded string
-- [ ] Add method to csv adapter to accept stream
+- [x] Add method to csv adapter to accept stream
 - [x] Return Result object containing successfully parsed models and parsing/validation messages
-- [ ] Add validation (Required, Regex, Unique, ...)
-- [ ] Add option to add multiple configurations by type (the SheetMapper already contains a `Dictionary<Type, MappingConfig>`, which stores `MappingConfigs` per `Type`)
+- [x] Required validation
+- [x] Regex validation
+- [ ] Configuration validation
+- [ ] DateTime parsing
+- [ ] Min/max validation
+- [ ] Unique validation
+- [ ] Multiple configurations by type (the SheetMapper already contains a `Dictionary<Type, MappingConfig>`, which stores `MappingConfigs` per `Type`)
 - [ ] Nested objects support
 - [ ] Add comments to MappingConfigBuilder and underlying methods for better Intellisense experience
-
+- [ ] Base64 encoded string as input for CSV adapter
+- [ ] Create Excel adapter
