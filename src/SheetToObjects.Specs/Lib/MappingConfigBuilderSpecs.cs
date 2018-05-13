@@ -87,7 +87,7 @@ namespace SheetToObjects.Specs.Lib
 
             result.HasHeaders.Should().BeTrue();
             result.ColumnMappings.Single().Should().BeOfType<IndexColumnMapping>()
-                .Which.ColumnIndex.Value.Should().Be(3);
+                .Which.ColumnIndex.Should().Be(3);
 
             result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Should().NotBeNull();
             result.ColumnMappings.Single().Rules.OfType<RegexRule>().Should().NotBeNull();
@@ -99,7 +99,7 @@ namespace SheetToObjects.Specs.Lib
             var result = new MappingConfigBuilder<LetterAttributeTestModel>().BuildConfig();
 
             result.ColumnMappings.Single().Should().BeOfType<LetterColumnMapping>()
-                .Which.ColumnIndex.Value.Should().Be(2);
+                .Which.ColumnIndex.Should().Be(2);
         }
 
         [Fact]

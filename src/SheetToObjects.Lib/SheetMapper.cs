@@ -38,17 +38,15 @@ namespace SheetToObjects.Lib
             {
                 mappingConfig = new MappingConfigBuilder<TModel>().BuildConfig();
             }
-                
 
             if(mappingConfig.HasHeaders)
                 SetHeaderIndexesInColumnMappings(_sheet.Rows.FirstOrDefault(), mappingConfig);
 
-            List<Row> dataRows = mappingConfig.HasHeaders ? _sheet.Rows.Skip(1).ToList() : _sheet.Rows; 
-
+            var dataRows = mappingConfig.HasHeaders ? _sheet.Rows.Skip(1).ToList() : _sheet.Rows;
 
             dataRows.ForEach(row =>
             {
-                List<ValidationError> rowValidationErrors = new List<ValidationError>();
+                var rowValidationErrors = new List<ValidationError>();
                 var obj = new TModel();
                 var properties = obj.GetType().GetProperties().ToList();
                 
@@ -63,7 +61,14 @@ namespace SheetToObjects.Lib
 
                     if (cell == null)
                     {
-                        var validationError = new ValidationError(columnMapping?.ColumnIndex, row.RowIndex, "Cell not found", columnMapping?.DisplayName, null, property.Name);
+                        var validationError = new ValidationError(
+                            columnMapping.ColumnIndex, 
+                            row.RowIndex, 
+                            "Cell not found", 
+                            columnMapping?.DisplayName, 
+                            string.Empty, 
+                            property.Name);
+
                         CheckToAddValidationErrorToList(rowValidationErrors, columnMapping, validationError);
                         return;
                     }
@@ -76,12 +81,12 @@ namespace SheetToObjects.Lib
                         .OnSuccess(value => property.SetValue(obj, value))
                         .OnFailure(parseErrorMessage =>
                         {
-                            var validationError = new ValidationError(columnMapping?.ColumnIndex, row.RowIndex, parseErrorMessage, columnMapping?.DisplayName, cell?.Value?.ToString(), property.Name);
+                            var validationError = new ValidationError(columnMapping.ColumnIndex, row.RowIndex, parseErrorMessage, columnMapping.DisplayName, cell.Value?.ToString(), property.Name);
                             CheckToAddValidationErrorToList(rowValidationErrors, columnMapping, validationError);
                         });
                 });
 
-                if(rowValidationErrors?.Any() == true)
+                if(rowValidationErrors.Any())
                     validationErrors.AddRange(rowValidationErrors);
                 else 
                     parsedModels.Add(obj);

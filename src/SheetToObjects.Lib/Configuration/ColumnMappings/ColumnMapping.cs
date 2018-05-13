@@ -12,11 +12,11 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
             get { return Rules.Exists(r => r is RequiredRule); }
         }
 
-        public int? ColumnIndex { get; protected set; }
+        public int ColumnIndex { get; protected set; }
         public string PropertyName { get; }
         public List<IRule> Rules { get; }
 
-        public ColumnMapping(string propertyName, List<IRule> rules)
+        protected ColumnMapping(string propertyName, List<IRule> rules)
         {
             PropertyName = propertyName;
             Rules = rules ?? new List<IRule>();
