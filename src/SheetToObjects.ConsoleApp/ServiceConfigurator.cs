@@ -10,10 +10,11 @@ namespace SheetToObjects.ConsoleApp
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
-            serviceCollection.AddTransient<IProvideCsv, CsvProvider>();
             serviceCollection.AddTransient<IConvertResponseToSheet<CsvData>, CsvAdapter>();
-            serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
+            serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
+            serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.SheetProvider>();
+            serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.SheetProvider>();
+            serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();
 

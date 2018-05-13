@@ -9,32 +9,25 @@ namespace SheetToObjects.ConsoleApp
 {
     public class CsvApp
     {
-        private readonly IProvideCsv _csvProvider;
-        private readonly IConvertResponseToSheet<CsvData> _csvDataConverter;
+        private readonly IProvideSheet _sheetProvider;
         private readonly IMapSheetToObjects _sheetMapper;
 
         public CsvApp(
-            IProvideCsv csvProvider,
-            IConvertResponseToSheet<CsvData> csvDataConverter,
+            IProvideSheet sheetProvider,
             IMapSheetToObjects sheetMapper)
         {
-            _csvProvider = csvProvider;
-            _csvDataConverter = csvDataConverter;
+            _sheetProvider = sheetProvider;
             _sheetMapper = sheetMapper;
         }
 
         public void Run()
         {
-            
             var fileStream = File.Open(@"./profiles.csv", FileMode.Open);
-            var csvData = _csvProvider.Get(fileStream, ';');
-            var sheet = _csvDataConverter.Convert(csvData);
+            var sheet = _sheetProvider.Get(fileStream, ';');
 
-            //do the actual mapping
             var result = _sheetMapper.Map(sheet).To<ProfileModel>();
 
-            //write csv data, sheet and model to console
-            WriteToConsole(csvData, sheet, result.ParsedModels, result.ValidationErrors);
+            WriteToConsole(sheet, result.ParsedModels, result.ValidationErrors);
         }
         
         private static void WriteToConsole(params object[] objects)
