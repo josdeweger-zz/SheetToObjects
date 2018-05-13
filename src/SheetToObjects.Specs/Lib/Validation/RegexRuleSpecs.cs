@@ -47,7 +47,7 @@ namespace SheetToObjects.Specs.Lib.Validation
         [Fact]
         public void GivenValidatingRegex_WhenPatternIsNull_ValidationFails()
         {
-            string value = "SomeValue";
+            var value = "SomeValue";
             string pattern = null;
 
             var result = new RegexRule(pattern).Validate(value);

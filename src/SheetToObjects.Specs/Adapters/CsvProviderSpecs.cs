@@ -12,7 +12,7 @@ namespace SheetToObjects.Specs.Adapters
         [Fact]
         public void GivenACsvFileOnDisk_whenLoadingCsvData_thenCsvDatashouldContainData()
         {
-            CsvProvider provider = new CsvProvider();
+            var provider = new CsvProvider();
 
             var csvData = provider.Get(@"./test.csv", ';');
 
@@ -23,9 +23,9 @@ namespace SheetToObjects.Specs.Adapters
         [Fact]
         public void GivenAStream_whenLoadingCsvData_thenCsvDatashouldContainData()
         {
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
-                using (StreamWriter writer = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
+                using (var writer = new StreamWriter(memoryStream, Encoding.UTF8, 1024, true))
                 {
                     writer.WriteLine("columnn1;column2");
                     writer.WriteLine("one;1");
@@ -35,7 +35,7 @@ namespace SheetToObjects.Specs.Adapters
                     memoryStream.Position = 0;
                     using (var sr = new StreamReader(memoryStream, Encoding.UTF8,false, 1024, true))
                     {
-                        CsvProvider provider = new CsvProvider();
+                        var provider = new CsvProvider();
                         var csvData = provider.Get(sr.BaseStream, ';');
 
                         csvData.Values.Count.Should().Be(3);

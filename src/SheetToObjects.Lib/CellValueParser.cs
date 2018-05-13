@@ -24,7 +24,7 @@ namespace SheetToObjects.Lib
 
         public Result<object, string> ParseEnumeration(string value, Type type)
         {
-            string errorMessage = $"Cannot parse value '{value}' to type '{type?.Name}'";
+            var errorMessage = $"Cannot parse value '{value}' to type '{type?.Name}'";
 
             if(type.IsNull())
                 return Result.Fail<object, string>(errorMessage);

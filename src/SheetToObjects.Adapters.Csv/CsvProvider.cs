@@ -18,7 +18,7 @@ namespace SheetToObjects.Adapters.Csv
         public CsvData Get(Stream stream, char delimiter)
         {
             var lines = new List<string>();
-            using (StreamReader reader = new StreamReader(stream))
+            using (var reader = new StreamReader(stream))
             {
                 while(!reader.EndOfStream)
                 {
