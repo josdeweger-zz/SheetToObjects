@@ -13,7 +13,6 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
             serviceCollection.AddTransient<IProvideCsv, CsvProvider>();
             serviceCollection.AddTransient<IConvertResponseToSheet<CsvData>, CsvAdapter>();
-            serviceCollection.AddTransient<IParseValue, ValueParser>();
             serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();
