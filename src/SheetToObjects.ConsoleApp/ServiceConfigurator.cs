@@ -8,9 +8,6 @@ namespace SheetToObjects.ConsoleApp
 {
     public static class ServiceConfigurator
     {
-        public const string EMAIL_REGEX =  @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-        @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
-
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
