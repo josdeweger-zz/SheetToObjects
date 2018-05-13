@@ -73,12 +73,12 @@ When the datasource contains a first row with headers it's possible to map by na
 It's also possible to automap the properties based on their name without configuring anything. A headerrow is required for this feature. 
 When u don't want to property to be mapped use the [IgnorePropertyMapping] attribute on the property.
 
-## With this info using the SheetMapper is easy:
+For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs
+
+The actual mapping is ease, just pass the sheet and the `Type` to map to:
 ```
 MappingResult result = sheetMapper.Map(sheet).To<SomeModel>(); //contains successfully parsed models and validation errors
 ```
-
-For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs
 
 ## Status
 This library is in an early alpha stage, some core functionalities are still missing and it has NOT been battle tested in production. As the To Do implies, some core functionality is still missing.
