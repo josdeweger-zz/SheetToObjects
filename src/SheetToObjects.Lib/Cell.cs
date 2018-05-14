@@ -1,6 +1,4 @@
-﻿using SheetToObjects.Core;
-
-namespace SheetToObjects.Lib
+﻿namespace SheetToObjects.Lib
 {
     public class Cell
     {

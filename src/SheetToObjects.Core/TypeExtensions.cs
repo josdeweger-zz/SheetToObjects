@@ -2,7 +2,7 @@
 
 namespace SheetToObjects.Core
 {
-    public static class TypeExtensions
+    internal static class TypeExtensions
     {
         public static object GetDefault(this Type type)
         {

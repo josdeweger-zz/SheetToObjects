@@ -3,9 +3,9 @@ using Refit;
 
 namespace SheetToObjects.Adapters.GoogleSheets
 {
-    public interface IProvideGoogleSheet
+    internal interface IGoogleSheetApi
     {
         [Get("/spreadsheets/{sheetId}/values/{range}")]
-        Task<GoogleSheetResponse> GetSheet(string sheetId, string range, [AliasAs("key")] string apiKey);
+        Task<GoogleSheetResponse> GetSheetAsync(string sheetId, string range, [AliasAs("key")] string apiKey);
     }
 }

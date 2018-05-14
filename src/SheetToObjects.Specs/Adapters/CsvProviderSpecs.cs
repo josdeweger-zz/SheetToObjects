@@ -10,18 +10,18 @@ namespace SheetToObjects.Specs.Adapters
     public class CsvProviderSpecs
     {
         [Fact]
-        public void GivenACsvFileOnDisk_whenLoadingCsvData_thenCsvDatashouldContainData()
+        public void GivenACsvFileOnDisk_WhenLoadingCsvData_ThenSheetShouldContainData()
         {
-            var provider = new CsvProvider();
+            var provider = new SheetProvider(new CsvAdapter());
 
-            var csvData = provider.Get(@"./test.csv", ';');
+            var sheet = provider.Get(@"./test.csv", ';');
 
-            csvData.Values.Count.Should().Be(3);
-            csvData.Values.First().Count.Should().Be(2);
+            sheet.Rows.Count.Should().Be(3);
+            sheet.Rows.First().Cells.Count.Should().Be(2);
         }
 
         [Fact]
-        public void GivenAStream_whenLoadingCsvData_thenCsvDatashouldContainData()
+        public void GivenAStream_WhenLoadingCsvData_thenSheetShouldContainData()
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -33,17 +33,15 @@ namespace SheetToObjects.Specs.Adapters
 
                     writer.Flush();
                     memoryStream.Position = 0;
+
                     using (var sr = new StreamReader(memoryStream, Encoding.UTF8,false, 1024, true))
                     {
-                        var provider = new CsvProvider();
+                        var provider = new SheetProvider(new CsvAdapter());
                         var csvData = provider.Get(sr.BaseStream, ';');
 
-                        csvData.Values.Count.Should().Be(3);
-                        csvData.Values.First().Count.Should().Be(2);
-                        
+                        csvData.Rows.Count.Should().Be(3);
+                        csvData.Rows.First().Cells.Count.Should().Be(2);
                     }
-
-                    
                 }
             }
         }

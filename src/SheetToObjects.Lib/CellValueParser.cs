@@ -5,7 +5,7 @@ using SheetToObjects.Core;
 
 namespace SheetToObjects.Lib
 {
-    public class ValueParser
+    internal class ValueParser
     {
         public Result<object, string> ParseValueType<TValue>(string value)
         {

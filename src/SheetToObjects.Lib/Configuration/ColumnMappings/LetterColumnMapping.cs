@@ -4,7 +4,7 @@ using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
-    public class LetterColumnMapping : ColumnMapping
+    internal class LetterColumnMapping : ColumnMapping
     {
         public string ColumnName { get; }
 

@@ -1,21 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SheetToObjects.Lib;
 
 namespace SheetToObjects.Adapters.Csv
 {
-    public class CsvProvider : IProvideCsv
+    public class SheetProvider : IProvideSheet
     {
-        public CsvData Get(string csvPath, char delimiter)
+        private readonly IConvertResponseToSheet<CsvData> _csvDataConverter;
+
+        internal SheetProvider(IConvertResponseToSheet<CsvData> csvDataConverter)
+        {
+            _csvDataConverter = csvDataConverter;
+        }
+
+        public SheetProvider() : this(new CsvAdapter()) { }
+
+        public Sheet Get(string csvPath, char delimiter)
         {
             var data = File.ReadAllLines(csvPath)
                 .Select(line => line.Split(delimiter).ToList())
                 .ToList();
 
-            return new CsvData { Values = data };
+            var csvData = new CsvData { Values = data };
+
+            return _csvDataConverter.Convert(csvData);
         }
 
-        public CsvData Get(Stream stream, char delimiter)
+        public Sheet Get(Stream stream, char delimiter)
         {
             var lines = new List<string>();
             using (var reader = new StreamReader(stream))
@@ -30,7 +42,9 @@ namespace SheetToObjects.Adapters.Csv
                 .Select(line => line.Split(delimiter).ToList())
                 .ToList();
 
-            return new CsvData { Values = data };
+            var csvData = new CsvData { Values = data };
+
+            return _csvDataConverter.Convert(csvData);
         }
     }
 }

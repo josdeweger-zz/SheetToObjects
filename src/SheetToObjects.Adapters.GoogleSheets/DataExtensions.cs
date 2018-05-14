@@ -4,7 +4,7 @@ using SheetToObjects.Lib;
 
 namespace SheetToObjects.Adapters.GoogleSheets
 {
-    public static class DataExtensions
+    internal static class DataExtensions
     {
         public static List<Row> ToRows(this List<List<string>> sheetData)
         {

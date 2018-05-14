@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SheetToObjects.Specs.Builders
 {
-    public class GoogleSheetDataResponseBuilder
+    internal class GoogleSheetDataResponseBuilder
     {
         private readonly List<List<string>> _values = new List<List<string>>();
 

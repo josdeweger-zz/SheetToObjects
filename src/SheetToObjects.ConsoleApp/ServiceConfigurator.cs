@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SheetToObjects.Adapters.Csv;
-using SheetToObjects.Adapters.GoogleSheets;
+﻿using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Lib;
 
@@ -10,10 +10,9 @@ namespace SheetToObjects.ConsoleApp
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<IConvertResponseToSheet<GoogleSheetResponse>, GoogleSheetAdapter>();
-            serviceCollection.AddTransient<IProvideCsv, CsvProvider>();
-            serviceCollection.AddTransient<IConvertResponseToSheet<CsvData>, CsvAdapter>();
-            serviceCollection.AddSingleton<IMapSheetToObjects>(ctx =>
+            serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.SheetProvider>();
+            serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.SheetProvider>();
+            serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();
 
@@ -34,7 +33,14 @@ namespace SheetToObjects.ConsoleApp
             });
             
             serviceCollection.AddOptions();
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("app-settings.json", false)
+                .Build();
+
+            serviceCollection.Configure<AppSettings>(configuration.GetSection("Configuration"));
             serviceCollection.AddTransient<CsvApp>();
+            serviceCollection.AddTransient<GoogleSheetsApp>();
 
             return serviceCollection;
         }

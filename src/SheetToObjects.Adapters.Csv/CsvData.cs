@@ -2,7 +2,7 @@
 
 namespace SheetToObjects.Adapters.Csv
 {
-    public class CsvData
+    internal class CsvData
     {
         public List<List<string>> Values { get; set; }
 

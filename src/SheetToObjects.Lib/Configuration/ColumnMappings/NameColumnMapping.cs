@@ -3,7 +3,7 @@ using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
-    public class NameColumnMapping : ColumnMapping, IUseHeaderRow
+    internal class NameColumnMapping : ColumnMapping, IUseHeaderRow
     {
         public string ColumnName { get; }
 

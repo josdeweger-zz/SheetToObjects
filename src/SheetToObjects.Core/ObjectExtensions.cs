@@ -1,6 +1,6 @@
 ﻿namespace SheetToObjects.Core
 {
-    public static class ObjectExtensions
+    internal static class ObjectExtensions
     {
         public static bool IsNull(this object obj)
         {

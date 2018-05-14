@@ -3,7 +3,7 @@ using SheetToObjects.Adapters.Csv;
 
 namespace SheetToObjects.Specs.Builders
 {
-    public class CsvDataBuilder
+    internal class CsvDataBuilder
     {
         private readonly List<List<string>> _values = new List<List<string>>();
 
