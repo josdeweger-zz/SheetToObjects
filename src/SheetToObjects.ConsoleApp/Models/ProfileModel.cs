@@ -23,8 +23,10 @@ namespace SheetToObjects.ConsoleApp.Models
         
 
         public string MiddleName { get; set; }
+
         [IsRequired]
         public string LastName { get; set; }
+
         [IsRequired]
         public string RelationNumber { get; set; }
         
@@ -34,6 +36,7 @@ namespace SheetToObjects.ConsoleApp.Models
 
         [IsRequired]
         public YesNo Terms { get; set; }
+
         [IsRequired]
         public ProfileType ProfileType { get; set; }
     }
