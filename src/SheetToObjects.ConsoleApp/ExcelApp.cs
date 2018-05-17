@@ -1,18 +1,18 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
-using SheetToObjects.Adapters.Csv;
+using SheetToObjects.Adapters.MicrosoftExcel;
 using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Lib;
 
 namespace SheetToObjects.ConsoleApp
 {
-    public class CsvApp
+    public class ExcelApp
     {
         private readonly IProvideSheet _sheetProvider;
         private readonly IMapSheetToObjects _sheetMapper;
 
-        public CsvApp(
+        public ExcelApp(
             IProvideSheet sheetProvider,
             IMapSheetToObjects sheetMapper)
         {
@@ -22,8 +22,8 @@ namespace SheetToObjects.ConsoleApp
 
         public void Run()
         {
-            var fileStream = File.Open(@"./Files/profiles.csv", FileMode.Open);
-            var sheet = _sheetProvider.Get(fileStream, ';');
+            var excelRange = new ExcelRange(new ExcelCell("A", 1), new ExcelCell("I", 5));
+            var sheet = _sheetProvider.Get(@"./Files/profiles.xlsx", "profiles", excelRange);
 
             var result = _sheetMapper.Map(sheet).To<ProfileModel>();
 

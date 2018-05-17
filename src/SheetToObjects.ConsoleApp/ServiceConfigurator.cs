@@ -12,6 +12,8 @@ namespace SheetToObjects.ConsoleApp
         {
             serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.SheetProvider>();
             serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.SheetProvider>();
+            serviceCollection.AddTransient<Adapters.MicrosoftExcel.IProvideSheet, Adapters.MicrosoftExcel.SheetProvider>();
+
             serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();
@@ -39,7 +41,9 @@ namespace SheetToObjects.ConsoleApp
                 .Build();
 
             serviceCollection.Configure<AppSettings>(configuration.GetSection("Configuration"));
+
             serviceCollection.AddTransient<CsvApp>();
+            serviceCollection.AddTransient<ExcelApp>();
             serviceCollection.AddTransient<GoogleSheetsApp>();
 
             return serviceCollection;
