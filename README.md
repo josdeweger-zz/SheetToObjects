@@ -82,23 +82,3 @@ MappingResult result = sheetMapper.Map(sheet).To<SomeModel>(); //contains succes
 
 ## Status
 This library is in an early alpha stage, some core functionalities are still missing and it has NOT been battle tested in production. As the To Do implies, some core functionality is still missing.
-
-## To Do
-- [x] Allow headers through `MappingConfig`
-- [x] Setup Cake script for simple CI build
-- [x] Create NuGet package in CI build
-- [x] Split into different projects/nuget packages: SheetToObjects.Lib, SheetToObjects.Adapters.GoogleSheets, SheetToObjects.Adapters.MicrosoftExcel etc.
-- [x] Add columns based on header instead of columnletter
-- [x] Add method to csv adapter to accept stream
-- [x] Return Result object containing successfully parsed models and parsing/validation messages
-- [x] Required validation
-- [x] Regex validation
-- [ ] Configuration validation
-- [ ] DateTime parsing
-- [ ] Min/max validation
-- [ ] Unique validation
-- [ ] Multiple configurations by type (the SheetMapper already contains a `Dictionary<Type, MappingConfig>`, which stores `MappingConfigs` per `Type`)
-- [ ] Nested objects support
-- [ ] Add comments to MappingConfigBuilder and underlying methods for better Intellisense experience
-- [ ] Base64 encoded string as input for CSV adapter
-- [ ] Create Excel adapter
