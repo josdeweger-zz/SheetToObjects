@@ -19,7 +19,8 @@ var sheetMapper = new SheetMapper()
     .For<SomeModel>(cfg => cfg
     .Columns(columns => columns
         .Add(column => column.WithHeader("First Name").MapTo(m => m.FirstName))
-        .Add(column => column.WithHeader("Last Name").MapTo(m => m.LastName))));
+        .Add(column => column.WithHeader("Last Name").MapTo(m => m.LastName))))
+    .BuildConfig();
  ```
 
 An alternative is to register the `IMapSheetToObjects` interface using your favourite DI framework. An example using `Microsoft.Extensions.DependencyInjection`:
