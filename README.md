@@ -3,7 +3,7 @@
 # SheetToObjects
 
 ## What is SheetToObjects?
-SheetToObjects is a library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO. 
+SheetToObjects is a simple library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO. 
 
 ## How does it work?
 The overall idea is to create a `SheetMapper` which is provided with a `MappingConfig` that specifies how the columns in a sheet correspond to properties on a specified class. Eventually the goal is to create several adapters for different kinds of data sources, which adapt the data from the source to a generic model containing basic rows with cells. Based on the `MappingConfig` this generic model can be converted to a list of models/POCO's.
@@ -35,7 +35,7 @@ new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
 });
 ```
 
-Another way to map configuration to model is by DataAtributes see:
+Another way to map configuration to model is by adding DataAtributes to your model:
 
 ```
 [SheetToObjectConfig(sheetHasHeaders:true)]
