@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using SheetToObjects.Core;
 using SheetToObjects.Lib.Attributes;
 
 namespace SheetToObjects.Lib.Configuration
@@ -14,13 +15,18 @@ namespace SheetToObjects.Lib.Configuration
             InitByAtributes();
         }
 
-
+        /// <summary>
+        /// Specify whether the sheet contains headers or not (will skip the first row for data parsing)
+        /// </summary>
         public MappingConfigBuilder<TModel> HasHeaders()
         {
             _mappingConfig.HasHeaders = true;
             return this;
         }
         
+        /// <summary>
+        /// Add columns
+        /// </summary>
         public MappingConfigBuilder<TModel> Columns(Func<ColumnsMappingBuilder<TModel>, ColumnsMappingBuilder<TModel>> columnMappingBuilderFunc)
         {
             columnMappingBuilderFunc(new ColumnsMappingBuilder<TModel>(_mappingConfig));
@@ -37,13 +43,11 @@ namespace SheetToObjects.Lib.Configuration
             var objType = typeof(TModel);
 
             var sheetToConfigAttribute = objType.GetCustomAttributes().OfType<SheetToObjectConfig>().FirstOrDefault();
-            if (sheetToConfigAttribute != null)
+            if (sheetToConfigAttribute.IsNotNull())
             {
                 _mappingConfig.HasHeaders = sheetToConfigAttribute.SheetHasHeaders;
                 _mappingConfig.AutoMapProperties = sheetToConfigAttribute.AutoMapProperties;
             }
-
-            new ColumnsMappingBuilder<TModel>(_mappingConfig);
         }
     }
 }
