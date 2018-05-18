@@ -17,6 +17,9 @@ namespace SheetToObjects.Lib.Configuration
             InitByAttributes();
         }
 
+        /// <summary>
+        /// Add a column
+        /// </summary>
         public ColumnsMappingBuilder<TModel> Add(Func<ColumnMappingBuilder<TModel>, ColumnMapping> columnMappingBuilderFunc)
         {
             var columnMapping = columnMappingBuilderFunc(new ColumnMappingBuilder<TModel>());
@@ -59,7 +62,6 @@ namespace SheetToObjects.Lib.Configuration
                     _mappingConfig.ColumnMappings.Add(mappingConfigBuilder.MapTo(property));
                 }
             }
-
         }
     }
 }

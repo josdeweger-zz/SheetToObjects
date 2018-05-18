@@ -14,6 +14,9 @@ namespace SheetToObjects.Lib
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
+        /// <summary>
+        /// Configure how the sheet maps to your model
+        /// </summary>
         public SheetMapper For<TModel>(Func<MappingConfigBuilder<TModel>, MappingConfig> mappingConfigFunc)
         {
             var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<TModel>());
@@ -22,12 +25,18 @@ namespace SheetToObjects.Lib
             return this;
         }
 
+        /// <summary>
+        /// Specify the sheet to map
+        /// </summary>
         public SheetMapper Map(Sheet sheet)
         {
             _sheet = sheet;
             return this;
         }
 
+        /// <summary>
+        /// Returns a result containing the parsed result and validation errors
+        /// </summary>
         public MappingResult<TModel> To<TModel>() 
             where TModel : new()
         {
