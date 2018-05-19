@@ -1,4 +1,5 @@
-﻿using SheetToObjects.Lib.Attributes.MappingType;
+﻿using System;
+using SheetToObjects.Lib.Attributes.MappingType;
 
 namespace SheetToObjects.Specs.TestModels
 {
@@ -22,10 +23,9 @@ namespace SheetToObjects.Specs.TestModels
         [IgnorePropertyMapping]
         public EnumModel EnumProperty { get; set; }
 
+        public DateTime DateTimeProperty { get; set; }
+
         [IgnorePropertyMapping]
-        public string PropertyWithBody
-        {
-            get { return string.Empty; }
-        }
+        public string PropertyWithBody => string.Empty;
     }
 }

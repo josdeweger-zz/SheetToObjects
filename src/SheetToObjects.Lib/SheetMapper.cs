@@ -82,8 +82,8 @@ namespace SheetToObjects.Lib
                     rowValidationErrors
                         .AddRange(ValidateValueByColumnMapping(cell.Value.ToString(), columnMapping, row.RowIndex, property.Name)
                         .ToList());
-
-                    ParseValue(property.PropertyType, cell.Value.ToString())
+                    
+                    ParseValue(property.PropertyType, cell.Value.ToString(), columnMapping.Format)
                         .OnSuccess(value => property.SetValue(obj, value))
                         .OnFailure(parseErrorMessage =>
                         {
@@ -154,22 +154,24 @@ namespace SheetToObjects.Lib
             }
         }
 
-        private Result<object, string> ParseValue(Type type, string value)
+        private Result<object, string> ParseValue(Type type, string value, string format)
         {
             switch (true)
             {
                 case var _ when type == typeof(string):
-                    return _cellValueParser.ParseValueType<string>(value);
+                    return _cellValueParser.Parse<string>(value);
                 case var _ when type == typeof(int) || type == typeof(int?):
-                    return _cellValueParser.ParseValueType<int>(value);
+                    return _cellValueParser.Parse<int>(value);
                 case var _ when type == typeof(double) || type == typeof(double?):
-                    return _cellValueParser.ParseValueType<double>(value);
+                    return _cellValueParser.Parse<double>(value);
                 case var _ when type == typeof(float) || type == typeof(float?):
-                    return _cellValueParser.ParseValueType<float>(value);
+                    return _cellValueParser.Parse<float>(value);
                 case var _ when type == typeof(decimal) || type == typeof(decimal?):
-                    return _cellValueParser.ParseValueType<decimal>(value);
+                    return _cellValueParser.Parse<decimal>(value);
                 case var _ when type == typeof(bool) || type == typeof(bool?):
-                    return _cellValueParser.ParseValueType<bool>(value);
+                    return _cellValueParser.Parse<bool>(value);
+                case var _ when type == typeof(DateTime) || type == typeof(DateTime?):
+                    return _cellValueParser.ParseDateTime(value, format);
                 case var _ when type.IsEnum:
                     return _cellValueParser.ParseEnumeration(value, type);
                 default:
