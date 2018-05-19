@@ -7,9 +7,9 @@ namespace SheetToObjects.ConsoleApp
     {
         private static void Main()
         {
-            RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
+            //RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
             //RunExcelExample();
-            //RunCsvExample();
+            RunCsvExample();
         }
 
         private static async Task RunGoogleSheetsExampleAsync()
