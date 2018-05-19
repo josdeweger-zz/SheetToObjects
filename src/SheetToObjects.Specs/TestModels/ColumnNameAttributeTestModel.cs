@@ -8,6 +8,5 @@ namespace SheetToObjects.Specs.TestModels
         [MappingByHeader("StringColumn")]
         [IsRequired(true)]
         public string StringProperty { get; set; }
-       
     }
 }

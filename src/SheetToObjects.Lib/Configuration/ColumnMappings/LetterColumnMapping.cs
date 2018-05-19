@@ -8,7 +8,8 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
     {
         public string ColumnName { get; }
 
-        public LetterColumnMapping(string columnLetter, string propertyName, List<IRule> rules) : base(propertyName, rules)
+        public LetterColumnMapping(string columnLetter, string propertyName, string format, List<IRule> rules) 
+            : base(propertyName, format, rules)
         {
             ColumnName = columnLetter;
             ColumnIndex = columnLetter.ConvertExcelColumnNameToIndex();

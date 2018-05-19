@@ -11,25 +11,26 @@ namespace SheetToObjects.Specs.Lib
     public class SheetMapperSpecs
     {
         private readonly Sheet _sheetData;
-        private readonly string[] _headers = {"Double", "Integer", "Boolean", "Enumeration", "String"};
         private readonly string _stringValue = "foo";
         private readonly double _doubleValue = 42.42D;
         private readonly int _intValue = 42;
         private readonly bool _boolValue = true;
+        private readonly DateTime _dateTimeValue = new DateTime(2018, 5, 30);
         private readonly EnumModel _enumValue = EnumModel.Second;
 
         public SheetMapperSpecs()
         {
             _sheetData = new SheetBuilder()
-                .AddHeaders(_headers)
+                .AddHeaders("Double", "Integer", "Boolean", "Enumeration", "String", "DateTime")
                 .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue(_doubleValue).Build())
-                    .AddCell(c => c.WithColumnIndex(1).WithRowIndex(1).WithValue(_intValue).Build())
-                    .AddCell(c => c.WithColumnIndex(2).WithRowIndex(1).WithValue(_boolValue).Build())
-                    .AddCell(c => c.WithColumnIndex(3).WithRowIndex(1).WithValue(_enumValue).Build())
-                    .AddCell(c => c.WithColumnIndex(4).WithRowIndex(1).WithValue(_stringValue).Build())
+                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue(_doubleValue.ToString()).Build())
+                    .AddCell(c => c.WithColumnIndex(1).WithRowIndex(1).WithValue(_intValue.ToString()).Build())
+                    .AddCell(c => c.WithColumnIndex(2).WithRowIndex(1).WithValue(_boolValue.ToString()).Build())
+                    .AddCell(c => c.WithColumnIndex(3).WithRowIndex(1).WithValue(_enumValue.ToString()).Build())
+                    .AddCell(c => c.WithColumnIndex(4).WithRowIndex(1).WithValue(_stringValue.ToString()).Build())
+                    .AddCell(c => c.WithColumnIndex(5).WithRowIndex(1).WithValue(_dateTimeValue.ToString("yyyy-MM-dd")).Build())
                     .Build(0))
-                .Build(); 
+                .Build();
         }
 
         [Fact]
@@ -93,6 +94,22 @@ namespace SheetToObjects.Specs.Lib
         }
 
         [Fact]
+        public void GivenASheet_WhenMappingModelDateTimeProperty_ItSetsPropertyOnModel()
+        {
+            var testModelList = new SheetMapper()
+                .For<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .Columns(columns =>
+                        columns.Add(column => column.WithHeader("DateTime").UsingFormat("yyyy-MM-dd").MapTo(t => t.DateTimeProperty)))
+                    .BuildConfig())
+                .Map(_sheetData)
+                .To<TestModel>();
+
+            testModelList.ParsedModels.Should().HaveCount(1);
+            testModelList.ParsedModels.Single().DateTimeProperty.Should().Be(_dateTimeValue);
+        }
+
+        [Fact]
         public void GivenASheet_WhenMappingModelStringProperty_ItSetsPropertyOnModel()
         {
             var testModelList = new SheetMapper()
@@ -108,7 +125,7 @@ namespace SheetToObjects.Specs.Lib
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModelStringPropertyWithRegexValidation_shouldThrowValidationError()
+        public void GivenASheet_WhenMappingModelStringPropertyWithRegexValidation_ShouldThrowValidationError()
         {
             var testModelList = new SheetMapper()
                 .For<TestModel>(cfg => cfg
@@ -122,11 +139,9 @@ namespace SheetToObjects.Specs.Lib
             testModelList.ParsedModels.Should().HaveCount(0);
             testModelList.ValidationErrors.Single().ColumnName.Should().Be("string");
         }
-
-
-
+        
         [Fact]
-        public void GivenASheet_WhenMappingModelPropertyToInvalidType_shouldSetDefaultValue()
+        public void GivenASheet_WhenMappingModelPropertyToInvalidType_ShouldSetDefaultValue()
         {
             var testModelList = new SheetMapper()
                 .For<TestModel>(cfg => cfg
@@ -138,7 +153,7 @@ namespace SheetToObjects.Specs.Lib
 
             testModelList.IsFailure.Should().BeFalse();
             testModelList.ParsedModels.Should().HaveCount(1);
-            testModelList.ParsedModels.OfType<TestModel>().Single().DoubleProperty = default(double);
+            testModelList.ParsedModels.Single().DoubleProperty = default(double);
         }
 
         [Fact]
@@ -160,25 +175,16 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenASheet_WhenMappingModeltoAPropertyWithBody_ItShouldThrowException()
         {
-            Exception ex = null;
-            try
-            {
-                var testModelList = new SheetMapper()
-                    .For<TestModel>(cfg => cfg
-                        .HasHeaders()
-                        .Columns(columns =>
-                            columns.Add(column => column.WithHeader("String").MapTo(t => t.PropertyWithBody)))
-                        .BuildConfig())
-                    .Map(_sheetData)
-                    .To<TestModel>();
-            }
-            catch (Exception e)
-            {
-                ex = e;
-            }
+            Action result = () => new SheetMapper()
+                .For<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .Columns(columns =>
+                        columns.Add(column => column.WithHeader("String").MapTo(t => t.PropertyWithBody)))
+                    .BuildConfig())
+                .Map(_sheetData)
+                .To<TestModel>();
 
-            ex.Should().BeOfType<ArgumentException>();
-
+            result.Should().Throw<ArgumentException>();
         }
     }
 }

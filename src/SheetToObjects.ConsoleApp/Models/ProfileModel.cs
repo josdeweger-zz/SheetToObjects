@@ -1,4 +1,5 @@
-﻿using SheetToObjects.Lib.Attributes;
+﻿using System;
+using SheetToObjects.Lib.Attributes;
 using SheetToObjects.Lib.Attributes.MappingType;
 using SheetToObjects.Lib.Attributes.Rules;
 
@@ -26,6 +27,10 @@ namespace SheetToObjects.ConsoleApp.Models
 
         [IsRequired]
         public string LastName { get; set; }
+
+        [IsRequired]
+        [Format("d-M-yyyy")]
+        public DateTime DateOfBirth { get; set; }
 
         [IsRequired]
         public string RelationNumber { get; set; }

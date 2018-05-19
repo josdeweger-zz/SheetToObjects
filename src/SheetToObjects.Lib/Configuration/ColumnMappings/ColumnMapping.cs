@@ -14,11 +14,13 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
 
         public int ColumnIndex { get; protected set; }
         public string PropertyName { get; }
+        public string Format { get; }
         public List<IRule> Rules { get; }
 
-        protected ColumnMapping(string propertyName, List<IRule> rules)
+        protected ColumnMapping(string propertyName, string format, List<IRule> rules)
         {
             PropertyName = propertyName;
+            Format = format;
             Rules = rules ?? new List<IRule>();
         }
     }

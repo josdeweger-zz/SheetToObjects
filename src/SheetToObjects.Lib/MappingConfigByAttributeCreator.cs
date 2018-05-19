@@ -55,6 +55,11 @@ namespace SheetToObjects.Lib
                     {
                         mappingConfigBuilder.AddRule(ruleAttribute.GetRule());
                     }
+
+                    if (attribute is Format formatAttribute)
+                    {
+                        mappingConfigBuilder.UsingFormat(formatAttribute.FormatString);
+                    }
                 }
 
                 if (columnIsMappedByAttribute || mappingConfig.AutoMapProperties)

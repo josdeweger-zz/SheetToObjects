@@ -5,7 +5,8 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
     internal class IndexColumnMapping : ColumnMapping
     {
-        public IndexColumnMapping(int columnIndex, string propertyName, List<IRule> rules) : base(propertyName, rules)
+        public IndexColumnMapping(int columnIndex, string propertyName, string format, List<IRule> rules) 
+            : base(propertyName, format, rules)
         {
             ColumnIndex = columnIndex;
         }

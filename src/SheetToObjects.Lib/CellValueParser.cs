@@ -7,7 +7,7 @@ namespace SheetToObjects.Lib
 {
     internal class ValueParser
     {
-        public Result<object, string> ParseValueType<TValue>(string value)
+        public Result<object, string> Parse<TValue>(string value)
         {
             var type = typeof(TValue);
             
@@ -20,6 +20,20 @@ namespace SheetToObjects.Lib
             {
                 return Result.Fail<object, string>($"Cannot parse value '{value}' to type '{type.Name}'");
             }
+        }
+
+        public Result<object, string> ParseDateTime(string value, string format)
+        {
+            var errorMessage = $"Cannot parse value '{value}' to DateTime using format '{format}'";
+
+            try
+            {
+                var parsedDateTime = DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
+                return Result.Ok<object, string>(parsedDateTime);
+            }
+            catch (Exception) { }
+
+            return Result.Fail<object, string>(errorMessage);
         }
 
         public Result<object, string> ParseEnumeration(string value, Type type)
@@ -47,7 +61,7 @@ namespace SheetToObjects.Lib
                     return Result.Fail<object, string>(errorMessage);
                 }
 
-                var enumValue = Enum.Parse(type, value.ToString(), ignoreCase: true);
+                var enumValue = Enum.Parse(type, value, ignoreCase: true);
                 if (enumValue.IsNotNull())
                 {
                     return Result.Ok<object, string>(enumValue);

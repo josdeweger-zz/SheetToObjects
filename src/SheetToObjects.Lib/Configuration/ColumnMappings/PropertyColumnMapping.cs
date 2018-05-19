@@ -7,7 +7,8 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
     {
         public string ColumnName { get; }
 
-        public PropertyColumnMapping(string propertyName, List<IRule> rules) : base(propertyName, rules)
+        public PropertyColumnMapping(string propertyName, string format, List<IRule> rules) 
+            : base(propertyName, format, rules)
         {
             ColumnName = propertyName;
             ColumnIndex = -1;

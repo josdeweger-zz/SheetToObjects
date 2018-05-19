@@ -13,6 +13,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         private int _columnIndex = -1;
         private string _columnLetter;
         private string _propertyName;
+        private string _format;
         private readonly List<IRule> _rules = new List<IRule>();
 
         /// <summary>
@@ -61,6 +62,15 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         }
 
         /// <summary>
+        /// Use format for parsing, can only be used for DateTime formats, e.g. "dd-MM-yyyy"
+        /// </summary>
+        public ColumnMappingBuilder<TModel> UsingFormat(string format)
+        {
+            _format = format;
+            return this;
+        }
+
+        /// <summary>
         /// Values in this column need to match the given regex
         /// </summary>
         public ColumnMappingBuilder<TModel> Matches(string regex)
@@ -101,13 +111,13 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
             _propertyName = property.Name;
 
             if(_header.IsNotNullOrWhiteSpace())
-                return new NameColumnMapping(_header, _propertyName, _rules);
+                return new NameColumnMapping(_header, _propertyName, _format, _rules);
             if(_columnLetter.IsNotNullOrWhiteSpace())
-                return new LetterColumnMapping(_columnLetter, _propertyName, _rules);
+                return new LetterColumnMapping(_columnLetter, _propertyName, _format, _rules);
             if(_columnIndex >= 0)
-                return new IndexColumnMapping(_columnIndex, _propertyName, _rules);
+                return new IndexColumnMapping(_columnIndex, _propertyName, _format, _rules);
 
-            return new PropertyColumnMapping(_propertyName, _rules);
+            return new PropertyColumnMapping(_propertyName, _format, _rules);
         }
     }
 }
