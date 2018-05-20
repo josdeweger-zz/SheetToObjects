@@ -6,7 +6,7 @@ using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
 
-namespace SheetToObjects.Specs.Lib
+namespace SheetToObjects.Specs.Lib.Configuration
 {
     public class MappingConfigBuilderSpecs
     {
@@ -79,51 +79,5 @@ namespace SheetToObjects.Specs.Lib
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
         }
-
-        [Fact]
-        void GivenAModelWithAttributes_AttributesAreSetInConfig()
-        {
-            var result = new MappingConfigBuilder<AttributeTestModel>().BuildConfig();
-
-            result.HasHeaders.Should().BeTrue();
-            result.ColumnMappings.Single().Should().BeOfType<IndexColumnMapping>()
-                .Which.ColumnIndex.Should().Be(3);
-
-            result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Should().NotBeNull();
-            result.ColumnMappings.Single().Rules.OfType<RegexRule>().Should().NotBeNull();
-        }
-
-        [Fact]
-        void GivenAModelWithMappingByLetterAttribute_LetterAttributeIsSetInConfig()
-        {
-            var result = new MappingConfigBuilder<LetterAttributeTestModel>().BuildConfig();
-
-            result.ColumnMappings.Single().Should().BeOfType<LetterColumnMapping>()
-                .Which.ColumnIndex.Should().Be(2);
-        }
-
-        [Fact]
-        void GivenAModelWithMappingByNameAttributeAndRequiredSettingWithWhitespace_NameAttributeIsSetInConfig()
-        {
-            var result = new MappingConfigBuilder<ColumnNameAttributeTestModel>().BuildConfig();
-
-            result.ColumnMappings.Single().Should().BeOfType<NameColumnMapping>()
-                .Which.ColumnName.Should().Be("stringcolumn");
-
-            result.ColumnMappings.Single().Rules.OfType<RequiredRule>().Single().WhiteSpaceAllowed.Should().BeTrue();
-
-        }
-
-        [Fact]
-        void GivenAModelWithOutAttributes_CheckIfPropertyIsAutoMapped()
-        {
-            var result = new MappingConfigBuilder<AutoMapTestModel>().BuildConfig();
-
-            result.HasHeaders.Should().BeTrue();
-            result.ColumnMappings.Single().Should().BeOfType<PropertyColumnMapping>()
-                .Which.ColumnName.Should().Be("AutoMap");
-        }
-
-
     }
 }

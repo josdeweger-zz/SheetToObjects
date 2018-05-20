@@ -117,7 +117,7 @@ namespace SheetToObjects.Lib
             if (_mappingConfigs.TryGetValue(type, out var mappingConfig))
                 return mappingConfig;
 
-            var result = new MappingConfigByAttributeCreator<TModel>().CreateMappingConfigByAttributes();
+            var result = new MappingConfigByAttributeCreator<TModel>().CreateMappingConfig();
 
             if (result.IsSuccess)
                 return result.Value;

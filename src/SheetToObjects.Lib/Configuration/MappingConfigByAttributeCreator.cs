@@ -6,27 +6,26 @@ using SheetToObjects.Core;
 using SheetToObjects.Lib.Attributes;
 using SheetToObjects.Lib.Attributes.MappingType;
 using SheetToObjects.Lib.Attributes.Rules;
-using SheetToObjects.Lib.Configuration;
 using SheetToObjects.Lib.Configuration.ColumnMappings;
 
-namespace SheetToObjects.Lib
+namespace SheetToObjects.Lib.Configuration
 {
     internal class MappingConfigByAttributeCreator<TModel>
     {
-        public Result<MappingConfig> CreateMappingConfigByAttributes()
+        public Result<MappingConfig> CreateMappingConfig()
         {
             var type = typeof(TModel);
 
             var sheetToConfigAttribute = type.GetCustomAttributes().OfType<SheetToObjectConfig>().FirstOrDefault();
             if (sheetToConfigAttribute.IsNotNull())
             {
-                return Result.Ok(InitByAttributes(type, sheetToConfigAttribute));
+                return Result.Ok(CreateMappingConfigForType(type, sheetToConfigAttribute));
             }
 
             return Result.Fail<MappingConfig>($"No SheetToObjectConfig attribute found on model of type {type}");
         }
 
-        private MappingConfig InitByAttributes(Type type, SheetToObjectConfig sheetToConfigAttribute)
+        private MappingConfig CreateMappingConfigForType(Type type, SheetToObjectConfig sheetToConfigAttribute)
         {
             var mappingConfig = new MappingConfig
             {
