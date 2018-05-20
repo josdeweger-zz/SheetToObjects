@@ -34,6 +34,17 @@ namespace SheetToObjects.Specs.Lib
         }
 
         [Fact]
+        public void GivenModel_WhenNoMappingIsConfigured_ItThrows()
+        {
+            Action result = () => new SheetMapper()
+                .For<WithoutSheetToObjectConfigModel>(cfg => cfg.BuildConfig())
+                .Map(_sheetData)
+                .To<TestModel>();
+
+            result.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
         public void GivenASheet_WhenMappingModelDoubleProperty_ItSetsPropertyOnModel()
         {
             var testModelList = new SheetMapper()

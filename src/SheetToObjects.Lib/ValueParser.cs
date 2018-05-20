@@ -5,15 +5,43 @@ using SheetToObjects.Core;
 
 namespace SheetToObjects.Lib
 {
-    internal class ValueParser
+    internal class ValueParser : IParseValue
     {
-        public Result<object, string> Parse<TValue>(string value)
+        public Result<object, string> Parse(Type type, string value, string format = "")
         {
-            var type = typeof(TValue);
-            
+            if(type.IsNull())
+                return Result.Fail<object, string>($"Can not parse value for unspecified type");
+
+            switch (true)
+            {
+                case var _ when type == typeof(string):
+                    return Parse<string>(value);
+                case var _ when type == typeof(int) || type == typeof(int?):
+                    return Parse<int>(value);
+                case var _ when type == typeof(double) || type == typeof(double?):
+                    return Parse<double>(value);
+                case var _ when type == typeof(float) || type == typeof(float?):
+                    return Parse<float>(value);
+                case var _ when type == typeof(decimal) || type == typeof(decimal?):
+                    return Parse<decimal>(value);
+                case var _ when type == typeof(bool) || type == typeof(bool?):
+                    return Parse<bool>(value);
+                case var _ when type == typeof(DateTime) || type == typeof(DateTime?):
+                    return ParseDateTime(value, format);
+                case var _ when type.IsEnum:
+                    return ParseEnumeration(type, value);
+                default:
+                    return Result.Fail<object, string>($"Parser for '{type.Name}' not implemented");
+            }
+        }
+
+        private Result<object, string> Parse<T>(string value)
+        {
+            var type = typeof(T);
+
             try
             {
-                var parsedValue = (TValue) Convert.ChangeType(value, type);
+                var parsedValue = Convert.ChangeType(value, type);
                 return Result.Ok<object, string>(parsedValue);
             }
             catch (Exception)
@@ -22,7 +50,7 @@ namespace SheetToObjects.Lib
             }
         }
 
-        public Result<object, string> ParseDateTime(string value, string format)
+        private Result<object, string> ParseDateTime(string value, string format)
         {
             var errorMessage = $"Cannot parse value '{value}' to DateTime using format '{format}'";
 
@@ -36,11 +64,11 @@ namespace SheetToObjects.Lib
             return Result.Fail<object, string>(errorMessage);
         }
 
-        public Result<object, string> ParseEnumeration(string value, Type type)
+        private Result<object, string> ParseEnumeration(Type type, string value)
         {
             var errorMessage = $"Cannot parse value '{value}' to type '{type?.Name}'";
 
-            if(type.IsNull())
+            if (type.IsNull())
                 return Result.Fail<object, string>(errorMessage);
 
             if (!type.IsEnum)
