@@ -18,7 +18,7 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenParsingInt_WhenValueIsNotSet_ResultIsNotValid()
         {
-            var result = _cellValueParser.Parse<int>(null);
+            var result = _cellValueParser.Parse(typeof(int), null);
 
             result.IsSuccess.Should().BeFalse();
         }
@@ -26,7 +26,7 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenParsingEnum_WhenValueCanNotBeParsed_ResultIsNotValid()
         {
-            var result = _cellValueParser.Parse<EnumModel>("SomeString");
+            var result = _cellValueParser.Parse(typeof(EnumModel), "SomeString");
 
             result.IsSuccess.Should().BeFalse();
         }
@@ -36,7 +36,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var doubleValue = 3.3D;
 
-            var result = _cellValueParser.Parse<double>(doubleValue.ToString());
+            var result = _cellValueParser.Parse(typeof(double), doubleValue.ToString());
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(doubleValue);
@@ -47,7 +47,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var stringValue = "MyString";
 
-            var result = _cellValueParser.Parse<string>(stringValue);
+            var result = _cellValueParser.Parse(typeof(string), stringValue);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(stringValue);
@@ -58,7 +58,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var value = "Second";
 
-            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+            var result = _cellValueParser.Parse(typeof(EnumModel), value);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(EnumModel.Second);
@@ -69,7 +69,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var value = "2";
 
-            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+            var result = _cellValueParser.Parse(typeof(EnumModel), value);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(EnumModel.Second);
@@ -80,7 +80,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var value = "12";
 
-            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+            var result = _cellValueParser.Parse(typeof(EnumModel), value);
 
             result.IsSuccess.Should().BeFalse();
         }
@@ -90,7 +90,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var value = "notexisting";
 
-            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+            var result = _cellValueParser.Parse(typeof(EnumModel), value);
 
             result.IsSuccess.Should().BeFalse();
         }
@@ -100,7 +100,7 @@ namespace SheetToObjects.Specs.Lib
         {
             string value = null;
 
-            var result = _cellValueParser.ParseEnumeration(value, typeof(EnumModel));
+            var result = _cellValueParser.Parse(typeof(EnumModel), value);
 
             result.IsSuccess.Should().BeFalse();
         }
@@ -109,7 +109,7 @@ namespace SheetToObjects.Specs.Lib
         public void GivenParsingString_WhenTypeIsNull_ResultIsInvalid()
         {
             var value = "second";
-            var result = _cellValueParser.ParseEnumeration(value, null);
+            var result = _cellValueParser.Parse(null, value);
 
             result.IsSuccess.Should().BeFalse();
         }
@@ -118,7 +118,7 @@ namespace SheetToObjects.Specs.Lib
         public void GivenParsingString_WhenTypeIsNoEnum_ResultIsInvalid()
         {
             var value = "second";
-            var result = _cellValueParser.ParseEnumeration(value, typeof(double));
+            var result = _cellValueParser.Parse(typeof(double), value);
 
             result.IsSuccess.Should().BeFalse();
         }
@@ -132,7 +132,7 @@ namespace SheetToObjects.Specs.Lib
             var day = 30;
             var value = new DateTime(year, month, day).ToString(format);
 
-            var result = _cellValueParser.ParseDateTime(value, format);
+            var result = _cellValueParser.Parse(typeof(DateTime), value, format);
 
             result.IsSuccess.Should().BeTrue();
             ((DateTime) result.Value).Year.Should().Be(year);
@@ -145,7 +145,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var value = string.Empty;
 
-            var result = _cellValueParser.ParseDateTime(value, "yyyy-MM-dd");
+            var result = _cellValueParser.Parse(typeof(DateTime), value, "yyyy-MM-dd");
 
             result.IsSuccess.Should().BeFalse();
         }
@@ -155,7 +155,7 @@ namespace SheetToObjects.Specs.Lib
         {
             var value = new DateTime(2018, 5, 30).ToString("dd-MM-yyyy");
 
-            var result = _cellValueParser.ParseDateTime(value, "yyyy-MM-dd");
+            var result = _cellValueParser.Parse(typeof(DateTime), value, "yyyy-MM-dd");
 
             result.IsSuccess.Should().BeFalse();
         }

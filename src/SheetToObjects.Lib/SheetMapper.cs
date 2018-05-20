@@ -10,9 +10,18 @@ namespace SheetToObjects.Lib
 {
     public class SheetMapper : IMapSheetToObjects
     {
-        private readonly ValueParser _cellValueParser = new ValueParser();
+        private readonly IParseValue _valueParser;
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
+
+        private SheetMapper(IParseValue valueParser)
+        {
+            _valueParser = valueParser;
+        }
+
+        public SheetMapper() : this(new ValueParser())
+        {
+        }
 
         /// <summary>
         /// Configure how the sheet maps to your model
@@ -83,7 +92,7 @@ namespace SheetToObjects.Lib
                         .AddRange(ValidateValueByColumnMapping(cell.Value.ToString(), columnMapping, row.RowIndex, property.Name)
                         .ToList());
                     
-                    ParseValue(property.PropertyType, cell.Value.ToString(), columnMapping.Format)
+                    _valueParser.Parse(property.PropertyType, cell.Value.ToString(), columnMapping.Format)
                         .OnSuccess(value => property.SetValue(obj, value))
                         .OnFailure(parseErrorMessage =>
                         {
@@ -122,7 +131,7 @@ namespace SheetToObjects.Lib
             if (result.IsSuccess)
                 return result.Value;
 
-            throw new ApplicationException($"Could not find mapping configuration for type {type} " +
+            throw new ArgumentException($"Could not find mapping configuration for type {type} " +
                                             $"and no SheetToObjectConfig attribute was set on the model " +
                                             $"to map the properties by data attributes");
         }
@@ -151,31 +160,6 @@ namespace SheetToObjects.Lib
                 {
                     columnMapping.SetColumnIndex(headerCell.ColumnIndex);
                 }
-            }
-        }
-
-        private Result<object, string> ParseValue(Type type, string value, string format)
-        {
-            switch (true)
-            {
-                case var _ when type == typeof(string):
-                    return _cellValueParser.Parse<string>(value);
-                case var _ when type == typeof(int) || type == typeof(int?):
-                    return _cellValueParser.Parse<int>(value);
-                case var _ when type == typeof(double) || type == typeof(double?):
-                    return _cellValueParser.Parse<double>(value);
-                case var _ when type == typeof(float) || type == typeof(float?):
-                    return _cellValueParser.Parse<float>(value);
-                case var _ when type == typeof(decimal) || type == typeof(decimal?):
-                    return _cellValueParser.Parse<decimal>(value);
-                case var _ when type == typeof(bool) || type == typeof(bool?):
-                    return _cellValueParser.Parse<bool>(value);
-                case var _ when type == typeof(DateTime) || type == typeof(DateTime?):
-                    return _cellValueParser.ParseDateTime(value, format);
-                case var _ when type.IsEnum:
-                    return _cellValueParser.ParseEnumeration(value, type);
-                default:
-                    throw new NotImplementedException($"Parser for type {type} not implemented.");
             }
         }
     }
