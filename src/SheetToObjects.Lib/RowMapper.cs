@@ -35,11 +35,11 @@ namespace SheetToObjects.Lib
 
                 if (cell == null)
                 {
-                    var IValidationError = ParsingValidationError.CellNotFound(columnMapping.ColumnIndex, row.RowIndex,
+                    var parsingValidationError = ParsingValidationError.CellNotFound(columnMapping.ColumnIndex, row.RowIndex,
                         columnMapping.DisplayName, property.Name);
 
                     if (columnMapping.IsRequired)
-                        rowIValidationErrors.Add(IValidationError);
+                        rowIValidationErrors.Add(parsingValidationError);
 
                     return;
                 }
@@ -50,7 +50,7 @@ namespace SheetToObjects.Lib
 
                 _valueMapper.Map(cell.Value.ToString(), property.PropertyType, columnMapping, row.RowIndex)
                     .OnSuccess(value => property.SetValue(obj, value))
-                    .OnFailure(IValidationError => { rowIValidationErrors.Add(IValidationError); });
+                    .OnFailure(validationError => { rowIValidationErrors.Add(validationError); });
             });
 
             if (rowIValidationErrors.Any())
