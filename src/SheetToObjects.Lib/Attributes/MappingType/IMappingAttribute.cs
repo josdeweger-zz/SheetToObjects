@@ -5,6 +5,6 @@ namespace SheetToObjects.Lib.Attributes.MappingType
 {
     internal interface IMappingAttribute
     {
-        void SetColumnMapping<TModel>(ColumnMappingBuilder<TModel> builder);
+        void SetColumnMapping<T>(ColumnMappingBuilder<T> builder);
     }
 }

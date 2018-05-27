@@ -13,7 +13,7 @@ namespace SheetToObjects.Lib.Attributes.MappingType
             ColumnIndex = columnIndex;
         }
 
-        public void SetColumnMapping<TModel>(ColumnMappingBuilder<TModel> builder)
+        public void SetColumnMapping<T>(ColumnMappingBuilder<T> builder)
         {
             builder.WithColumnIndex(ColumnIndex);
         }

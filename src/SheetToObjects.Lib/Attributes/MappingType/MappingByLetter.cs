@@ -13,7 +13,7 @@ namespace SheetToObjects.Lib.Attributes.MappingType
             ColumnLetter = columnLetter;
         }
 
-        public void SetColumnMapping<TModel>(ColumnMappingBuilder<TModel> builder)
+        public void SetColumnMapping<T>(ColumnMappingBuilder<T> builder)
         {
             builder.WithColumnLetter(ColumnLetter);
         }

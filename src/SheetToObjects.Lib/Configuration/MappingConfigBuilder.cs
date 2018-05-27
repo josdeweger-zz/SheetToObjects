@@ -2,14 +2,14 @@
 
 namespace SheetToObjects.Lib.Configuration
 {
-    public class MappingConfigBuilder<TModel>
+    public class MappingConfigBuilder<T>
     {
         private readonly MappingConfig _mappingConfig = new MappingConfig();
         
         /// <summary>
         /// Specify whether the sheet contains headers or not (will skip the first row for data parsing)
         /// </summary>
-        public MappingConfigBuilder<TModel> HasHeaders()
+        public MappingConfigBuilder<T> HasHeaders()
         {
             _mappingConfig.HasHeaders = true;
             return this;
@@ -18,9 +18,9 @@ namespace SheetToObjects.Lib.Configuration
         /// <summary>
         /// Add columns
         /// </summary>
-        public MappingConfigBuilder<TModel> Columns(Func<ColumnsMappingBuilder<TModel>, ColumnsMappingBuilder<TModel>> columnMappingBuilderFunc)
+        public MappingConfigBuilder<T> Columns(Func<ColumnsMappingBuilder<T>, ColumnsMappingBuilder<T>> columnMappingBuilderFunc)
         {
-            columnMappingBuilderFunc(new ColumnsMappingBuilder<TModel>(_mappingConfig));
+            columnMappingBuilderFunc(new ColumnsMappingBuilder<T>(_mappingConfig));
             return this;
         }
         

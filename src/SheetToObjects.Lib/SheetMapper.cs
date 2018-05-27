@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
-using SheetToObjects.Core;
 using SheetToObjects.Lib.Configuration;
 using SheetToObjects.Lib.Configuration.ColumnMappings;
 
@@ -10,26 +9,26 @@ namespace SheetToObjects.Lib
 {
     public class SheetMapper : IMapSheetToObjects
     {
-        private readonly IParseValue _valueParser;
+        private readonly IMapRow _rowMapper;
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
         private Sheet _sheet;
 
-        private SheetMapper(IParseValue valueParser)
+        private SheetMapper(IMapRow rowMapper)
         {
-            _valueParser = valueParser;
+            _rowMapper = rowMapper;
         }
 
-        public SheetMapper() : this(new ValueParser())
+        public SheetMapper() : this(new RowMapper(new ValueMapper(new ValueParser())))
         {
         }
 
         /// <summary>
         /// Configure how the sheet maps to your model
         /// </summary>
-        public SheetMapper For<TModel>(Func<MappingConfigBuilder<TModel>, MappingConfig> mappingConfigFunc)
+        public SheetMapper For<T>(Func<MappingConfigBuilder<T>, MappingConfig> mappingConfigFunc)
         {
-            var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<TModel>());
-            _mappingConfigs.Add(typeof(TModel), mappingConfig);
+            var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<T>());
+            _mappingConfigs.Add(typeof(T), mappingConfig);
 
             return this;
         }
@@ -46,14 +45,14 @@ namespace SheetToObjects.Lib
         /// <summary>
         /// Returns a result containing the parsed result and validation errors
         /// </summary>
-        public MappingResult<TModel> To<TModel>()
-            where TModel : new()
+        public MappingResult<T> To<T>()
+            where T : new()
         {
-            var type = typeof(TModel);
-            var parsedModels = new List<TModel>();
+            var type = typeof(T);
+            var parsedModels = new List<T>();
             var validationErrors = new List<ValidationError>();
 
-            var mappingConfig = GetMappingConfig<TModel>(type);
+            var mappingConfig = GetMappingConfig<T>(type);
 
             if (mappingConfig.HasHeaders)
                 SetHeaderIndexesInColumnMappings(_sheet.Rows.FirstOrDefault(), mappingConfig);
@@ -62,71 +61,20 @@ namespace SheetToObjects.Lib
 
             dataRows.ForEach(row =>
             {
-                var rowValidationErrors = new List<ValidationError>();
-                var obj = new TModel();
-                var properties = obj.GetType().GetProperties().ToList();
-
-                properties.ForEach(property =>
-                {
-                    var columnMapping = mappingConfig.GetColumnMappingByPropertyName(property.Name);
-
-                    if (columnMapping.IsNull())
-                        return;
-
-                    var cell = row.GetCellByColumnIndex(columnMapping.ColumnIndex);
-
-                    if (cell == null)
-                    {
-                        var validationError = ValidationError.CellNotFoundError(columnMapping.ColumnIndex, row.RowIndex,
-                            columnMapping.DisplayName, property.Name);
-
-                        if (columnMapping.IsRequired)
-                        {
-                            rowValidationErrors.Add(validationError);
-                        }
-
-                        return;
-                    }
-
-                    rowValidationErrors
-                        .AddRange(ValidateValueByColumnMapping(cell.Value.ToString(), columnMapping, row.RowIndex, property.Name)
-                        .ToList());
-                    
-                    _valueParser.Parse(property.PropertyType, cell.Value.ToString(), columnMapping.Format)
-                        .OnSuccess(value => property.SetValue(obj, value))
-                        .OnFailure(parseErrorMessage =>
-                        {
-                            var validationError = ValidationError.ParseValueError(
-                                columnMapping.ColumnIndex,
-                                row.RowIndex,
-                                parseErrorMessage,
-                                columnMapping.DisplayName,
-                                cell.Value.ToString(),
-                                property.Name);
-
-                            if (columnMapping.IsRequired)
-                            {
-                                rowValidationErrors.Add(validationError);
-                            }
-                        });
-                });
-
-                if (rowValidationErrors.Any())
-                    validationErrors.AddRange(rowValidationErrors);
-                else
-                    parsedModels.Add(obj);
-
+                _rowMapper.Map<T>(row, mappingConfig)
+                    .OnSuccess(obj => parsedModels.Add(obj))
+                    .OnFailure(rowValidationErrors => validationErrors.AddRange(rowValidationErrors));
             });
 
-            return MappingResult<TModel>.Create(parsedModels, validationErrors);
+            return MappingResult<T>.Create(parsedModels, validationErrors);
         }
 
-        private MappingConfig GetMappingConfig<TModel>(Type type) where TModel : new()
+        private MappingConfig GetMappingConfig<T>(Type type) where T : new()
         {
             if (_mappingConfigs.TryGetValue(type, out var mappingConfig))
                 return mappingConfig;
 
-            var result = new MappingConfigByAttributeCreator<TModel>().CreateMappingConfig();
+            var result = new MappingConfigByAttributeCreator<T>().CreateMappingConfig();
 
             if (result.IsSuccess)
                 return result.Value;
@@ -134,21 +82,6 @@ namespace SheetToObjects.Lib
             throw new ArgumentException($"Could not find mapping configuration for type {type} " +
                                             $"and no SheetToObjectConfig attribute was set on the model " +
                                             $"to map the properties by data attributes");
-        }
-
-        private IEnumerable<ValidationError> ValidateValueByColumnMapping(string value, ColumnMapping mapping, int rowIndex, string propertyName)
-        {
-            return mapping.Rules
-                .Select(rule => rule.Validate(value))
-                .Where(validationResult => validationResult.IsFailure)
-                .Select(validationResult =>
-                    ValidationError.DoesNotMatchRuleError(
-                        mapping.ColumnIndex,
-                        rowIndex,
-                        validationResult.Error,
-                        mapping.DisplayName,
-                        value,
-                        propertyName));
         }
 
         private void SetHeaderIndexesInColumnMappings(Row firstRow, MappingConfig mappingConfig)

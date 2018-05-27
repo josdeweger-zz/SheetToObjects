@@ -10,11 +10,11 @@ using SheetToObjects.Lib.Configuration.ColumnMappings;
 
 namespace SheetToObjects.Lib.Configuration
 {
-    internal class MappingConfigByAttributeCreator<TModel>
+    internal class MappingConfigByAttributeCreator<T>
     {
         public Result<MappingConfig> CreateMappingConfig()
         {
-            var type = typeof(TModel);
+            var type = typeof(T);
 
             var sheetToConfigAttribute = type.GetCustomAttributes().OfType<SheetToObjectConfig>().FirstOrDefault();
             if (sheetToConfigAttribute.IsNotNull())
@@ -36,7 +36,7 @@ namespace SheetToObjects.Lib.Configuration
             foreach (var property in type.GetProperties())
             {
                 var columnIsMappedByAttribute = false;
-                var mappingConfigBuilder = new ColumnMappingBuilder<TModel>();
+                var mappingConfigBuilder = new ColumnMappingBuilder<T>();
                 var attributes = property.GetCustomAttributes().ToList();
 
                 if (attributes.OfType<IgnorePropertyMapping>().Any())
