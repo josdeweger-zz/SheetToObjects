@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Lib.Configuration;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
 {

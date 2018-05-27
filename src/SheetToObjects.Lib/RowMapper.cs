@@ -4,6 +4,7 @@ using CSharpFunctionalExtensions;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Configuration;
 using SheetToObjects.Lib.Configuration.ColumnMappings;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
 {

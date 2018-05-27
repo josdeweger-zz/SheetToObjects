@@ -1,4 +1,4 @@
-﻿namespace SheetToObjects.Lib
+﻿namespace SheetToObjects.Lib.Validation
 {
     public class RuleValidationError : IValidationError
     {

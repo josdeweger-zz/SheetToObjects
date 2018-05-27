@@ -1,6 +1,7 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Lib.Configuration.ColumnMappings;
+using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
 {
