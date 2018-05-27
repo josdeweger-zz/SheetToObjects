@@ -6,6 +6,6 @@ namespace SheetToObjects.Lib
 {
     internal interface IMapValue
     {
-        Result<object, ValidationError> Map(string value, Type propertyType, ColumnMapping columnMapping, int rowIndex);
+        Result<object, IValidationError> Map(string value, Type propertyType, ColumnMapping columnMapping, int rowIndex);
     }
 }

@@ -14,40 +14,43 @@ namespace SheetToObjects.Lib
             _valueParser = valueParser;
         }
 
-        public Result<object, ValidationError> Map(string value, Type propertyType, ColumnMapping columnMapping, int rowIndex)
+        public Result<object, IValidationError> Map(string value, Type propertyType, ColumnMapping columnMapping, int rowIndex)
         {
             if (string.IsNullOrEmpty(value))
             {
-                if (columnMapping.IsRequired)
-                {
-                    var cellValueRequiredError = ValidationError.CellValueRequiredError(
-                        columnMapping.ColumnIndex,
-                        rowIndex,
-                        columnMapping.DisplayName,
-                        columnMapping.PropertyName);
-
-                    return Result.Fail<object, ValidationError>(cellValueRequiredError);
-                }
-
-                return Result.Ok<object, ValidationError>(propertyType.GetDefault());
+                return HandleEmptyValue(propertyType, columnMapping, rowIndex);
             }
 
             var parsingResult = _valueParser.Parse(propertyType, value, columnMapping.Format);
 
             if (!parsingResult.IsSuccess)
             {
-                var validationError = ValidationError.ParseValueError(
+                var validationError = ParsingValidationError.CouldNotParseValue(
                     columnMapping.ColumnIndex,
                     rowIndex,
-                    parsingResult.Error,
                     columnMapping.DisplayName,
-                    value,
                     columnMapping.PropertyName);
 
-                return Result.Fail<object, ValidationError>(validationError);
+                return Result.Fail<object, IValidationError>(validationError);
             }
 
-            return Result.Ok<object, ValidationError>(parsingResult.Value);
+            return Result.Ok<object, IValidationError>(parsingResult.Value);
+        }
+
+        private static Result<object, IValidationError> HandleEmptyValue(Type propertyType, ColumnMapping columnMapping, int rowIndex)
+        {
+            if (columnMapping.IsRequired)
+            {
+                var cellValueRequiredError = RuleValidationError.CellValueRequired(
+                    columnMapping.ColumnIndex,
+                    rowIndex,
+                    columnMapping.DisplayName,
+                    columnMapping.PropertyName);
+
+                return Result.Fail<object, IValidationError>(cellValueRequiredError);
+            }
+
+            return Result.Ok<object, IValidationError>(propertyType.GetDefault() ?? string.Empty);
         }
     }
 }

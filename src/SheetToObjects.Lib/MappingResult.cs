@@ -7,18 +7,18 @@ namespace SheetToObjects.Lib
         where T : new()
     {
         public List<T> ParsedModels { get; set; }
-        public List<ValidationError> ValidationErrors { get; set; }
+        public List<IValidationError> ValidationErrors { get; set; }
 
         public bool IsFailure => ValidationErrors.Any();
         public bool IsSuccess => !IsFailure;
 
-        private MappingResult(List<T> parsedModels, List<ValidationError> validationErrors)
+        private MappingResult(List<T> parsedModels, List<IValidationError> validationErrors)
         {
             ParsedModels = parsedModels;
             ValidationErrors = validationErrors;
         }
 
-        public static MappingResult<T> Create(List<T> parsedModels,List<ValidationError> validationErrors)
+        public static MappingResult<T> Create(List<T> parsedModels,List<IValidationError> validationErrors)
         {
             return new MappingResult<T>(parsedModels, validationErrors);
         }
