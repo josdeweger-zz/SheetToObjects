@@ -6,6 +6,6 @@ namespace SheetToObjects.Lib
 {
     internal interface IMapRow
     {
-        Result<T, List<ValidationError>> Map<T>(Row row, MappingConfig mappingConfig) where T : new();
+        Result<T, List<IValidationError>> Map<T>(Row row, MappingConfig mappingConfig) where T : new();
     }
 }

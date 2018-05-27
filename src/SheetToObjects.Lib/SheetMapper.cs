@@ -50,7 +50,7 @@ namespace SheetToObjects.Lib
         {
             var type = typeof(T);
             var parsedModels = new List<T>();
-            var validationErrors = new List<ValidationError>();
+            var validationErrors = new List<IValidationError>();
 
             var mappingConfig = GetMappingConfig<T>(type);
 
