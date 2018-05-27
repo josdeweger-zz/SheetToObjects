@@ -3,6 +3,7 @@
     public class ValidationError
     {
         private const string CellNotFoundMessage = "Cell not found";
+        private const string ValueRequiredMessage = "This cell is required";
         public string CellValue { get; }
         public string ColumnName { get; }
         public int ColumnIndex { get; }
@@ -33,6 +34,11 @@
         public static ValidationError DoesNotMatchRuleError(int columnIndex, int rowIndex, string errorMessage, string columnName, string cellValue, string propertyName)
         {
             return new ValidationError(columnIndex, rowIndex, errorMessage, columnName, cellValue, propertyName);
+        }
+
+        public static ValidationError CellValueRequiredError(int columnIndex, int rowIndex, string columnName, string propertyName)
+        {
+            return new ValidationError(columnIndex, rowIndex, ValueRequiredMessage, columnName, string.Empty, propertyName);
         }
     }
 }

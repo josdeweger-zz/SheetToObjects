@@ -4,6 +4,6 @@
     {
         SheetMapper Map(Sheet sheet);
 
-        MappingResult<TModel> To<TModel>() where TModel : new();
+        MappingResult<T> To<T>() where T : new();
     }
 }

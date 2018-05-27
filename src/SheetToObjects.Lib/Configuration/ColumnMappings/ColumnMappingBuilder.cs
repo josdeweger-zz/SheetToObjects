@@ -7,7 +7,7 @@ using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.Configuration.ColumnMappings
 {
-    public class ColumnMappingBuilder<TModel>
+    public class ColumnMappingBuilder<T>
     {
         private string _header;
         private int _columnIndex = -1;
@@ -19,7 +19,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// <summary>
         /// Map to column by header (other options are to map by column index or column letter)
         /// </summary>
-        public ColumnMappingBuilder<TModel> WithHeader(string header)
+        public ColumnMappingBuilder<T> WithHeader(string header)
         {
             _header = header;
             return this;
@@ -28,7 +28,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// <summary>
         /// Map to column by column index (other options are to map by header or column letter)
         /// </summary>
-        public ColumnMappingBuilder<TModel> WithColumnIndex(int columnIndex)
+        public ColumnMappingBuilder<T> WithColumnIndex(int columnIndex)
         {
             _columnIndex = columnIndex; ;
             return this;
@@ -37,7 +37,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// <summary>
         /// Map to column by column letter (other options are to map by header or column index)
         /// </summary>
-        public ColumnMappingBuilder<TModel> WithColumnLetter(string columnLetter)
+        public ColumnMappingBuilder<T> WithColumnLetter(string columnLetter)
         {
             _columnLetter = columnLetter; 
             return this;
@@ -46,7 +46,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// <summary>
         /// Add new rule that the column needs to adhere to. After parsing these rules are validated
         /// </summary>
-        public ColumnMappingBuilder<TModel> AddRule(IRule rule)
+        public ColumnMappingBuilder<T> AddRule(IRule rule)
         {
             _rules.Add(rule);
             return this;
@@ -55,7 +55,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// <summary>
         /// Make values in this column required, which means it can not be empty
         /// </summary>
-        public ColumnMappingBuilder<TModel> IsRequired()
+        public ColumnMappingBuilder<T> IsRequired()
         {
             _rules.Add(new RequiredRule());
             return this;
@@ -64,7 +64,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// <summary>
         /// Use format for parsing, can only be used for DateTime formats, e.g. "dd-MM-yyyy"
         /// </summary>
-        public ColumnMappingBuilder<TModel> UsingFormat(string format)
+        public ColumnMappingBuilder<T> UsingFormat(string format)
         {
             _format = format;
             return this;
@@ -73,7 +73,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// <summary>
         /// Values in this column need to match the given regex
         /// </summary>
-        public ColumnMappingBuilder<TModel> Matches(string regex)
+        public ColumnMappingBuilder<T> Matches(string regex)
         {
             _rules.Add(new RegexRule(regex));
             return this;
@@ -82,9 +82,9 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// <summary>
         /// Specify the model property this column needs to map to. The type is inferred from the type on the model
         /// </summary>
-        public ColumnMapping MapTo<TProperty>(Expression<Func<TModel, TProperty>> propertyLambda)
+        public ColumnMapping MapTo<TProperty>(Expression<Func<T, TProperty>> propertyLambda)
         {
-            var type = typeof(TModel);
+            var type = typeof(T);
 
             if (!(propertyLambda.Body is MemberExpression member))
                 throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");

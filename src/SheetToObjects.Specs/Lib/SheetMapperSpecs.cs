@@ -45,23 +45,23 @@ namespace SheetToObjects.Specs.Lib
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModelDoubleProperty_ItSetsPropertyOnModel()
+        public void GivenSheet_WhenMappingModelDoubleProperty_ItSetsPropertyOnModel()
         {
-            var testModelList = new SheetMapper()
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
                     .Columns(columns => columns.Add(column => column.WithHeader("Double").MapTo(t => t.DoubleProperty))).BuildConfig())
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.ParsedModels.Should().HaveCount(1);
-            testModelList.ParsedModels.Single().DoubleProperty.Should().Be(_doubleValue);
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.Single().DoubleProperty.Should().Be(_doubleValue);
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModelIntProperty_ItSetsPropertyOnModel()
+        public void GivenSheet_WhenMappingModelIntProperty_ItSetsPropertyOnModel()
         {
-            var testModelList = new SheetMapper()
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
                     .Columns(columns => columns.Add(column => column.WithHeader("Integer").MapTo(t => t.IntProperty)))
@@ -69,14 +69,14 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.ParsedModels.Should().HaveCount(1);
-            testModelList.ParsedModels.Single().IntProperty.Should().Be(_intValue);
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.Single().IntProperty.Should().Be(_intValue);
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModelBoolProperty_ItSetsPropertyOnModel()
+        public void GivenSheet_WhenMappingModelBoolProperty_ItSetsPropertyOnModel()
         {
-            var testModelList = new SheetMapper()
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
                     .Columns(columns => columns.Add(column => column.WithHeader("Boolean").MapTo(t => t.BoolProperty)))
@@ -84,14 +84,14 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.ParsedModels.Should().HaveCount(1);
-            testModelList.ParsedModels.Single().BoolProperty.Should().Be(_boolValue);
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.Single().BoolProperty.Should().Be(_boolValue);
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModelEnumProperty_ItSetsPropertyOnModel()
+        public void GivenSheet_WhenMappingModelEnumProperty_ItSetsPropertyOnModel()
         {
-            var testModelList = new SheetMapper()
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
                     .Columns(columns =>
@@ -100,14 +100,14 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.ParsedModels.Should().HaveCount(1);
-            testModelList.ParsedModels.Single().EnumProperty.Should().Be(_enumValue);
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.Single().EnumProperty.Should().Be(_enumValue);
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModelDateTimeProperty_ItSetsPropertyOnModel()
+        public void GivenSheet_WhenMappingModelDateTimeProperty_ItSetsPropertyOnModel()
         {
-            var testModelList = new SheetMapper()
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
                     .Columns(columns =>
@@ -116,14 +116,14 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.ParsedModels.Should().HaveCount(1);
-            testModelList.ParsedModels.Single().DateTimeProperty.Should().Be(_dateTimeValue);
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.Single().DateTimeProperty.Should().Be(_dateTimeValue);
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModelStringProperty_ItSetsPropertyOnModel()
+        public void GivenSheet_WhenMappingModelStringProperty_ItSetsPropertyOnModel()
         {
-            var testModelList = new SheetMapper()
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
                     .Columns(columns => columns.Add(column => column.WithHeader("String").MapTo(t => t.StringProperty)))
@@ -131,14 +131,14 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.ParsedModels.Should().HaveCount(1);
-            testModelList.ParsedModels.Single().StringProperty.Should().Be(_stringValue);
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.Single().StringProperty.Should().Be(_stringValue);
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModelStringPropertyWithRegexValidation_ShouldThrowValidationError()
+        public void GivenSheet_WhenMappingModelStringPropertyWithRegexValidation_ShouldThrowValidationError()
         {
-            var testModelList = new SheetMapper()
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
                     .Columns(columns => columns.Add(column => column.WithHeader("String").Matches("invalid").MapTo(t => t.StringProperty)))
@@ -146,29 +146,59 @@ namespace SheetToObjects.Specs.Lib
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.IsFailure.Should().BeTrue();
-            testModelList.ParsedModels.Should().HaveCount(0);
-            testModelList.ValidationErrors.Single().ColumnName.Should().Be("string");
+            result.IsFailure.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(0);
+            result.ValidationErrors.Single().ColumnName.Should().Be("string");
         }
-        
+
         [Fact]
-        public void GivenASheet_WhenMappingModelPropertyToInvalidType_ShouldSetDefaultValue()
+        public void GivenSheet_WhenMappingRequiredModelPropertyToInvalidType_shouldSetDefaultValue()
         {
-            var testModelList = new SheetMapper()
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns.Add(column => column.WithHeader("String").MapTo(t => t.DoubleProperty)))
+                    .Columns(columns => columns.Add(column => column.WithHeader("String").IsRequired().MapTo(t => t.DoubleProperty)))
                     .BuildConfig())
                 .Map(_sheetData)
                 .To<TestModel>();
 
-            testModelList.IsFailure.Should().BeFalse();
-            testModelList.ParsedModels.Should().HaveCount(1);
-            testModelList.ParsedModels.Single().DoubleProperty = default(double);
+            result.IsFailure.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(0);
+            result.ValidationErrors.Single().ColumnName.Should().Be("string");
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingRequiredModelPropertyToInvalidType_shouldSetDefaultValue()
+        public void GivenSheet_WhenMappingModeltoAPropertyWithBody_ItShouldThrowException()
+        {
+            Action result = () => new SheetMapper()
+                .For<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .Columns(columns =>
+                        columns.Add(column => column.WithHeader("String").MapTo(t => t.PropertyWithBody)))
+                    .BuildConfig())
+                .Map(_sheetData)
+                .To<TestModel>();
+
+            result.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void GivenSheet_WhenMappingRequiredPropertyThatIsSet_ItSetsNoValidationError()
+        {
+            var result = new SheetMapper()
+                .For<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .Columns(columns => columns
+                        .Add(column => column.WithHeader("String").IsRequired().MapTo(t => t.StringProperty)))
+                    .BuildConfig())
+                .Map(_sheetData)
+                .To<TestModel>();
+
+            result.ValidationErrors.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void GivenASheet_WhenMappingRequiredModelPropertyToInvalidType_ShouldSetDefaultValue()
         {
             var testModelList = new SheetMapper()
                 .For<TestModel>(cfg => cfg
@@ -184,18 +214,25 @@ namespace SheetToObjects.Specs.Lib
         }
 
         [Fact]
-        public void GivenASheet_WhenMappingModeltoAPropertyWithBody_ItShouldThrowException()
+        public void GivenSheet_WhenMappingRequiredPropertyThatIsEmpty_ItSetsValidationError()
         {
-            Action result = () => new SheetMapper()
+            var sheetData = new SheetBuilder()
+                .AddHeaders("String")
+                .AddRow(r => r
+                    .AddCell(c => c.WithColumnIndex(4).WithRowIndex(1).WithValue(string.Empty).Build())
+                    .Build(0))
+                .Build();
+
+            var result = new SheetMapper()
                 .For<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns =>
-                        columns.Add(column => column.WithHeader("String").MapTo(t => t.PropertyWithBody)))
+                    .Columns(columns => columns
+                        .Add(column => column.WithHeader("String").IsRequired().MapTo(t => t.StringProperty)))
                     .BuildConfig())
-                .Map(_sheetData)
+                .Map(sheetData)
                 .To<TestModel>();
 
-            result.Should().Throw<ArgumentException>();
+            result.ValidationErrors.Should().HaveCount(1);
         }
     }
 }
