@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using SheetToObjects.Lib.Configuration;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
+using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
@@ -15,8 +14,9 @@ namespace SheetToObjects.Specs.Lib.Configuration
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)))
-                .BuildConfig();
+                    .Add(column => column
+                        .WithHeader("FirstName")
+                        .MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.OfType<NameColumnMapping>().Should().HaveCount(1);
         }
@@ -24,12 +24,15 @@ namespace SheetToObjects.Specs.Lib.Configuration
         [Fact]
         public void GivenCreatingMappingConfiguration_WhenAddingHeader_HeaderIsSetToLower()
         {
+            var columnName = "FirstName";
+
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)))
-                .BuildConfig();
+                    .Add(column => column
+                        .WithHeader(columnName)
+                        .MapTo(m => m.StringProperty)));
 
-            result.ColumnMappings.OfType<NameColumnMapping>().Single().ColumnName.Should().Be("firstname");
+            result.ColumnMappings.OfType<NameColumnMapping>().Single().ColumnName.Should().Be(columnName);
         }
 
         [Fact]
@@ -37,8 +40,9 @@ namespace SheetToObjects.Specs.Lib.Configuration
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").MapTo(m => m.StringProperty)))
-                .BuildConfig();
+                    .Add(column => column
+                        .WithHeader("FirstName")
+                        .MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().PropertyName.Should().Be("StringProperty");
         }
@@ -48,10 +52,11 @@ namespace SheetToObjects.Specs.Lib.Configuration
         {
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").IsRequired().MapTo(m => m.StringProperty)))
-                .BuildConfig();
+                    .Add(column => column.WithHeader("FirstName")
+                        .IsRequired()
+                        .MapTo(m => m.StringProperty)));
 
-            result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RequiredRule>();
+            result.ColumnMappings.OfType<NameColumnMapping>().Single().ParsingRules.Single().Should().BeOfType<RequiredRule>();
         }
 
         [Fact]
@@ -61,8 +66,10 @@ namespace SheetToObjects.Specs.Lib.Configuration
 
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").Matches(emailRegex).MapTo(m => m.StringProperty)))
-                .BuildConfig();
+                    .Add(column => column
+                        .WithHeader("FirstName")
+                        .Matches(emailRegex)
+                        .MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
         }
@@ -74,8 +81,10 @@ namespace SheetToObjects.Specs.Lib.Configuration
 
             var result = new MappingConfigBuilder<TestModel>()
                 .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName").Matches(emailRegex).MapTo(m => m.StringProperty)))
-                .BuildConfig();
+                    .Add(column => column
+                        .WithHeader("FirstName")
+                        .Matches(emailRegex)
+                        .MapTo(m => m.StringProperty)));
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
         }

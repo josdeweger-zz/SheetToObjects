@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SheetToObjects.ConsoleApp
@@ -7,9 +8,11 @@ namespace SheetToObjects.ConsoleApp
     {
         private static void Main()
         {
-            //RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
-            //RunExcelExample();
+            RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
+            RunExcelExample();
             RunCsvExample();
+
+            Console.ReadLine();
         }
 
         private static async Task RunGoogleSheetsExampleAsync()

@@ -1,4 +1,4 @@
-﻿using SheetToObjects.Lib.Attributes;
+﻿using SheetToObjects.Lib.AttributesConfiguration;
 
 namespace SheetToObjects.Specs.TestModels
 {

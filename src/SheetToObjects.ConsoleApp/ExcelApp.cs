@@ -9,11 +9,11 @@ namespace SheetToObjects.ConsoleApp
     public class ExcelApp
     {
         private readonly IProvideSheet _sheetProvider;
-        private readonly IMapSheetToObjects _sheetMapper;
+        private readonly IMapSheetTo<ProfileModel> _sheetMapper;
 
         public ExcelApp(
             IProvideSheet sheetProvider,
-            IMapSheetToObjects sheetMapper)
+            IMapSheetTo<ProfileModel> sheetMapper)
         {
             _sheetProvider = sheetProvider;
             _sheetMapper = sheetMapper;
@@ -24,7 +24,7 @@ namespace SheetToObjects.ConsoleApp
             var excelRange = new ExcelRange(new ExcelCell("A", 1), new ExcelCell("I", 5));
             var sheet = _sheetProvider.Get(@"./Files/profiles.xlsx", "profiles", excelRange);
 
-            var result = _sheetMapper.Map(sheet).To<ProfileModel>();
+            var result = _sheetMapper.Map(sheet);
 
             WriteToConsole(sheet, result.ParsedModels, result.ValidationErrors);
         }
@@ -37,8 +37,6 @@ namespace SheetToObjects.ConsoleApp
                 ConsoleWriteJson(obj);
                 Console.WriteLine("===============================================================");
             }
-
-            Console.ReadLine();
         }
 
         private static void ConsoleWriteJson(object obj)

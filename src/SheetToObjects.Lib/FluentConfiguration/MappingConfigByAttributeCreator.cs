@@ -3,12 +3,11 @@ using System.Linq;
 using System.Reflection;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Core;
-using SheetToObjects.Lib.Attributes;
-using SheetToObjects.Lib.Attributes.MappingType;
-using SheetToObjects.Lib.Attributes.Rules;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
+using SheetToObjects.Lib.AttributesConfiguration;
+using SheetToObjects.Lib.AttributesConfiguration.MappingType;
+using SheetToObjects.Lib.AttributesConfiguration.Rules;
 
-namespace SheetToObjects.Lib.Configuration
+namespace SheetToObjects.Lib.FluentConfiguration
 {
     internal class MappingConfigByAttributeCreator<T>
     {
@@ -50,9 +49,9 @@ namespace SheetToObjects.Lib.Configuration
 
                 foreach (var attribute in attributes)
                 {
-                    if (attribute is IRuleAttribute ruleAttribute)
+                    if (attribute is IParsingRuleAttribute ruleAttribute)
                     {
-                        mappingConfigBuilder.AddRule(ruleAttribute.GetRule());
+                        mappingConfigBuilder.AddParsingRule(ruleAttribute.GetRule());
                     }
 
                     if (attribute is Format formatAttribute)

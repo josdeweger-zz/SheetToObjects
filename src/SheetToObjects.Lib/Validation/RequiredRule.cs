@@ -3,7 +3,7 @@ using SheetToObjects.Core;
 
 namespace SheetToObjects.Lib.Validation
 {
-    internal class RequiredRule : IRule
+    internal class RequiredRule : IParsingRule
     {
         public bool WhiteSpaceAllowed { get; private set; }
         

@@ -59,9 +59,10 @@ namespace SheetToObjects.Lib
                 var parsedDateTime = DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
                 return Result.Ok<object, string>(parsedDateTime);
             }
-            catch (Exception) { }
-
-            return Result.Fail<object, string>(errorMessage);
+            catch (Exception)
+            {
+                return Result.Fail<object, string>(errorMessage);
+            }
         }
 
         private Result<object, string> ParseEnumeration(Type type, string value)
@@ -95,7 +96,10 @@ namespace SheetToObjects.Lib
                     return Result.Ok<object, string>(enumValue);
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                return Result.Fail<object, string>(errorMessage);
+            }
 
             return Result.Fail<object, string>(errorMessage);
         }

@@ -14,11 +14,11 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.SheetProvider>();
             serviceCollection.AddTransient<Adapters.MicrosoftExcel.IProvideSheet, Adapters.MicrosoftExcel.SheetProvider>();
 
-            serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
+            serviceCollection.AddTransient<IMapSheetTo<EpicTrackingModel>>(ctx =>
             {
-                var sheetMapper = new SheetMapper();
+                var sheetMapper = new SheetMapper<EpicTrackingModel>();
 
-                sheetMapper.For<EpicTrackingModel>(cfg => cfg
+                sheetMapper.Configure(cfg => cfg
                     .Columns(columns => columns
                         .Add(column => column.WithColumnLetter("A").MapTo(m => m.SprintNumber))
                         .Add(column => column.WithColumnLetter("B").MapTo(m => m.SprintName))
@@ -28,11 +28,12 @@ namespace SheetToObjects.ConsoleApp
                         .Add(column => column.WithColumnLetter("F").MapTo(m => m.ForecastHigh))
                         .Add(column => column.WithColumnLetter("G").MapTo(m => m.ForecastLow))
                         .Add(column => column.WithColumnLetter("H").MapTo(m => m.Scope)))
-                    .BuildConfig()
                 );
 
                 return sheetMapper;
             });
+
+            serviceCollection.AddTransient<IMapSheetTo<ProfileModel>, SheetMapper<ProfileModel>>();
             
             serviceCollection.AddOptions();
             var configuration = new ConfigurationBuilder()

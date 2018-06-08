@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.Configuration.ColumnMappings
+namespace SheetToObjects.Lib.FluentConfiguration
 {
     internal class IndexColumnMapping : ColumnMapping
     {
-        public IndexColumnMapping(int columnIndex, string propertyName, string format, List<IRule> rules) 
-            : base(propertyName, format, rules)
+        public IndexColumnMapping(int columnIndex, string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules) 
+            : base(propertyName, format, parsingRules, rules)
         {
             ColumnIndex = columnIndex;
         }

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using SheetToObjects.Lib.Configuration;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
+using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
@@ -43,12 +42,14 @@ namespace SheetToObjects.Specs.Lib.Configuration
         [Fact]
         void WhenCreatingFromModelWithMappingByNameAttributeAndRequiredSettingWithWhitespace_NameAttributeIsSetInConfig()
         {
+            var columnName = "StringColumn";
+
             var result = new MappingConfigByAttributeCreator<ColumnNameAttributeTestModel>().CreateMappingConfig();
 
             result.Value.ColumnMappings.Single().Should().BeOfType<NameColumnMapping>()
-                .Which.ColumnName.Should().Be("stringcolumn");
+                .Which.ColumnName.Should().Be(columnName);
 
-            result.Value.ColumnMappings.Single().Rules.OfType<RequiredRule>().Single().WhiteSpaceAllowed.Should().BeTrue();
+            result.Value.ColumnMappings.Single().ParsingRules.OfType<RequiredRule>().Single().WhiteSpaceAllowed.Should().BeTrue();
         }
 
         [Fact]

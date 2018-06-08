@@ -1,4 +1,4 @@
-﻿namespace SheetToObjects.Lib.Configuration.ColumnMappings
+﻿namespace SheetToObjects.Lib.FluentConfiguration
 {
     internal interface IUseHeaderRow
     {

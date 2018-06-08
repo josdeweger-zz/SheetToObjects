@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SheetToObjects.Lib.Configuration
+namespace SheetToObjects.Lib.FluentConfiguration
 {
     public class MappingConfigBuilder<T>
     {
@@ -18,14 +18,9 @@ namespace SheetToObjects.Lib.Configuration
         /// <summary>
         /// Add columns
         /// </summary>
-        public MappingConfigBuilder<T> Columns(Func<ColumnsMappingBuilder<T>, ColumnsMappingBuilder<T>> columnMappingBuilderFunc)
+        public MappingConfig Columns(Func<ColumnsMappingBuilder<T>, ColumnsMappingBuilder<T>> columnMappingBuilderFunc)
         {
             columnMappingBuilderFunc(new ColumnsMappingBuilder<T>(_mappingConfig));
-            return this;
-        }
-        
-        public MappingConfig BuildConfig()
-        {
             return _mappingConfig;
         }
     }

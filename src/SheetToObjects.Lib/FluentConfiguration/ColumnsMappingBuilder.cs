@@ -1,7 +1,6 @@
 ﻿using System;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
 
-namespace SheetToObjects.Lib.Configuration
+namespace SheetToObjects.Lib.FluentConfiguration
 {
     public class ColumnsMappingBuilder<T>
     {

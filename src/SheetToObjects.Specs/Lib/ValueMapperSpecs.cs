@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using FluentAssertions;
 using Moq;
 using SheetToObjects.Lib;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
-using SheetToObjects.Lib.Validation;
 using Xunit;
 
 namespace SheetToObjects.Specs.Lib
@@ -22,11 +18,15 @@ namespace SheetToObjects.Specs.Lib
             var result = mapper.Map(
                 value: string.Empty, 
                 propertyType: typeof(int),
-                columnMapping: new PropertyColumnMapping("name", string.Empty, new List<IRule>()), 
-                rowIndex: 0);
+                columnIndex: 0,
+                rowIndex: 0,
+                displayName: string.Empty,
+                propertyName: string.Empty,
+                format: string.Empty,
+                isRequired: false);
 
             result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(default(int));
+            result.Value.Should().Be(string.Empty);
         }
 
         [Fact]
@@ -39,8 +39,12 @@ namespace SheetToObjects.Specs.Lib
             var result = mapper.Map(
                 value: string.Empty,
                 propertyType: typeof(int),
-                columnMapping: new PropertyColumnMapping("name", string.Empty, new List<IRule>{ new RequiredRule() }),
-                rowIndex: 0);
+                columnIndex: 0,
+                rowIndex: 0,
+                displayName: string.Empty,
+                propertyName: string.Empty,
+                format: string.Empty,
+                isRequired: true);
 
             result.IsFailure.Should().BeTrue();
         }
@@ -55,10 +59,14 @@ namespace SheetToObjects.Specs.Lib
             var mapper = new ValueMapper(valueParser.Object);
 
             var result = mapper.Map(
-                value: 50.ToString(),
+                value: value.ToString(),
                 propertyType: typeof(int),
-                columnMapping: new PropertyColumnMapping("name", string.Empty, new List<IRule>()),
-                rowIndex: 0);
+                columnIndex: 0,
+                rowIndex: 0,
+                displayName: string.Empty,
+                propertyName: string.Empty,
+                format: string.Empty,
+                isRequired: false);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(value);
@@ -76,8 +84,12 @@ namespace SheetToObjects.Specs.Lib
             var result = mapper.Map(
                 value: value,
                 propertyType: typeof(int),
-                columnMapping: new PropertyColumnMapping("name", string.Empty, new List<IRule>()),
-                rowIndex: 0);
+                columnIndex: 0,
+                rowIndex: 0,
+                displayName: string.Empty,
+                propertyName: string.Empty,
+                format: string.Empty,
+                isRequired: false);
 
             result.IsFailure.Should().BeTrue();
         }

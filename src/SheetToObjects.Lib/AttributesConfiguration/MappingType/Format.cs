@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SheetToObjects.Lib.Attributes.MappingType
+namespace SheetToObjects.Lib.AttributesConfiguration.MappingType
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class Format : Attribute

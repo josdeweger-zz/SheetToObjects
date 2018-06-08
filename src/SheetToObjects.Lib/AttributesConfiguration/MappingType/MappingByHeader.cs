@@ -1,7 +1,7 @@
 ﻿using System;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
+using SheetToObjects.Lib.FluentConfiguration;
 
-namespace SheetToObjects.Lib.Attributes.MappingType
+namespace SheetToObjects.Lib.AttributesConfiguration.MappingType
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class MappingByHeader : Attribute, IMappingAttribute

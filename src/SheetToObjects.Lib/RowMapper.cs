@@ -2,8 +2,7 @@
 using System.Linq;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Core;
-using SheetToObjects.Lib.Configuration;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
+using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
@@ -17,11 +16,11 @@ namespace SheetToObjects.Lib
             _valueMapper = valueMapper;
         }
 
-        public Result<T, List<IValidationError>> Map<T>(Row row, MappingConfig mappingConfig)
-            where T : new()
+        public Result<TModel, List<IValidationError>> Map<TModel>(Row row, MappingConfig mappingConfig)
+            where TModel : new()
         {
             var rowIValidationErrors = new List<IValidationError>();
-            var obj = new T();
+            var obj = new TModel();
             var properties = obj.GetType().GetProperties().ToList();
 
             properties.ForEach(property =>
@@ -44,34 +43,29 @@ namespace SheetToObjects.Lib
                     return;
                 }
 
-                rowIValidationErrors
-                    .AddRange(ValidateValueByColumnMapping(cell.Value.ToString(), columnMapping, row.RowIndex, property.Name)
-                        .ToList());
-
-                _valueMapper.Map(cell.Value.ToString(), property.PropertyType, columnMapping, row.RowIndex)
-                    .OnSuccess(value => property.SetValue(obj, value))
+                _valueMapper.Map(
+                        cell.Value.ToString(), 
+                        property.PropertyType, 
+                        columnMapping.ColumnIndex, 
+                        row.RowIndex,
+                        columnMapping.DisplayName, 
+                        columnMapping.PropertyName, 
+                        columnMapping.Format,
+                        columnMapping.IsRequired)
+                    .OnSuccess(value =>
+                    {
+                        if (value.ToString().IsNotNullOrEmpty())
+                        {
+                            property.SetValue(obj, value);
+                        }
+                    })
                     .OnFailure(validationError => { rowIValidationErrors.Add(validationError); });
             });
 
             if (rowIValidationErrors.Any())
-                return Result.Fail<T, List<IValidationError>>(rowIValidationErrors);
+                return Result.Fail<TModel, List<IValidationError>>(rowIValidationErrors);
 
-            return Result.Ok<T, List<IValidationError>>(obj);
-        }
-
-        private IEnumerable<IValidationError> ValidateValueByColumnMapping(string value, ColumnMapping mapping, int rowIndex, string propertyName)
-        {
-            return mapping.Rules
-                .Select(rule => rule.Validate(value))
-                .Where(validationResult => validationResult.IsFailure)
-                .Select(validationResult =>
-                    RuleValidationError.DoesNotMatchRule(
-                        mapping.ColumnIndex,
-                        rowIndex,
-                        validationResult.Error,
-                        mapping.DisplayName,
-                        value,
-                        propertyName));
+            return Result.Ok<TModel, List<IValidationError>>(obj);
         }
     }
 }
