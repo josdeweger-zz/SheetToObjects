@@ -1,7 +1,7 @@
 ﻿using System;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.Attributes.Rules
+namespace SheetToObjects.Lib.AttributesConfiguration.Rules
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class Regex : Attribute, IRuleAttribute

@@ -1,7 +1,5 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
-using SheetToObjects.Core;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
@@ -15,22 +13,30 @@ namespace SheetToObjects.Lib
             _valueParser = valueParser;
         }
 
-        public Result<object, IValidationError> Map(string value, Type propertyType, ColumnMapping columnMapping, int rowIndex)
+        public Result<object, IValidationError> Map(
+            string value, 
+            Type propertyType, 
+            int columnIndex, 
+            int rowIndex, 
+            string displayName, 
+            string propertyName, 
+            string format,
+            bool isRequired)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return HandleEmptyValue(propertyType, columnMapping, rowIndex);
+                return HandleEmptyValue(isRequired, columnIndex, rowIndex, displayName, propertyName);
             }
 
-            var parsingResult = _valueParser.Parse(propertyType, value, columnMapping.Format);
+            var parsingResult = _valueParser.Parse(propertyType, value, format);
 
             if (!parsingResult.IsSuccess)
             {
                 var validationError = ParsingValidationError.CouldNotParseValue(
-                    columnMapping.ColumnIndex,
+                    columnIndex,
                     rowIndex,
-                    columnMapping.DisplayName,
-                    columnMapping.PropertyName);
+                    displayName,
+                    propertyName);
 
                 return Result.Fail<object, IValidationError>(validationError);
             }
@@ -38,20 +44,20 @@ namespace SheetToObjects.Lib
             return Result.Ok<object, IValidationError>(parsingResult.Value);
         }
 
-        private static Result<object, IValidationError> HandleEmptyValue(Type propertyType, ColumnMapping columnMapping, int rowIndex)
+        private static Result<object, IValidationError> HandleEmptyValue(bool isRequired, int columnIndex, int rowIndex, string displayName, string propertyName)
         {
-            if (columnMapping.IsRequired)
+            if (isRequired)
             {
                 var cellValueRequiredError = RuleValidationError.CellValueRequired(
-                    columnMapping.ColumnIndex,
+                    columnIndex,
                     rowIndex,
-                    columnMapping.DisplayName,
-                    columnMapping.PropertyName);
+                    displayName,
+                    propertyName);
 
                 return Result.Fail<object, IValidationError>(cellValueRequiredError);
             }
 
-            return Result.Ok<object, IValidationError>(propertyType.GetDefault() ?? string.Empty);
+            return Result.Ok<object, IValidationError>(string.Empty);
         }
     }
 }

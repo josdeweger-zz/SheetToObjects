@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.Configuration.ColumnMappings
+namespace SheetToObjects.Lib.FluentConfiguration
 {
     internal class NameColumnMapping : ColumnMapping, IUseHeaderRow
     {
         public string ColumnName { get; }
 
-        public NameColumnMapping(string columnName, string propertyName, string format, List<IRule> rules) 
-            : base(propertyName, format, rules)
+        public NameColumnMapping(string columnName, string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules) 
+            : base(propertyName, format, parsingRules, rules)
         {
-            ColumnName = columnName.ToLower();
+            ColumnName = columnName;
             ColumnIndex = -1;
         }
 

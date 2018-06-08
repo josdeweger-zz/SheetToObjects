@@ -1,12 +1,11 @@
-﻿using SheetToObjects.Core;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
 
 namespace SheetToObjects.Lib.Validation
 {
-    internal class RegexRule : IRule
-    {
+    internal class RegexRule : IGenericRule
+    { 
         private readonly string _pattern;
         private readonly bool _isCaseSensitive;
 
@@ -16,23 +15,28 @@ namespace SheetToObjects.Lib.Validation
             _isCaseSensitive = isCaseSensitive;
         }
 
-        public Result Validate(string value)
+        public Result<TValue, IValidationError> Validate<TValue>(int columnIndex, int rowIndex, string columnName, string propertyName, TValue value)
         {
-            if(value.IsNullOrEmpty())
-                return Result.Fail("Value is empty");
-
             try
             {
-                if (Regex.IsMatch(value, _pattern, _isCaseSensitive ? RegexOptions.IgnoreCase : RegexOptions.None))
+                var stringValue = value.ToString();
+
+                if (Regex.IsMatch(stringValue, _pattern, _isCaseSensitive ? RegexOptions.IgnoreCase : RegexOptions.None))
                 {
-                    return Result.Ok(value);
+                    return Result.Ok<TValue, IValidationError>(value);
                 }
 
-                return Result.Fail($"Value '{value}' does not match pattern '{_pattern}'");
+                var validationError = RuleValidationError.ValueDoesNotMatchRegex(columnIndex, rowIndex, columnName,
+                    propertyName, stringValue, _pattern);
+
+                return Result.Fail<TValue, IValidationError>(validationError);
             }
             catch (Exception)
             {
-                return Result.Fail($"Value '{value}' could not be validated by regex '{_pattern}'");
+                var validationError = RuleValidationError.CouldNotValidateValueWithPattern(columnIndex, rowIndex, columnName,
+                    propertyName, _pattern);
+
+                return Result.Fail<TValue, IValidationError>(validationError);
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿using System;
-using SheetToObjects.Lib.Attributes.MappingType;
+using SheetToObjects.Lib.AttributesConfiguration.MappingType;
 
 namespace SheetToObjects.Specs.TestModels
 {
@@ -27,5 +27,7 @@ namespace SheetToObjects.Specs.TestModels
 
         [IgnorePropertyMapping]
         public string PropertyWithBody => string.Empty;
+
+        public decimal DecimalProperty { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 
-
-namespace SheetToObjects.Lib.Attributes
+namespace SheetToObjects.Lib.AttributesConfiguration
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class SheetToObjectConfig : Attribute

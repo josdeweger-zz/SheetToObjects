@@ -2,31 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
-using SheetToObjects.Lib.Configuration;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
+using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
 {
-    public class SheetMapper : IMapSheetToObjects
+    public class SheetMapper<T> : IMapSheetTo<T> where T : new()
     {
         private readonly IMapRow _rowMapper;
+        private readonly IValidateModels _modelValidator;
         private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
-        private Sheet _sheet;
 
-        private SheetMapper(IMapRow rowMapper)
+        private SheetMapper(IMapRow rowMapper, IValidateModels modelValidator)
         {
             _rowMapper = rowMapper;
+            _modelValidator = modelValidator;
         }
 
-        public SheetMapper() : this(new RowMapper(new ValueMapper(new ValueParser())))
+        public SheetMapper() : this(new RowMapper(new ValueMapper(new ValueParser())), new ModelValidator())
         {
+
         }
 
         /// <summary>
         /// Configure how the sheet maps to your model
         /// </summary>
-        public SheetMapper For<T>(Func<MappingConfigBuilder<T>, MappingConfig> mappingConfigFunc)
+        public SheetMapper<T> Configure(Func<MappingConfigBuilder<T>, MappingConfig> mappingConfigFunc)
         {
             var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<T>());
             _mappingConfigs.Add(typeof(T), mappingConfig);
@@ -35,30 +36,19 @@ namespace SheetToObjects.Lib
         }
 
         /// <summary>
-        /// Specify the sheet to map
-        /// </summary>
-        public SheetMapper Map(Sheet sheet)
-        {
-            _sheet = sheet;
-            return this;
-        }
-
-        /// <summary>
         /// Returns a result containing the parsed result and validation errors
         /// </summary>
-        public MappingResult<T> To<T>()
-            where T : new()
+        public MappingResult<T> Map(Sheet sheet)
         {
-            var type = typeof(T);
             var parsedModels = new List<T>();
             var validationErrors = new List<IValidationError>();
 
-            var mappingConfig = GetMappingConfig<T>(type);
+            var mappingConfig = GetMappingConfig();
 
             if (mappingConfig.HasHeaders)
-                SetHeaderIndexesInColumnMappings(_sheet.Rows.FirstOrDefault(), mappingConfig);
+                SetHeaderIndexesInColumnMappings(sheet.Rows.FirstOrDefault(), mappingConfig);
 
-            var dataRows = mappingConfig.HasHeaders ? _sheet.Rows.Skip(1).ToList() : _sheet.Rows;
+            var dataRows = mappingConfig.HasHeaders ? sheet.Rows.Skip(1).ToList() : sheet.Rows;
 
             dataRows.ForEach(row =>
             {
@@ -67,11 +57,18 @@ namespace SheetToObjects.Lib
                     .OnFailure(rowValidationErrors => validationErrors.AddRange(rowValidationErrors));
             });
 
-            return MappingResult<T>.Create(parsedModels, validationErrors);
+            var validationResult = _modelValidator.Validate(parsedModels, mappingConfig.ColumnMappings);
+
+            return MappingResult<T>.Create(
+                validationResult.ValidatedModels,
+                validationErrors.Concat(validationResult.ValidationErrors).ToList()
+            );
         }
 
-        private MappingConfig GetMappingConfig<T>(Type type) where T : new()
+        private MappingConfig GetMappingConfig()
         {
+            var type = typeof(T);
+
             if (_mappingConfigs.TryGetValue(type, out var mappingConfig))
                 return mappingConfig;
 

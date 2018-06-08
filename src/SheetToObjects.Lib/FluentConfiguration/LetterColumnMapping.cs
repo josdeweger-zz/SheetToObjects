@@ -2,14 +2,14 @@
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.Configuration.ColumnMappings
+namespace SheetToObjects.Lib.FluentConfiguration
 {
     internal class LetterColumnMapping : ColumnMapping
     {
         public string ColumnName { get; }
 
-        public LetterColumnMapping(string columnLetter, string propertyName, string format, List<IRule> rules) 
-            : base(propertyName, format, rules)
+        public LetterColumnMapping(string columnLetter, string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules) 
+            : base(propertyName, format, parsingRules, rules)
         {
             ColumnName = columnLetter;
             ColumnIndex = columnLetter.ConvertExcelColumnNameToIndex();

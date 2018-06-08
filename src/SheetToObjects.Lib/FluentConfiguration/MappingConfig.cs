@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SheetToObjects.Lib.Configuration.ColumnMappings;
 
-namespace SheetToObjects.Lib.Configuration
+namespace SheetToObjects.Lib.FluentConfiguration
 {
     public class MappingConfig
     {

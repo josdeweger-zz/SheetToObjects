@@ -1,19 +1,19 @@
 ﻿using System;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.Attributes.Rules
+namespace SheetToObjects.Lib.AttributesConfiguration.Rules
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class IsRequired : Attribute, IRuleAttribute
+    public class IsRequired : Attribute, IParsingRuleAttribute
     {
-        private bool _allowWhiteSpace;
+        private readonly bool _allowWhiteSpace;
 
         public IsRequired(bool allowWhiteSpace = false)
         {
             _allowWhiteSpace = allowWhiteSpace;
         }
 
-        public IRule GetRule()
+        public IParsingRule GetRule()
         {
             var requireRule = new RequiredRule();
 

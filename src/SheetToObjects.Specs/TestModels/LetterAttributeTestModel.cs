@@ -1,5 +1,5 @@
-﻿using SheetToObjects.Lib.Attributes;
-using SheetToObjects.Lib.Attributes.MappingType;
+﻿using SheetToObjects.Lib.AttributesConfiguration;
+using SheetToObjects.Lib.AttributesConfiguration.MappingType;
 
 namespace SheetToObjects.Specs.TestModels
 {

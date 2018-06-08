@@ -5,7 +5,7 @@ using System.Reflection;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.Configuration.ColumnMappings
+namespace SheetToObjects.Lib.FluentConfiguration
 {
     public class ColumnMappingBuilder<T>
     {
@@ -14,6 +14,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         private string _columnLetter;
         private string _propertyName;
         private string _format;
+        private readonly List<IParsingRule> _parsingRules = new List<IParsingRule>();
         private readonly List<IRule> _rules = new List<IRule>();
 
         /// <summary>
@@ -44,6 +45,15 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         }
 
         /// <summary>
+        /// Add new rule that the column needs to adhere to during parsing
+        /// </summary>
+        public ColumnMappingBuilder<T> AddParsingRule(IParsingRule rule)
+        {
+            _parsingRules.Add(rule);
+            return this;
+        }
+
+        /// <summary>
         /// Add new rule that the column needs to adhere to. After parsing these rules are validated
         /// </summary>
         public ColumnMappingBuilder<T> AddRule(IRule rule)
@@ -57,7 +67,7 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         /// </summary>
         public ColumnMappingBuilder<T> IsRequired()
         {
-            _rules.Add(new RequiredRule());
+            _parsingRules.Add(new RequiredRule());
             return this;
         }
 
@@ -76,6 +86,26 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
         public ColumnMappingBuilder<T> Matches(string regex)
         {
             _rules.Add(new RegexRule(regex));
+            return this;
+        }
+        
+        /// <summary>
+        /// Values in this column have to have at least the minimum given value
+        /// </summary>
+        public ColumnMappingBuilder<T> WithMinimum<TComparer>(TComparer comparer) 
+            where TComparer : IComparable<TComparer>
+        {
+            _rules.Add(new MinimumRule<TComparer>(comparer));
+            return this;
+        }
+
+        /// <summary>
+        /// Values in this column can have a maximum of the given value
+        /// </summary>
+        public ColumnMappingBuilder<T> WithMaximum<TComparer>(TComparer comparer)
+            where TComparer : IComparable<TComparer>
+        {
+            _rules.Add(new MaximumRule<TComparer>(comparer));
             return this;
         }
 
@@ -111,13 +141,13 @@ namespace SheetToObjects.Lib.Configuration.ColumnMappings
             _propertyName = property.Name;
 
             if(_header.IsNotNullOrWhiteSpace())
-                return new NameColumnMapping(_header, _propertyName, _format, _rules);
+                return new NameColumnMapping(_header, _propertyName, _format, _parsingRules, _rules);
             if(_columnLetter.IsNotNullOrWhiteSpace())
-                return new LetterColumnMapping(_columnLetter, _propertyName, _format, _rules);
+                return new LetterColumnMapping(_columnLetter, _propertyName, _format, _parsingRules, _rules);
             if(_columnIndex >= 0)
-                return new IndexColumnMapping(_columnIndex, _propertyName, _format, _rules);
+                return new IndexColumnMapping(_columnIndex, _propertyName, _format, _parsingRules, _rules);
 
-            return new PropertyColumnMapping(_propertyName, _format, _rules);
+            return new PropertyColumnMapping(_propertyName, _format, _parsingRules, _rules);
         }
     }
 }
