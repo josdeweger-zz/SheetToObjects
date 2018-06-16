@@ -43,7 +43,7 @@ namespace SheetToObjects.Lib
         public MappingResult<T> Map<T>(Sheet sheet)
             where T : new()
         {
-            var parsedModels = new List<T>();
+            var parsedModels = new List<ParsedModelResult<T>>();
             var validationErrors = new List<IValidationError>();
 
             var mappingConfig = GetMappingConfig<T>();
@@ -56,7 +56,7 @@ namespace SheetToObjects.Lib
             dataRows.ForEach(row =>
             {
                 _rowMapper.Map<T>(row, mappingConfig)
-                    .OnSuccess(obj => parsedModels.Add(obj))
+                    .OnSuccess(result => parsedModels.Add(result))
                     .OnFailure(rowValidationErrors => validationErrors.AddRange(rowValidationErrors));
             });
 

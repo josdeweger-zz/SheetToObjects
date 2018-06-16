@@ -8,16 +8,18 @@ namespace SheetToObjects.Lib.Validation
 {
     internal class ModelValidator : IValidateModels
     {
-        public ValidationResult<TModel> Validate<TModel>(List<TModel> parsedModels, List<ColumnMapping> columnMappings)
+        public ValidationResult<ParsedModelResult<TModel>> Validate<TModel>(
+            List<ParsedModelResult<TModel>> parsedModels, 
+            List<ColumnMapping> columnMappings)
             where TModel : new()
         {
-            var validatedModels = new List<TModel>();
+            var validatedModels = new List<ParsedModelResult<TModel>>();
             var validationErrors = new List<IValidationError>();
             var properties = typeof(TModel).GetProperties();
 
-            foreach (var parsedModel in parsedModels)
+            foreach (var parsedModelResult in parsedModels)
             {
-                var parsedModelValidationErrors = new List<IValidationError>();
+                var modelValidationErrors = new List<IValidationError>();
 
                 foreach (var property in properties)
                 {
@@ -27,35 +29,45 @@ namespace SheetToObjects.Lib.Validation
 
                     var genericRules = GetRulesOfType<IGenericRule>(columnMapping);
                     var comparableRules = GetRulesOfType<IComparableRule>(columnMapping);
+                    var customRules = GetRulesOfType<ICustomRule>(columnMapping);
 
-                    var propertyValue = property.GetValue(parsedModel);
+                    var propertyValue = property.GetValue(parsedModelResult.ParsedModel);
 
                     foreach (var genericRule in genericRules)
                     {
-                        genericRule.Validate(0, 0, columnMapping.DisplayName, property.Name, propertyValue)
+                        genericRule.Validate(columnMapping.ColumnIndex, parsedModelResult.RowIndex, columnMapping.DisplayName, property.Name, propertyValue)
                             .OnFailure(failure =>
                             {
-                                parsedModelValidationErrors.Add(failure);
+                                modelValidationErrors.Add(failure);
                             });
                     }
 
                     foreach (var comparableRule in comparableRules)
                     {
-                        comparableRule.Validate(0, 0, columnMapping.DisplayName, property.Name, propertyValue)
+                        comparableRule.Validate(columnMapping.ColumnIndex, parsedModelResult.RowIndex, columnMapping.DisplayName, property.Name, propertyValue)
                             .OnFailure(failure =>
                             {
-                                parsedModelValidationErrors.Add(failure);
+                                modelValidationErrors.Add(failure);
+                            });
+                    }
+
+                    foreach (var customRule in customRules)
+                    {
+                        customRule.Validate(columnMapping.ColumnIndex, parsedModelResult.RowIndex, columnMapping.DisplayName, property.Name, propertyValue)
+                            .OnFailure(failure =>
+                            {
+                                modelValidationErrors.Add(failure);
                             });
                     }
                 }
 
-                if (parsedModelValidationErrors.Any())
-                    validationErrors.AddRange(parsedModelValidationErrors);
+                if (modelValidationErrors.Any())
+                    validationErrors.AddRange(modelValidationErrors);
                 else
-                    validatedModels.Add(parsedModel);
+                    validatedModels.Add(parsedModelResult);
             }
 
-            return new ValidationResult<TModel>(validatedModels, validationErrors);
+            return new ValidationResult<ParsedModelResult<TModel>>(validatedModels, validationErrors);
         }
 
         private static List<TRule> GetRulesOfType<TRule>(ColumnMapping columnMapping)

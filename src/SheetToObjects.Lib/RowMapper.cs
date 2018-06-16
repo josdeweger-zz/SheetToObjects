@@ -16,7 +16,7 @@ namespace SheetToObjects.Lib
             _valueMapper = valueMapper;
         }
 
-        public Result<TModel, List<IValidationError>> Map<TModel>(Row row, MappingConfig mappingConfig)
+        public Result<ParsedModelResult<TModel>, List<IValidationError>> Map<TModel>(Row row, MappingConfig mappingConfig)
             where TModel : new()
         {
             var rowIValidationErrors = new List<IValidationError>();
@@ -63,9 +63,11 @@ namespace SheetToObjects.Lib
             });
 
             if (rowIValidationErrors.Any())
-                return Result.Fail<TModel, List<IValidationError>>(rowIValidationErrors);
+                return Result.Fail<ParsedModelResult<TModel>, List<IValidationError>>(rowIValidationErrors);
 
-            return Result.Ok<TModel, List<IValidationError>>(obj);
+            var parsedModelResult = new ParsedModelResult<TModel>(obj, row.RowIndex);
+
+            return Result.Ok<ParsedModelResult<TModel>, List<IValidationError>>(parsedModelResult);
         }
     }
 }

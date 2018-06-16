@@ -86,7 +86,10 @@ The actual mapping is easy, tell your instance of the `SheetMapper` to map a she
 MappingResult result = sheetMapper.Map<SomeModel>(sheet);
 ```
 
-The result will contain a list of validation errors (if any), flags indicating success or failure and a list of succesfully parsed models (if any).
+The result will contain a list of:
+- validation errors (if any)
+- flags indicating success or failure 
+- a list of succesfully parsed model results (if any), which is just a wrapper around the parsed model holding the sheet row index for reference
 
 ## Dependency Injection
 You have the option of creating and configuring a new `SheetMapper` instance every time you need one, but this might become tedious pretty fast. Newing up an instance everywhere could also decrease testability, 
