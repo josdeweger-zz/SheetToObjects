@@ -14,13 +14,22 @@ namespace SheetToObjects.Lib.FluentConfiguration
             _mappingConfig.HasHeaders = true;
             return this;
         }
-        
+
         /// <summary>
-        /// Add columns
+        /// Add a column
         /// </summary>
-        public MappingConfig Columns(Func<ColumnsMappingBuilder<T>, ColumnsMappingBuilder<T>> columnMappingBuilderFunc)
+        public MappingConfigBuilder<T> MapColumn(Func<ColumnMappingBuilder<T>, ColumnMapping> columnMappingBuilderFunc)
         {
-            columnMappingBuilderFunc(new ColumnsMappingBuilder<T>(_mappingConfig));
+            var columnMapping = columnMappingBuilderFunc(new ColumnMappingBuilder<T>());
+
+            _mappingConfig.ColumnMappings.RemoveAll(c => c.PropertyName == columnMapping.PropertyName);
+            _mappingConfig.ColumnMappings.Add(columnMapping);
+
+            return this;
+        }
+
+        public MappingConfig Build()
+        {
             return _mappingConfig;
         }
     }

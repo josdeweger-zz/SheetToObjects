@@ -5,7 +5,7 @@ using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
 
-namespace SheetToObjects.Specs.Lib.Configuration
+namespace SheetToObjects.Specs.Lib.FluentConfiguration
 {
     public class MappingConfigBuilderSpecs
     {
@@ -13,10 +13,10 @@ namespace SheetToObjects.Specs.Lib.Configuration
         public void GivenCreatingMappingConfiguration_WhenAddingColumnConfig_ColumnConfigIsAdded()
         {
             var result = new MappingConfigBuilder<TestModel>()
-                .Columns(columns => columns
-                    .Add(column => column
-                        .WithHeader("FirstName")
-                        .MapTo(m => m.StringProperty)));
+                .MapColumn(column => column
+                    .WithHeader("FirstName")
+                    .MapTo(m => m.StringProperty))
+                .Build();
 
             result.ColumnMappings.OfType<NameColumnMapping>().Should().HaveCount(1);
         }
@@ -27,10 +27,10 @@ namespace SheetToObjects.Specs.Lib.Configuration
             var columnName = "FirstName";
 
             var result = new MappingConfigBuilder<TestModel>()
-                .Columns(columns => columns
-                    .Add(column => column
-                        .WithHeader(columnName)
-                        .MapTo(m => m.StringProperty)));
+                .MapColumn(column => column
+                    .WithHeader(columnName)
+                    .MapTo(m => m.StringProperty))
+                .Build();
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().ColumnName.Should().Be(columnName);
         }
@@ -39,10 +39,10 @@ namespace SheetToObjects.Specs.Lib.Configuration
         public void GivenCreatingMappingConfiguration_WhenAddingProperty_PropertyNameIsSet()
         {
             var result = new MappingConfigBuilder<TestModel>()
-                .Columns(columns => columns
-                    .Add(column => column
-                        .WithHeader("FirstName")
-                        .MapTo(m => m.StringProperty)));
+                .MapColumn(column => column
+                    .WithHeader("FirstName")
+                    .MapTo(m => m.StringProperty))
+                .Build();
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().PropertyName.Should().Be("StringProperty");
         }
@@ -51,10 +51,10 @@ namespace SheetToObjects.Specs.Lib.Configuration
         public void GivenCreatingMappingConfiguration_WhenAddingRequiredRule_RuleIsAdded()
         {
             var result = new MappingConfigBuilder<TestModel>()
-                .Columns(columns => columns
-                    .Add(column => column.WithHeader("FirstName")
-                        .IsRequired()
-                        .MapTo(m => m.StringProperty)));
+                .MapColumn(column => column.WithHeader("FirstName")
+                    .IsRequired()
+                    .MapTo(m => m.StringProperty))
+                .Build();
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().ParsingRules.Single().Should().BeOfType<RequiredRule>();
         }
@@ -65,11 +65,11 @@ namespace SheetToObjects.Specs.Lib.Configuration
             var emailRegex = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
             var result = new MappingConfigBuilder<TestModel>()
-                .Columns(columns => columns
-                    .Add(column => column
-                        .WithHeader("FirstName")
-                        .Matches(emailRegex)
-                        .MapTo(m => m.StringProperty)));
+                .MapColumn(column => column
+                    .WithHeader("FirstName")
+                    .Matches(emailRegex)
+                    .MapTo(m => m.StringProperty))
+                .Build();
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
         }
@@ -80,11 +80,11 @@ namespace SheetToObjects.Specs.Lib.Configuration
             var emailRegex = "^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
             var result = new MappingConfigBuilder<TestModel>()
-                .Columns(columns => columns
-                    .Add(column => column
-                        .WithHeader("FirstName")
-                        .Matches(emailRegex)
-                        .MapTo(m => m.StringProperty)));
+                .MapColumn(column => column
+                    .WithHeader("FirstName")
+                    .Matches(emailRegex)
+                    .MapTo(m => m.StringProperty))
+                .Build();
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
         }

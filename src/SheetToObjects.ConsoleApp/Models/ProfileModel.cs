@@ -1,7 +1,7 @@
 ﻿using System;
 using SheetToObjects.Lib.AttributesConfiguration;
 using SheetToObjects.Lib.AttributesConfiguration.MappingType;
-using SheetToObjects.Lib.AttributesConfiguration.Rules;
+using SheetToObjects.Lib.AttributesConfiguration.RuleAttributes;
 
 namespace SheetToObjects.ConsoleApp.Models
 {

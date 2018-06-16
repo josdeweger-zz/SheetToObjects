@@ -12,12 +12,12 @@ namespace SheetToObjects.ConsoleApp
     {
         private readonly AppSettings _appSettings;
         private readonly IProvideSheet _sheetProvider;
-        private readonly IMapSheetTo<EpicTrackingModel> _sheetMapper;
+        private readonly IMapSheetToObjects _sheetMapper;
 
         public GoogleSheetsApp(
             IOptions<AppSettings> appSettings,
             IProvideSheet sheetProvider,
-            IMapSheetTo<EpicTrackingModel> sheetMapper)
+            IMapSheetToObjects sheetMapper)
         {
             _appSettings = appSettings.Value;
             _sheetProvider = sheetProvider;
@@ -31,7 +31,7 @@ namespace SheetToObjects.ConsoleApp
                 "'Herstructurering Filters Data'!A1:H9", 
                 _appSettings.ApiKey);
 
-            var result = _sheetMapper.Map(sheet);
+            var result = _sheetMapper.Map<EpicTrackingModel>(sheet);
 
             WriteToConsole(sheet, result.ParsedModels, result.ValidationErrors);
         }

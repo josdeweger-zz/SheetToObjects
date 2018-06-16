@@ -1,16 +1,16 @@
 ﻿using System;
 using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.AttributesConfiguration.Rules
+namespace SheetToObjects.Lib.AttributesConfiguration.RuleAttributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class Regex : Attribute, IRuleAttribute
+    public class RegexAttribute : Attribute, IRuleAttribute
     {
         public string Pattern { get; }
 
         public bool IgnoreCase { get;  }
         
-        public Regex(string pattern, bool ignoreCase)
+        public RegexAttribute(string pattern, bool ignoreCase)
         {
             Pattern = pattern;
             IgnoreCase = ignoreCase;
