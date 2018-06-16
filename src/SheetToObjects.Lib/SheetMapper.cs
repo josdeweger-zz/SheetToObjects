@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
@@ -11,7 +12,7 @@ namespace SheetToObjects.Lib
     {
         private readonly IMapRow _rowMapper;
         private readonly IValidateModels _modelValidator;
-        private readonly Dictionary<Type, MappingConfig> _mappingConfigs = new Dictionary<Type, MappingConfig>();
+        private readonly ConcurrentDictionary<Type, MappingConfig> _mappingConfigs = new ConcurrentDictionary<Type, MappingConfig>();
 
         private SheetMapper(IMapRow rowMapper, IValidateModels modelValidator)
         {
@@ -31,7 +32,7 @@ namespace SheetToObjects.Lib
             where T : new()
         {
             var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<T>()).Build();
-            _mappingConfigs.Add(typeof(T), mappingConfig);
+            _mappingConfigs.AddOrUpdate(typeof(T), mappingConfig, (type, existingConfig) => mappingConfig);
 
             return this;
         }

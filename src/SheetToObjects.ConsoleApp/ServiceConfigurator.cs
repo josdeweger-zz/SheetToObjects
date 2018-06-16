@@ -32,8 +32,6 @@ namespace SheetToObjects.ConsoleApp
                 return sheetMapper;
             });
 
-            serviceCollection.AddTransient<IMapSheetToObjects, SheetMapper>();
-
             serviceCollection.AddOptions();
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
