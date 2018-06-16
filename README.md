@@ -50,7 +50,7 @@ The following default validation attributes are available as attributes;
 
 The model attributes can be overwritten by configuring a config for the model on the used SheetMapper
 
-### More on configuration
+### How to map a column to a model property?
 There are multiple ways to map a column in the datasource to the model property
 
 ##### By Index
@@ -68,14 +68,28 @@ When u don't want the property to be mapped use the `[IgnorePropertyMapping]` at
 
 For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs
 
+### Validation
+The following validations are provided out of the box:
+- IsRequired
+- Regex
+- Minimum
+- Maximum
+
+If you need your own custom validation, you can extend the library by implementing one of the following interfaces and writing extension methods:
+- IParsingRule (these rules are validated during parsing of the cell value, e.g. IsRequiredRule)
+- IComparableRule (these rules do some kind of comparison between values)
+- IGenericRule (all other rules)
+
 ## Doing the actual mapping
 The actual mapping is easy, tell your instance of the `SheetMapper` to map a sheet to a `Type`:
 ```
-MappingResult result = sheetMapper.Map<SomeModel>(sheet); //contains successfully parsed models and validation errors
+MappingResult result = sheetMapper.Map<SomeModel>(sheet);
 ```
 
+The result will contain a list of validation errors (if any), flags indicating success or failure and a list of succesfully parsed models (if any).
+
 ## Dependency Injection
-You have the option of creating and configuring a new `SheetMapper` instance every time you need one, but this might become tedious pretty fast. It will also decrease testability, 
+You have the option of creating and configuring a new `SheetMapper` instance every time you need one, but this might become tedious pretty fast. Newing up an instance everywhere could also decrease testability, 
 so it might be a good idea to use the Dependency Injection Framework of your choice to register `SheetToObjects`. An example using `Microsoft.Extensions.DependencyInjection`:
 
 ```
