@@ -5,7 +5,7 @@ using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
 
-namespace SheetToObjects.Specs.Lib.Configuration
+namespace SheetToObjects.Specs.Lib.AttributeConfiguration
 {
     public class MappingConfigByAttributeCreatorSpecs
     {

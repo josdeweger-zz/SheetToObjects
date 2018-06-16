@@ -7,7 +7,7 @@ using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
 {
-    public class SheetMapper<T> : IMapSheetTo<T> where T : new()
+    public class SheetMapper : IMapSheetToObjects
     {
         private readonly IMapRow _rowMapper;
         private readonly IValidateModels _modelValidator;
@@ -27,9 +27,10 @@ namespace SheetToObjects.Lib
         /// <summary>
         /// Configure how the sheet maps to your model
         /// </summary>
-        public SheetMapper<T> Configure(Func<MappingConfigBuilder<T>, MappingConfig> mappingConfigFunc)
+        public SheetMapper AddConfigFor<T>(Func<MappingConfigBuilder<T>, MappingConfigBuilder<T>> mappingConfigFunc)
+            where T : new()
         {
-            var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<T>());
+            var mappingConfig = mappingConfigFunc(new MappingConfigBuilder<T>()).Build();
             _mappingConfigs.Add(typeof(T), mappingConfig);
 
             return this;
@@ -38,12 +39,13 @@ namespace SheetToObjects.Lib
         /// <summary>
         /// Returns a result containing the parsed result and validation errors
         /// </summary>
-        public MappingResult<T> Map(Sheet sheet)
+        public MappingResult<T> Map<T>(Sheet sheet)
+            where T : new()
         {
             var parsedModels = new List<T>();
             var validationErrors = new List<IValidationError>();
 
-            var mappingConfig = GetMappingConfig();
+            var mappingConfig = GetMappingConfig<T>();
 
             if (mappingConfig.HasHeaders)
                 SetHeaderIndexesInColumnMappings(sheet.Rows.FirstOrDefault(), mappingConfig);
@@ -65,7 +67,7 @@ namespace SheetToObjects.Lib
             );
         }
 
-        private MappingConfig GetMappingConfig()
+        private MappingConfig GetMappingConfig<T>()
         {
             var type = typeof(T);
 

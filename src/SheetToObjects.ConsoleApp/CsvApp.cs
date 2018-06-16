@@ -10,11 +10,11 @@ namespace SheetToObjects.ConsoleApp
     public class CsvApp
     {
         private readonly IProvideSheet _sheetProvider;
-        private readonly IMapSheetTo<ProfileModel> _sheetMapper;
+        private readonly IMapSheetToObjects _sheetMapper;
 
         public CsvApp(
             IProvideSheet sheetProvider,
-            IMapSheetTo<ProfileModel> sheetMapper)
+            IMapSheetToObjects sheetMapper)
         {
             _sheetProvider = sheetProvider;
             _sheetMapper = sheetMapper;
@@ -25,7 +25,7 @@ namespace SheetToObjects.ConsoleApp
             var fileStream = File.Open(@"./Files/profiles.csv", FileMode.Open);
             var sheet = _sheetProvider.Get(fileStream, ';');
 
-            var result = _sheetMapper.Map(sheet);
+            var result = _sheetMapper.Map<ProfileModel>(sheet);
 
             WriteToConsole(sheet, result.ParsedModels, result.ValidationErrors);
         }

@@ -1,6 +1,6 @@
 ﻿using SheetToObjects.Lib.Validation;
 
-namespace SheetToObjects.Lib.AttributesConfiguration.Rules
+namespace SheetToObjects.Lib.AttributesConfiguration.RuleAttributes
 {
     interface IParsingRuleAttribute
     {

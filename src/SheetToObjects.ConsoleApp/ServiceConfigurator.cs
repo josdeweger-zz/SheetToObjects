@@ -14,27 +14,26 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.SheetProvider>();
             serviceCollection.AddTransient<Adapters.MicrosoftExcel.IProvideSheet, Adapters.MicrosoftExcel.SheetProvider>();
 
-            serviceCollection.AddTransient<IMapSheetTo<EpicTrackingModel>>(ctx =>
+            serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
             {
-                var sheetMapper = new SheetMapper<EpicTrackingModel>();
+                var sheetMapper = new SheetMapper();
 
-                sheetMapper.Configure(cfg => cfg
-                    .Columns(columns => columns
-                        .Add(column => column.WithColumnLetter("A").MapTo(m => m.SprintNumber))
-                        .Add(column => column.WithColumnLetter("B").MapTo(m => m.SprintName))
-                        .Add(column => column.WithColumnLetter("C").MapTo(m => m.StoryPointsCompleted))
-                        .Add(column => column.WithColumnLetter("D").MapTo(m => m.TotalCompleted))
-                        .Add(column => column.WithColumnLetter("E").MapTo(m => m.ForecastNormal))
-                        .Add(column => column.WithColumnLetter("F").MapTo(m => m.ForecastHigh))
-                        .Add(column => column.WithColumnLetter("G").MapTo(m => m.ForecastLow))
-                        .Add(column => column.WithColumnLetter("H").MapTo(m => m.Scope)))
+                sheetMapper.AddConfigFor<EpicTrackingModel>(cfg => cfg
+                    .MapColumn(column => column.WithColumnLetter("A").MapTo(m => m.SprintNumber))
+                    .MapColumn(column => column.WithColumnLetter("B").MapTo(m => m.SprintName))
+                    .MapColumn(column => column.WithColumnLetter("C").MapTo(m => m.StoryPointsCompleted))
+                    .MapColumn(column => column.WithColumnLetter("D").MapTo(m => m.TotalCompleted))
+                    .MapColumn(column => column.WithColumnLetter("E").MapTo(m => m.ForecastNormal))
+                    .MapColumn(column => column.WithColumnLetter("F").MapTo(m => m.ForecastHigh))
+                    .MapColumn(column => column.WithColumnLetter("G").MapTo(m => m.ForecastLow))
+                    .MapColumn(column => column.WithColumnLetter("H").MapTo(m => m.Scope))
                 );
 
                 return sheetMapper;
             });
 
-            serviceCollection.AddTransient<IMapSheetTo<ProfileModel>, SheetMapper<ProfileModel>>();
-            
+            serviceCollection.AddTransient<IMapSheetToObjects, SheetMapper>();
+
             serviceCollection.AddOptions();
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

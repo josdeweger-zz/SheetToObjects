@@ -38,8 +38,8 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenModel_WhenNoMappingIsConfigured_ItThrows()
         {
-            Action result = () => new SheetMapper<WithoutSheetToObjectConfigModel>()
-                .Map(_sheetData);
+            Action result = () => new SheetMapper()
+                .Map<WithoutSheetToObjectConfigModel>(_sheetData);
 
             result.Should().Throw<ArgumentException>();
         }
@@ -47,11 +47,11 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenSheet_WhenMappingModelDoubleProperty_ItSetsPropertyOnModel()
         {
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns.Add(column => column.WithHeader("Double").MapTo(t => t.DoubleProperty))))
-                .Map(_sheetData);
+                    .MapColumn(column => column.WithHeader("Double").MapTo(t => t.DoubleProperty)))
+                .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
             result.ParsedModels.Single().DoubleProperty.Should().Be(_doubleValue);
@@ -60,11 +60,11 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenSheet_WhenMappingModelIntProperty_ItSetsPropertyOnModel()
         {
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns.Add(column => column.WithHeader("Integer").MapTo(t => t.IntProperty))))
-                .Map(_sheetData);
+                    .MapColumn(column => column.WithHeader("Integer").MapTo(t => t.IntProperty)))
+                .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
             result.ParsedModels.Single().IntProperty.Should().Be(_intValue);
@@ -73,11 +73,11 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenSheet_WhenMappingModelBoolProperty_ItSetsPropertyOnModel()
         {
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns.Add(column => column.WithHeader("Boolean").MapTo(t => t.BoolProperty))))
-                .Map(_sheetData);
+                    .MapColumn(column => column.WithHeader("Boolean").MapTo(t => t.BoolProperty)))
+                .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
             result.ParsedModels.Single().BoolProperty.Should().Be(_boolValue);
@@ -86,12 +86,11 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenSheet_WhenMappingModelEnumProperty_ItSetsPropertyOnModel()
         {
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns =>
-                        columns.Add(column => column.WithHeader("Enumeration").MapTo(t => t.EnumProperty))))
-                .Map(_sheetData);
+                    .MapColumn(column => column.WithHeader("Enumeration").MapTo(t => t.EnumProperty)))
+                .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
             result.ParsedModels.Single().EnumProperty.Should().Be(_enumValue);
@@ -100,15 +99,14 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenSheet_WhenMappingModelDateTimeProperty_ItSetsPropertyOnModel()
         {
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns =>
-                        columns.Add(column => column
+                    .MapColumn(column => column
                             .WithHeader("DateTime")
                             .UsingFormat("yyyy-MM-dd")
-                            .MapTo(t => t.DateTimeProperty))))
-                .Map(_sheetData);
+                            .MapTo(t => t.DateTimeProperty)))
+                .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
             result.ParsedModels.Single().DateTimeProperty.Should().Be(_dateTimeValue);
@@ -117,13 +115,13 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenSheet_WhenMappingModelStringProperty_ItSetsPropertyOnModel()
         {
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns.Add(column => column
+                    .MapColumn(column => column
                         .WithHeader("String")
-                        .MapTo(t => t.StringProperty))))
-                .Map(_sheetData);
+                        .MapTo(t => t.StringProperty)))
+                .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
             result.ParsedModels.Single().StringProperty.Should().Be(_stringValue);
@@ -134,14 +132,14 @@ namespace SheetToObjects.Specs.Lib
         {
             var columnName = "String";
 
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns.Add(column => column
+                    .MapColumn(column => column
                         .WithHeader(columnName)
                         .Matches("some_invalid_pattern")
-                        .MapTo(t => t.StringProperty))))
-                .Map(_sheetData);
+                        .MapTo(t => t.StringProperty)))
+                .Map<TestModel>(_sheetData);
 
             result.IsFailure.Should().BeTrue();
             result.ParsedModels.Should().HaveCount(0);
@@ -153,14 +151,14 @@ namespace SheetToObjects.Specs.Lib
         {
             var columnName = "String";
 
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns.Add(column => column
+                    .MapColumn(column => column
                         .WithHeader(columnName)
                         .IsRequired()
-                        .MapTo(t => t.DoubleProperty))))
-                .Map(_sheetData);
+                        .MapTo(t => t.DoubleProperty)))
+                .Map<TestModel>(_sheetData);
 
             result.IsFailure.Should().BeTrue();
             result.ParsedModels.Should().HaveCount(0);
@@ -170,213 +168,60 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenSheet_WhenMappingModeltoAPropertyWithBody_ItShouldThrowException()
         {
-            Action result = () => new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            Action result = () => new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns =>
-                        columns.Add(column => column
-                            .WithHeader("String")
-                            .MapTo(t => t.PropertyWithBody))))
-                .Map(_sheetData);
+                    .MapColumn(column => column
+                        .WithHeader("String")
+                        .MapTo(t => t.PropertyWithBody)))
+                .Map<TestModel>(_sheetData);
 
             result.Should().Throw<ArgumentException>();
         }
 
         [Fact]
-        public void GivenSheet_WhenMappingRequiredPropertyThatIsSet_ItSetsNoValidationError()
+        public void GivenSheetMapper_WhenCreatingTwoConfigs_TheyBothExist()
         {
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
-                    .HasHeaders()
-                    .Columns(columns => columns
-                        .Add(column => column
-                            .WithHeader("String")
-                            .IsRequired()
-                            .MapTo(t => t.StringProperty))))
-                .Map(_sheetData);
-
-            result.ValidationErrors.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void GivenASheet_WhenMappingRequiredModelPropertyToInvalidType_ShouldSetDefaultValue()
-        {
-            var columnName = "String";
-
-            var testModelList = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
-                    .HasHeaders()
-                    .Columns(columns => columns
-                        .Add(column => column
-                            .WithHeader(columnName)
-                            .IsRequired()
-                            .MapTo(t => t.DoubleProperty))))
-                .Map(_sheetData);
-
-            testModelList.IsFailure.Should().BeTrue();
-            testModelList.ParsedModels.Should().HaveCount(0);
-            testModelList.ValidationErrors.Single().ColumnName.Should().Be(columnName);
-        }
-
-        [Fact]
-        public void GivenSheet_WhenMappingRequiredPropertyThatIsEmpty_ItSetsValidationError()
-        {
-            var columnName = "String";
-
-            var sheetData = new SheetBuilder()
-                .AddHeaders(columnName)
+            var sheetDataModelOne = new SheetBuilder()
+                .AddHeaders("ModelOnePropertyOne")
                 .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(4).WithRowIndex(1).WithValue(string.Empty).Build())
-                    .Build(0))
+                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue("SomeValue").Build())
+                    .Build(1))
                 .Build();
 
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
-                    .HasHeaders()
-                    .Columns(columns => columns
-                        .Add(column => column.WithHeader(columnName).IsRequired().MapTo(t => t.StringProperty))))
-                .Map(sheetData);
-
-            result.ValidationErrors.Should().HaveCount(1);
-            result.ValidationErrors.Single().PropertyName.Should().Be("StringProperty");
-            result.ValidationErrors.Single().CellValue.Should().Be(string.Empty);
-            result.ValidationErrors.Single().ColumnIndex.Should().Be(0);
-            result.ValidationErrors.Single().RowIndex.Should().Be(0);
-            result.ValidationErrors.Single().ColumnName.Should().Be(columnName);
-        }
-
-        [Fact]
-        public void GivenSheet_WhenMappingIntValueSmallerThanMinValue_ItSetsValidationError()
-        {
-            var columnName = "Int";
-
-            var sheetData = new SheetBuilder()
-                .AddHeaders(columnName)
+            var sheetDataModelTwo = new SheetBuilder()
+                .AddHeaders("ModelTwoPropertyOne")
                 .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue(5).Build())
-                    .Build(0))
+                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue("1").Build())
+                    .Build(1))
                 .Build();
 
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+            var sheetMapper = new SheetMapper()
+                .AddConfigFor<ModelOne>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns
-                        .Add(column => column
-                            .WithHeader(columnName)
-                            .WithMinimum(10)
-                            .MapTo(t => t.IntProperty))))
-                .Map(sheetData);
-
-            result.ValidationErrors.Should().HaveCount(1);
-            result.ValidationErrors.Single().PropertyName.Should().Be("IntProperty");
-            result.ValidationErrors.Single().CellValue.Should().Be(string.Empty);
-            result.ValidationErrors.Single().ColumnName.Should().Be(columnName);
-        }
-
-        [Fact]
-        public void GivenSheet_WhenMappingDoubleValueBiggerThanMinValue_ItSetsNoValidationError()
-        {
-            var columnName = "Double";
-
-            var sheetData = new SheetBuilder()
-                .AddHeaders(columnName)
-                .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue(5.0D).Build())
-                    .Build(0))
-                .Build();
-
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
+                    .MapColumn(column => column.WithHeader("ModelOnePropertyOne").MapTo(t => t.ModelOnePropertyOne)))
+                .AddConfigFor<ModelTwo>(cfg => cfg
                     .HasHeaders()
-                    .Columns(columns => columns
-                        .Add(column => column
-                            .WithHeader(columnName)
-                            .WithMinimum(4D)
-                            .MapTo(t => t.DoubleProperty))))
-                .Map(sheetData);
+                    .MapColumn(column => column.MapTo(t => t.ModelTwoPropertyOne)));
 
-            result.ValidationErrors.Should().BeEmpty();
+            var resultModelOne = sheetMapper.Map<ModelOne>(sheetDataModelOne);
+            var resultModelTwo = sheetMapper.Map<ModelTwo>(sheetDataModelTwo);
+
+            resultModelOne.IsSuccess.Should().BeTrue();
+            resultModelOne.ParsedModels.Single().ModelOnePropertyOne.Should().Be("SomeValue");
+
+            resultModelTwo.IsSuccess.Should().BeTrue();
+            resultModelTwo.ParsedModels.Single().ModelTwoPropertyOne.Should().Be(1);
         }
+    }
 
-        [Fact]
-        public void GivenSheet_WhenMappingDoubleValueSmallerThanMinValue_ItSetsValidationError()
-        {
-            var columnName = "Double";
+    public class ModelOne
+    {
+        public string ModelOnePropertyOne { get; set; }
+    }
 
-            var sheetData = new SheetBuilder()
-                .AddHeaders(columnName)
-                .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue(5.0D).Build())
-                    .Build(0))
-                .Build();
-
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
-                    .HasHeaders()
-                    .Columns(columns => columns
-                        .Add(column => column
-                            .WithHeader(columnName)
-                            .WithMinimum(10D)
-                            .MapTo(t => t.DoubleProperty))))
-                .Map(sheetData);
-
-            result.ValidationErrors.Should().HaveCount(1);
-            result.ValidationErrors.Single().PropertyName.Should().Be("DoubleProperty");
-            result.ValidationErrors.Single().CellValue.Should().Be(string.Empty);
-            result.ValidationErrors.Single().ColumnName.Should().Be(columnName);
-        }
-
-        [Fact]
-        public void GivenSheet_WhenMappingDecimalValueSmallerThanMaxValue_ItSetsNoValidationError()
-        {
-            var columnName = "Decimal";
-
-            var sheetData = new SheetBuilder()
-                .AddHeaders(columnName)
-                .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue(3.123m).Build())
-                    .Build(0))
-                .Build();
-
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
-                    .HasHeaders()
-                    .Columns(columns => columns
-                        .Add(column => column
-                            .WithHeader(columnName)
-                            .WithMaximum(3.123m)
-                            .MapTo(t => t.DecimalProperty))))
-                .Map(sheetData);
-
-            result.ValidationErrors.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void GivenSheet_WhenMappingDecimalValueBiggerThanMaxValue_ItSetsValidationError()
-        {
-            var columnName = "Decimal";
-
-            var sheetData = new SheetBuilder()
-                .AddHeaders(columnName)
-                .AddRow(r => r
-                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(0).WithValue(5.012m).Build())
-                    .Build(0))
-                .Build();
-
-            var result = new SheetMapper<TestModel>()
-                .Configure(cfg => cfg
-                    .HasHeaders()
-                    .Columns(columns => columns
-                        .Add(column => column
-                            .WithHeader(columnName)
-                            .WithMaximum(5.011m)
-                            .MapTo(t => t.DecimalProperty))))
-                .Map(sheetData);
-
-            result.ValidationErrors.Should().HaveCount(1);
-            result.ValidationErrors.Single().PropertyName.Should().Be("DecimalProperty");
-            result.ValidationErrors.Single().CellValue.Should().Be(string.Empty);
-            result.ValidationErrors.Single().ColumnName.Should().Be(columnName);
-        }
+    public class ModelTwo
+    {
+        public int ModelTwoPropertyOne { get; set; }
     }
 }

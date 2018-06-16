@@ -3,39 +3,31 @@
 # SheetToObjects
 
 ## What is SheetToObjects?
-SheetToObjects is a simple library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO. 
+A simple library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO. 
 
 ## How does it work?
-The overall idea is to create a `SheetMapper` which is provided with a `MappingConfig` that specifies how the columns in a sheet correspond to properties on a specified class. Eventually the goal is to create several adapters for different kinds of data sources, which adapt the data from the source to a generic model containing basic rows with cells. Based on the `MappingConfig` this generic model can be converted to a list of models/POCO's.
+The overall idea is to create a `SheetMapper` which can be configured HOW to map each row in a sheet to a model. Currently the following sheet types are supported:
+
+- Comma Seperated Value files (.csv), via nuget pakage SheetToObjects.Adapters.Csv
+- Google Sheets, via nuget pakage SheetToObjects.Adapters.GoogleSheets
+- Microsoft Excel, via nuget pakage SheetToObjects.Adapters.MicrosoftExcel
 
 ## But... Why!?
 Having solved the problem of creating a custom csv/excel import (including upload, validation, mapping etc.) a couple of times, it seemed about time to make something generic and reusable.
 
-## Getting Started
-There are multiple ways to use SheetToObjects in your code, by immediately instantiating and configuring the SheetMapper:
+## Configuration
+There are two ways to configure SheetToObjects. Via fluent configuration or attributes on the model you are trying to map to. It is possible to setup multiple configurations, as long as the type you are mapping to is different.
+
+### Fluent Configuration
+An example of configuring the `SheetMapper` using the fluent api:
 
 ```
 var sheetMapper = new SheetMapper()
-    .For<SomeModel>(cfg => cfg
-    .Columns(columns => columns
-        .Add(column => column.WithHeader("First Name").MapTo(m => m.FirstName))
-        .Add(column => column.WithHeader("Last Name").MapTo(m => m.LastName))))
-    .BuildConfig();
+    .AddConfigFor<SomeModel>(cfg => cfg
+        .AddColumn(column => column.WithHeader("First Name").IsRequired().MapTo(m => m.FirstName))
+        .AddColumn(column => column.WithHeader("Last Name").IsRequired().MapTo(m => m.LastName)));
  ```
-
-An alternative is to register the `IMapSheetToObjects` interface using your favourite DI framework. An example using `Microsoft.Extensions.DependencyInjection`:
-
-```
-new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
-{
-    return new SheetMapper()
-        .For<SomeModel>(cfg => cfg
-        .Columns(columns => columns
-            .Add(column => column.WithHeader("First Name").MapTo(m => m.FirstName))
-            .Add(column => column.WithHeader("Last Name").MapTo(m => m.LastName))));
-});
-```
-
+### Configuration using Attributes
 Another way to map configuration to model is by adding DataAtributes to your model:
 
 ```
@@ -58,28 +50,41 @@ The following default validation attributes are available as attributes;
 
 The model attributes can be overwritten by configuring a config for the model on the used SheetMapper
 
-## Column Mapping
+### More on configuration
 There are multiple ways to map a column in the datasource to the model property
 
-###### By Index
+##### By Index
 Use the .WithColumnIndex or [MappingByIndex] attribute to map the property based on Index. The index is 0-based
 
-###### By Letter
+##### By Letter
 Use the .WithColumnLetter() or [MappingByLetter] attribute to map the attribute base on "Excel-style" column naming. column "A" is the first column and "D" the fourth.
 
-###### By ColumnName
+##### By ColumnName
 When the datasource contains a first row with headers it's possible to map by name. Use the .WithHeader() or [MappingByHeader] to map by the name that is used on the first row
 
-###### AutoMapping property
-It's also possible to automap the properties based on their name without configuring anything. A headerrow is required for this feature. 
-When u don't want to property to be mapped use the [IgnorePropertyMapping] attribute on the property.
+##### AutoMapping property
+It's also possible to automap the properties based on their name without configuring anything. A header row is required for this feature, which name needs to match the name of the property you need that column to be mapped to. 
+When u don't want the property to be mapped use the `[IgnorePropertyMapping]` attribute on the property.
 
 For more information, check out the tests: https://github.com/josdeweger/SheetToObjects/blob/dev/src/SheetToObjects.Specs
 
-The actual mapping is ease, just pass the sheet and the `Type` to map to:
+## Doing the actual mapping
+The actual mapping is easy, tell your instance of the `SheetMapper` to map a sheet to a `Type`:
 ```
-MappingResult result = sheetMapper.Map(sheet).To<SomeModel>(); //contains successfully parsed models and validation errors
+MappingResult result = sheetMapper.Map<SomeModel>(sheet); //contains successfully parsed models and validation errors
 ```
 
-## Status
-This library is in an early alpha stage, some core functionalities are still missing and it has NOT been battle tested in production. As the To Do implies, some core functionality is still missing.
+## Dependency Injection
+You have the option of creating and configuring a new `SheetMapper` instance every time you need one, but this might become tedious pretty fast. It will also decrease testability, 
+so it might be a good idea to use the Dependency Injection Framework of your choice to register `SheetToObjects`. An example using `Microsoft.Extensions.DependencyInjection`:
+
+```
+new ServiceCollection().AddSingleton<IMapSheetToObjects>(ctx =>
+{
+    return new SheetMapper()
+        .For<SomeModel>(cfg => cfg
+        .Columns(columns => columns
+            .Add(column => column.WithHeader("First Name").MapTo(m => m.FirstName))
+            .Add(column => column.WithHeader("Last Name").MapTo(m => m.LastName))));
+});
+```
