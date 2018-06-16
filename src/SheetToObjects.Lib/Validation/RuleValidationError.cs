@@ -7,6 +7,7 @@
         private const string CanHaveMaximumValueOfMessage = "This cell can have maximum value of {0}";
         private const string ValueDoesNotMatchRegexMessage = "Value {0} does not match pattern {1}";
         private const string CouldNotValidateValueWithPatternMessage = "Value could not be validated by regex '{0}'";
+        private const string CouldNotValidateValueMessage = "Value could not be validated";
 
         public string CellValue { get; }
         public string ColumnName { get; }
@@ -15,7 +16,7 @@
         public string ErrorMessage { get; }
         public string PropertyName { get; }
 
-        private RuleValidationError(int columnIndex, int rowIndex, string errorMessage, string columnName, string cellValue, string propertyName)
+        public RuleValidationError(int columnIndex, int rowIndex, string errorMessage, string columnName, string cellValue, string propertyName)
         {
             ColumnIndex = columnIndex;
             RowIndex = rowIndex;
@@ -54,6 +55,11 @@
             return new RuleValidationError(columnIndex, rowIndex,
                 string.Format(CouldNotValidateValueWithPatternMessage, pattern), columnName, string.Empty,
                 propertyName);
+        }
+
+        public static IValidationError CouldNotValidateValue(int columnIndex, int rowIndex, string columnName, string propertyName)
+        {
+            return new RuleValidationError(columnIndex, rowIndex, CouldNotValidateValueMessage, columnName, string.Empty, propertyName);
         }
     }
 }

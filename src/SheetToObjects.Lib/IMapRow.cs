@@ -7,7 +7,7 @@ namespace SheetToObjects.Lib
 {
     public interface IMapRow
     {
-        Result<TModel, List<IValidationError>> Map<TModel>(Row row, MappingConfig mappingConfig)
+        Result<ParsedModelResult<TModel>, List<IValidationError>> Map<TModel>(Row row, MappingConfig mappingConfig)
             where TModel : new();
     }
 }

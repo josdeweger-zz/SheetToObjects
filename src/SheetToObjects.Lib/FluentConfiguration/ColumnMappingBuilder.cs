@@ -63,11 +63,13 @@ namespace SheetToObjects.Lib.FluentConfiguration
         }
 
         /// <summary>
-        /// Make values in this column required, which means it can not be empty
+        /// Values in this column need to satisfy the custom func
         /// </summary>
-        public ColumnMappingBuilder<T> IsRequired()
+        public ColumnMappingBuilder<T> WithCustomRule<TValue>(
+            Func<TValue, bool> customRuleFunc,
+            string validationMessage)
         {
-            _parsingRules.Add(new RequiredRule());
+            AddRule(new CustomRule<TValue>(customRuleFunc, validationMessage));
             return this;
         }
 
@@ -77,35 +79,6 @@ namespace SheetToObjects.Lib.FluentConfiguration
         public ColumnMappingBuilder<T> UsingFormat(string format)
         {
             _format = format;
-            return this;
-        }
-
-        /// <summary>
-        /// Values in this column need to match the given regex
-        /// </summary>
-        public ColumnMappingBuilder<T> Matches(string regex)
-        {
-            _rules.Add(new RegexRule(regex));
-            return this;
-        }
-        
-        /// <summary>
-        /// Values in this column have to have at least the minimum given value
-        /// </summary>
-        public ColumnMappingBuilder<T> WithMinimum<TComparer>(TComparer comparer) 
-            where TComparer : IComparable<TComparer>
-        {
-            _rules.Add(new MinimumRule<TComparer>(comparer));
-            return this;
-        }
-
-        /// <summary>
-        /// Values in this column can have a maximum of the given value
-        /// </summary>
-        public ColumnMappingBuilder<T> WithMaximum<TComparer>(TComparer comparer)
-            where TComparer : IComparable<TComparer>
-        {
-            _rules.Add(new MaximumRule<TComparer>(comparer));
             return this;
         }
 

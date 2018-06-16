@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using SheetToObjects.Lib;
+using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Specs.Builders;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
@@ -54,7 +55,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().DoubleProperty.Should().Be(_doubleValue);
+            result.ParsedModels.Single().ParsedModel.DoubleProperty.Should().Be(_doubleValue);
         }
 
         [Fact]
@@ -67,7 +68,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().IntProperty.Should().Be(_intValue);
+            result.ParsedModels.Single().ParsedModel.IntProperty.Should().Be(_intValue);
         }
 
         [Fact]
@@ -80,7 +81,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().BoolProperty.Should().Be(_boolValue);
+            result.ParsedModels.Single().ParsedModel.BoolProperty.Should().Be(_boolValue);
         }
 
         [Fact]
@@ -93,7 +94,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().EnumProperty.Should().Be(_enumValue);
+            result.ParsedModels.Single().ParsedModel.EnumProperty.Should().Be(_enumValue);
         }
 
         [Fact]
@@ -109,7 +110,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().DateTimeProperty.Should().Be(_dateTimeValue);
+            result.ParsedModels.Single().ParsedModel.DateTimeProperty.Should().Be(_dateTimeValue);
         }
 
         [Fact]
@@ -124,7 +125,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().StringProperty.Should().Be(_stringValue);
+            result.ParsedModels.Single().ParsedModel.StringProperty.Should().Be(_stringValue);
         }
 
         [Fact]
@@ -208,10 +209,10 @@ namespace SheetToObjects.Specs.Lib
             var resultModelTwo = sheetMapper.Map<ModelTwo>(sheetDataModelTwo);
 
             resultModelOne.IsSuccess.Should().BeTrue();
-            resultModelOne.ParsedModels.Single().ModelOnePropertyOne.Should().Be("SomeValue");
+            resultModelOne.ParsedModels.Single().ParsedModel.ModelOnePropertyOne.Should().Be("SomeValue");
 
             resultModelTwo.IsSuccess.Should().BeTrue();
-            resultModelTwo.ParsedModels.Single().ModelTwoPropertyOne.Should().Be(1);
+            resultModelTwo.ParsedModels.Single().ParsedModel.ModelTwoPropertyOne.Should().Be(1);
         }
     }
 
