@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using SheetToObjects.Lib;
 
 namespace SheetToObjects.Adapters.Csv
@@ -16,7 +18,22 @@ namespace SheetToObjects.Adapters.Csv
 
         public SheetProvider() : this(new CsvAdapter()) { }
 
-        public Sheet Get(string csvPath, char delimiter)
+        public Sheet GetFromBase64Encoded(string base64EncodedFile, char delimiter)
+        {
+            var fileBytes = Convert.FromBase64String(base64EncodedFile);
+            var fileString = Encoding.UTF8.GetString(fileBytes);
+
+            var data = fileString
+                .Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(l => l.Split(delimiter).ToList())
+                .ToList();
+
+            var csvData = new CsvData { Values = data };
+
+            return _csvDataConverter.Convert(csvData);
+        }
+
+        public Sheet GetFromPath(string csvPath, char delimiter)
         {
             var data = File.ReadAllLines(csvPath)
                 .Select(line => line.Split(delimiter).ToList())
@@ -27,7 +44,7 @@ namespace SheetToObjects.Adapters.Csv
             return _csvDataConverter.Convert(csvData);
         }
 
-        public Sheet Get(Stream stream, char delimiter)
+        public Sheet GetFromStream(Stream stream, char delimiter)
         {
             var lines = new List<string>();
             using (var reader = new StreamReader(stream))

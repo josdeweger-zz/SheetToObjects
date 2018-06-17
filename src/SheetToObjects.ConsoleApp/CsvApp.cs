@@ -23,7 +23,7 @@ namespace SheetToObjects.ConsoleApp
         public void Run()
         {
             var fileStream = File.Open(@"./Files/profiles.csv", FileMode.Open);
-            var sheet = _sheetProvider.Get(fileStream, ';');
+            var sheet = _sheetProvider.GetFromStream(fileStream, ';');
 
             var result = _sheetMapper.Map<ProfileModel>(sheet);
 
