@@ -55,6 +55,7 @@ namespace SheetToObjects.Specs.Lib.Validation
                     .MapColumn(column => column
                         .WithHeader(columnName)
                         .WithMaximum(5.011m)
+                        .IsRequired()
                         .MapTo(t => t.DecimalProperty)))
                 .Map<TestModel>(sheetData);
 
@@ -82,6 +83,7 @@ namespace SheetToObjects.Specs.Lib.Validation
                     .MapColumn(column => column
                         .WithHeader(columnName)
                         .WithMaximum(3.123m)
+                        .IsRequired()
                         .MapTo(t => t.DecimalProperty)))
                 .Map<TestModel>(sheetData);
 
@@ -106,6 +108,7 @@ namespace SheetToObjects.Specs.Lib.Validation
                     .MapColumn(column => column
                         .WithHeader(columnName)
                         .WithMinimum(4D)
+                        .IsRequired()
                         .MapTo(t => t.DoubleProperty)))
                 .Map<TestModel>(sheetData);
 
@@ -130,6 +133,7 @@ namespace SheetToObjects.Specs.Lib.Validation
                     .MapColumn(column => column
                         .WithHeader(columnName)
                         .WithMinimum(10D)
+                        .IsRequired()
                         .MapTo(t => t.DoubleProperty)))
                 .Map<TestModel>(sheetData);
 
@@ -157,6 +161,7 @@ namespace SheetToObjects.Specs.Lib.Validation
                     .MapColumn(column => column
                         .WithHeader(columnName)
                         .WithMinimum(10)
+                        .IsRequired()
                         .MapTo(t => t.IntProperty)))
                 .Map<TestModel>(sheetData);
 
@@ -227,6 +232,7 @@ namespace SheetToObjects.Specs.Lib.Validation
                     .HasHeaders()
                     .MapColumn(column => column
                         .WithHeader("Column1")
+                        .IsRequired()
                         .WithCustomRule<int>(x => x >= 3 && x <= 5, "Value should be between 3 and 5")
                         .MapTo(t => t.IntProperty)))
                 .Map<TestModel>(sheetData);
@@ -249,6 +255,7 @@ namespace SheetToObjects.Specs.Lib.Validation
                     .HasHeaders()
                     .MapColumn(column => column
                         .WithHeader("Column1")
+                        .IsRequired()
                         .WithCustomRule<int>(x => x >= 3 && x <= 5, "Value should be between 3 and 5")
                         .MapTo(t => t.IntProperty)))
                 .Map<TestModel>(sheetData);

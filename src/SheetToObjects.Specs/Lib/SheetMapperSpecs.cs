@@ -51,7 +51,7 @@ namespace SheetToObjects.Specs.Lib
             var result = new SheetMapper()
                 .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .MapColumn(column => column.WithHeader("Double").MapTo(t => t.DoubleProperty)))
+                    .MapColumn(column => column.WithHeader("Double").IsRequired().MapTo(t => t.DoubleProperty)))
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
@@ -64,7 +64,7 @@ namespace SheetToObjects.Specs.Lib
             var result = new SheetMapper()
                 .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .MapColumn(column => column.WithHeader("Integer").MapTo(t => t.IntProperty)))
+                    .MapColumn(column => column.WithHeader("Integer").IsRequired().MapTo(t => t.IntProperty)))
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
@@ -77,7 +77,7 @@ namespace SheetToObjects.Specs.Lib
             var result = new SheetMapper()
                 .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .MapColumn(column => column.WithHeader("Boolean").MapTo(t => t.BoolProperty)))
+                    .MapColumn(column => column.WithHeader("Boolean").IsRequired().MapTo(t => t.BoolProperty)))
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
@@ -90,7 +90,7 @@ namespace SheetToObjects.Specs.Lib
             var result = new SheetMapper()
                 .AddConfigFor<TestModel>(cfg => cfg
                     .HasHeaders()
-                    .MapColumn(column => column.WithHeader("Enumeration").MapTo(t => t.EnumProperty)))
+                    .MapColumn(column => column.WithHeader("Enumeration").IsRequired().MapTo(t => t.EnumProperty)))
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
@@ -106,6 +106,7 @@ namespace SheetToObjects.Specs.Lib
                     .MapColumn(column => column
                             .WithHeader("DateTime")
                             .UsingFormat("yyyy-MM-dd")
+                            .IsRequired()
                             .MapTo(t => t.DateTimeProperty)))
                 .Map<TestModel>(_sheetData);
 
@@ -200,10 +201,10 @@ namespace SheetToObjects.Specs.Lib
             var sheetMapper = new SheetMapper()
                 .AddConfigFor<ModelOne>(cfg => cfg
                     .HasHeaders()
-                    .MapColumn(column => column.WithHeader("ModelOnePropertyOne").MapTo(t => t.ModelOnePropertyOne)))
+                    .MapColumn(column => column.WithHeader("ModelOnePropertyOne").IsRequired().MapTo(t => t.ModelOnePropertyOne)))
                 .AddConfigFor<ModelTwo>(cfg => cfg
                     .HasHeaders()
-                    .MapColumn(column => column.MapTo(t => t.ModelTwoPropertyOne)));
+                    .MapColumn(column => column.IsRequired().MapTo(t => t.ModelTwoPropertyOne)));
 
             var resultModelOne = sheetMapper.Map<ModelOne>(sheetDataModelOne);
             var resultModelTwo = sheetMapper.Map<ModelTwo>(sheetDataModelTwo);
@@ -213,6 +214,56 @@ namespace SheetToObjects.Specs.Lib
 
             resultModelTwo.IsSuccess.Should().BeTrue();
             resultModelTwo.ParsedModels.Single().ParsedModel.ModelTwoPropertyOne.Should().Be(1);
+        }
+
+        [Fact]
+        public void GivenSheet_WhenMappingEmptyNonNullableValueTypeWhichIsNotRequired_ItShouldSetDefaultValue()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("Age")
+                .AddRow(r => r
+                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("").Build())
+                    .Build(1))
+                .Build();
+
+            var defaultAge = 8;
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("Age")
+                        .WithDefaultValue(defaultAge)
+                        .MapTo(t => t.IntProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Single().ParsedModel.IntProperty.Should().Be(defaultAge);
+        }
+
+        [Fact]
+        public void GivenSheet_WhenMappingEmptyStringWhichIsNotRequired_ItShouldSetDefaultValue()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("Label")
+                .AddRow(r => r
+                    .AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("").Build())
+                    .Build(1))
+                .Build();
+
+            var defaultLabel = "Common";
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("Label")
+                        .WithDefaultValue(defaultLabel)
+                        .MapTo(t => t.StringProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Single().ParsedModel.StringProperty.Should().Be(defaultLabel);
         }
     }
 

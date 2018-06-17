@@ -23,7 +23,8 @@ namespace SheetToObjects.Specs.Lib
                 displayName: string.Empty,
                 propertyName: string.Empty,
                 format: string.Empty,
-                isRequired: false);
+                isRequired: false,
+                defaultValue: null);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(string.Empty);
@@ -44,7 +45,8 @@ namespace SheetToObjects.Specs.Lib
                 displayName: string.Empty,
                 propertyName: string.Empty,
                 format: string.Empty,
-                isRequired: true);
+                isRequired: true,
+                defaultValue: null);
 
             result.IsFailure.Should().BeTrue();
         }
@@ -66,7 +68,8 @@ namespace SheetToObjects.Specs.Lib
                 displayName: string.Empty,
                 propertyName: string.Empty,
                 format: string.Empty,
-                isRequired: false);
+                isRequired: false,
+                defaultValue: null);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(value);
@@ -89,7 +92,8 @@ namespace SheetToObjects.Specs.Lib
                 displayName: string.Empty,
                 propertyName: string.Empty,
                 format: string.Empty,
-                isRequired: false);
+                isRequired: false,
+                defaultValue: null);
 
             result.IsFailure.Should().BeTrue();
         }

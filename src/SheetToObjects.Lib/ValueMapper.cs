@@ -21,11 +21,12 @@ namespace SheetToObjects.Lib
             string displayName, 
             string propertyName, 
             string format,
-            bool isRequired)
+            bool isRequired,
+            object defaultValue)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return HandleEmptyValue(isRequired, columnIndex, rowIndex, displayName, propertyName);
+                return HandleEmptyValue(isRequired, columnIndex, rowIndex, displayName, propertyName, defaultValue);
             }
 
             var parsingResult = _valueParser.Parse(propertyType, value, format);
@@ -44,7 +45,7 @@ namespace SheetToObjects.Lib
             return Result.Ok<object, IValidationError>(parsingResult.Value);
         }
 
-        private static Result<object, IValidationError> HandleEmptyValue(bool isRequired, int columnIndex, int rowIndex, string displayName, string propertyName)
+        private static Result<object, IValidationError> HandleEmptyValue(bool isRequired, int columnIndex, int rowIndex, string displayName, string propertyName, object defaultValue)
         {
             if (isRequired)
             {
@@ -57,7 +58,7 @@ namespace SheetToObjects.Lib
                 return Result.Fail<object, IValidationError>(cellValueRequiredError);
             }
 
-            return Result.Ok<object, IValidationError>(string.Empty);
+            return Result.Ok<object, IValidationError>(defaultValue ?? string.Empty);
         }
     }
 }

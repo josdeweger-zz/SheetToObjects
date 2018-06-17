@@ -1,6 +1,6 @@
 ﻿using SheetToObjects.Lib.FluentConfiguration;
 
-namespace SheetToObjects.Lib.AttributesConfiguration.MappingType
+namespace SheetToObjects.Lib.AttributesConfiguration.MappingTypeAttributes
 {
     internal interface IMappingAttribute
     {

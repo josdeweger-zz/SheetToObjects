@@ -1,5 +1,6 @@
-﻿using SheetToObjects.Lib.AttributesConfiguration;
-using SheetToObjects.Lib.AttributesConfiguration.MappingType;
+﻿using System;
+using SheetToObjects.Lib.AttributesConfiguration;
+using SheetToObjects.Lib.AttributesConfiguration.MappingTypeAttributes;
 using SheetToObjects.Lib.AttributesConfiguration.RuleAttributes;
 
 namespace SheetToObjects.Specs.TestModels
@@ -10,7 +11,13 @@ namespace SheetToObjects.Specs.TestModels
 
         [MappingByIndex(3)]
         [IsRequired]
+        [DefaultValue("Default String Value")]
         [Regex(@"/^[a-z]+[0-9_\/\s,.-]+$", true)]
         public string StringProperty { get; set; }
+
+        [MappingByIndex(2)]
+        [Format("yyyy-MM-dd")]
+        [IsRequired]
+        public DateTime DateTimeProperty { get; set; }
     }
 }

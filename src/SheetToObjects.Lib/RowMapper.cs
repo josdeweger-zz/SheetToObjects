@@ -51,7 +51,8 @@ namespace SheetToObjects.Lib
                         columnMapping.DisplayName, 
                         columnMapping.PropertyName, 
                         columnMapping.Format,
-                        columnMapping.IsRequired)
+                        columnMapping.IsRequired,
+                        columnMapping.DefaultValue)
                     .OnSuccess(value =>
                     {
                         if (value.ToString().IsNotNullOrEmpty())
