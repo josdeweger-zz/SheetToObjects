@@ -5,8 +5,10 @@ namespace SheetToObjects.Adapters.Csv
 {
     public interface IProvideSheet
     {
-        Sheet Get(string csvPath, char delimiter);
+        Sheet GetFromBase64Encoded(string base64EncodedFile, char delimiter);
 
-        Sheet Get(Stream stream, char delimiter);
+        Sheet GetFromPath(string csvPath, char delimiter);
+
+        Sheet GetFromStream(Stream stream, char delimiter);
     }
 }

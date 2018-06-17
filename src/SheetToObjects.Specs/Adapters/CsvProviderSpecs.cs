@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,18 +11,51 @@ namespace SheetToObjects.Specs.Adapters
     public class CsvProviderSpecs
     {
         [Fact]
-        public void GivenACsvFileOnDisk_WhenLoadingCsvData_ThenSheetShouldContainData()
+        public void GivenInvalidBase64EncodedString_WhenLoadingCsvData_ItThrows()
+        {
+            var base64EncodedCsv = "some invalid base64encoded string";
+
+            var provider = new SheetProvider(new CsvAdapter());
+            Action result = () => provider.GetFromBase64Encoded(base64EncodedCsv, ';');
+
+            result.Should().Throw<FormatException>();
+        }
+
+        [Fact]
+        public void GivenBase64EncodedString_WhenLoadingCsvData_SheetContainsData()
+        {
+            var base64EncodedCsv = "Y29sdW1uMTtjb2x1bW5zMg0Kb25lOzENCnR3bzsy";
+
+            var provider = new SheetProvider(new CsvAdapter());
+            var csvData = provider.GetFromBase64Encoded(base64EncodedCsv, ';');
+
+            csvData.Rows.Count.Should().Be(3);
+            csvData.Rows.First().Cells.Count.Should().Be(2);
+        }
+
+        [Fact]
+        public void GivenNonExistentPath_WhenLoadingCsvData_ItThrows()
         {
             var provider = new SheetProvider(new CsvAdapter());
 
-            var sheet = provider.Get(@"./test.csv", ';');
+            Action result = () => provider.GetFromPath(@"/some/non/existing/file", ';');
+
+            result.Should().Throw<DirectoryNotFoundException>();
+        }
+
+        [Fact]
+        public void GivenCsvFileOnDisk_WhenLoadingCsvData_SheetContainsData()
+        {
+            var provider = new SheetProvider(new CsvAdapter());
+
+            var sheet = provider.GetFromPath(@"./TestFiles/test.csv", ';');
 
             sheet.Rows.Count.Should().Be(3);
             sheet.Rows.First().Cells.Count.Should().Be(2);
         }
 
         [Fact]
-        public void GivenAStream_WhenLoadingCsvData_thenSheetShouldContainData()
+        public void GivenAStream_WhenLoadingCsvData_SheetContainsData()
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -37,7 +71,7 @@ namespace SheetToObjects.Specs.Adapters
                     using (var sr = new StreamReader(memoryStream, Encoding.UTF8,false, 1024, true))
                     {
                         var provider = new SheetProvider(new CsvAdapter());
-                        var csvData = provider.Get(sr.BaseStream, ';');
+                        var csvData = provider.GetFromStream(sr.BaseStream, ';');
 
                         csvData.Rows.Count.Should().Be(3);
                         csvData.Rows.First().Cells.Count.Should().Be(2);

@@ -17,15 +17,25 @@ namespace SheetToObjects.Adapters.MicrosoftExcel
 
         public SheetProvider() : this(new ExcelAdapter()) { }
 
-        public Sheet Get(string excelPath, string sheetName, ExcelRange range)
+        public Sheet GetFromBase64Encoded(string base64EncodedFile, string sheetName, ExcelRange range)
         {
-            using (var fileStream = new FileStream(excelPath, FileMode.Open))
+            var fileBytes = Convert.FromBase64String(base64EncodedFile);
+
+            using (var fileStream = new MemoryStream(fileBytes))
             {
-                return Get(fileStream, sheetName, range);
+                return GetFromStream(fileStream, sheetName, range);
             }
         }
 
-        public Sheet Get(Stream fileStream, string sheetName, ExcelRange range)
+        public Sheet GetFromPath(string excelPath, string sheetName, ExcelRange range)
+        {
+            using (var fileStream = new FileStream(excelPath, FileMode.Open))
+            {
+                return GetFromStream(fileStream, sheetName, range);
+            }
+        }
+
+        public Sheet GetFromStream(Stream fileStream, string sheetName, ExcelRange range)
         {
             using (var excelPackage = new ExcelPackage(fileStream))
             {
@@ -61,9 +71,11 @@ namespace SheetToObjects.Adapters.MicrosoftExcel
 
         private static ExcelWorksheet GetSheetFromWorkBook(ExcelWorkbook excelWorkbook, string sheetName)
         {
-            for (var i = 1; i < excelWorkbook.Worksheets.Count; i++)
+            var normalizedSheetName = sheetName.Replace(" ", "").ToLowerInvariant();
+
+            for (var i = 1; i <= excelWorkbook.Worksheets.Count; i++)
             {
-                if (excelWorkbook.Worksheets[i].Name.Equals(sheetName))
+                if (excelWorkbook.Worksheets[i].Name.Replace(" ", "").ToLowerInvariant().Equals(normalizedSheetName))
                 {
                     return excelWorkbook.Worksheets[i];
                 }

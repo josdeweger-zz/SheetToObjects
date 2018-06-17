@@ -5,7 +5,7 @@ namespace SheetToObjects.Adapters.MicrosoftExcel
 {
     public interface IProvideSheet
     {
-        Sheet Get(string excelPath, string sheetName, ExcelRange range);
-        Sheet Get(Stream fileStream, string sheetName, ExcelRange range);
+        Sheet GetFromPath(string excelPath, string sheetName, ExcelRange range);
+        Sheet GetFromStream(Stream fileStream, string sheetName, ExcelRange range);
     }
 }

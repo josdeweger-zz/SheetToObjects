@@ -22,7 +22,7 @@ namespace SheetToObjects.ConsoleApp
         public void Run()
         {
             var excelRange = new ExcelRange(new ExcelCell("A", 1), new ExcelCell("I", 5));
-            var sheet = _sheetProvider.Get(@"./Files/profiles.xlsx", "profiles", excelRange);
+            var sheet = _sheetProvider.GetFromPath(@"./Files/profiles.xlsx", "profiles", excelRange);
 
             var result = _sheetMapper.Map<ProfileModel>(sheet);
 
