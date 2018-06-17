@@ -24,12 +24,11 @@ namespace SheetToObjects.Specs.Lib.AttributeConfiguration
         {
             var result = new MappingConfigByAttributeCreator<AttributeTestModel>().CreateMappingConfig();
 
-            result.Value.HasHeaders.Should().BeTrue();
-            result.Value.ColumnMappings.Single().Should().BeOfType<IndexColumnMapping>()
-                .Which.ColumnIndex.Should().Be(3);
+            var columnMapping = result.Value.ColumnMappings.Single(c => c.ColumnIndex.Equals(3));
 
-            result.Value.ColumnMappings.Single().Rules.OfType<RequiredRule>().Should().NotBeNull();
-            result.Value.ColumnMappings.Single().Rules.OfType<RegexRule>().Should().NotBeNull();
+            columnMapping.Should().BeOfType<IndexColumnMapping>();
+            columnMapping.Rules.OfType<RequiredRule>().Should().NotBeNull();
+            columnMapping.Rules.OfType<RegexRule>().Should().NotBeNull();
         }
 
         [Fact]
@@ -79,7 +78,9 @@ namespace SheetToObjects.Specs.Lib.AttributeConfiguration
 
             var result = new MappingConfigByAttributeCreator<AttributeTestModel>().CreateMappingConfig();
 
-            result.Value.ColumnMappings.Should().Contain(c => c.DefaultValue.IsNotNull() && c.DefaultValue.Equals(defaultValue));
+            var columnMapping = result.Value.ColumnMappings.Single(c => c.ColumnIndex.Equals(3));
+
+            columnMapping.DefaultValue.Should().Be(defaultValue);
         }
     }
 }
