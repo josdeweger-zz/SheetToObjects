@@ -8,8 +8,8 @@ namespace SheetToObjects.Lib.FluentConfiguration
     {
         public string ColumnName { get; }
 
-        public LetterColumnMapping(string columnLetter, string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules) 
-            : base(propertyName, format, parsingRules, rules)
+        public LetterColumnMapping(string columnLetter, string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules, object defaultValue) 
+            : base(propertyName, format, parsingRules, rules, defaultValue)
         {
             ColumnName = columnLetter;
             ColumnIndex = columnLetter.ConvertExcelColumnNameToIndex();

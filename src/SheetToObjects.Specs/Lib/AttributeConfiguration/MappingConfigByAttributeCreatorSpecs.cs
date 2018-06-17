@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
+using SheetToObjects.Core;
 using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
@@ -53,13 +55,31 @@ namespace SheetToObjects.Specs.Lib.AttributeConfiguration
         }
 
         [Fact]
-        void WhenCreatingFromModelWithoutAttributes_CheckIfPropertyIsAutoMapped()
+        void WhenCreatingFromModelWithoutAttributes_PropertyIsAutoMapped()
         {
             var result = new MappingConfigByAttributeCreator<AutoMapTestModel>().CreateMappingConfig();
 
             result.Value.HasHeaders.Should().BeTrue();
             result.Value.ColumnMappings.Single().Should().BeOfType<PropertyColumnMapping>()
                 .Which.ColumnName.Should().Be("AutoMap");
+        }
+
+        [Fact]
+        void WhenCreatingDateTimeWithFormat_FormatIsSet()
+        {
+            var result = new MappingConfigByAttributeCreator<AttributeTestModel>().CreateMappingConfig();
+            
+            result.Value.ColumnMappings.Should().Contain(c => c.Format.IsNotNull() && c.Format.Equals("yyyy-MM-dd"));
+        }
+
+        [Fact]
+        void WhenCreatingDateTimeWithDefaultValue_DefaultValueIsSet()
+        {
+            var defaultValue = "Default String Value";
+
+            var result = new MappingConfigByAttributeCreator<AttributeTestModel>().CreateMappingConfig();
+
+            result.Value.ColumnMappings.Should().Contain(c => c.DefaultValue.IsNotNull() && c.DefaultValue.Equals(defaultValue));
         }
     }
 }

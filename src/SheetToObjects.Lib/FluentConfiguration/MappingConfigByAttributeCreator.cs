@@ -4,7 +4,7 @@ using System.Reflection;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.AttributesConfiguration;
-using SheetToObjects.Lib.AttributesConfiguration.MappingType;
+using SheetToObjects.Lib.AttributesConfiguration.MappingTypeAttributes;
 using SheetToObjects.Lib.AttributesConfiguration.RuleAttributes;
 
 namespace SheetToObjects.Lib.FluentConfiguration
@@ -49,14 +49,17 @@ namespace SheetToObjects.Lib.FluentConfiguration
 
                 foreach (var attribute in attributes)
                 {
-                    if (attribute is IParsingRuleAttribute ruleAttribute)
+                    switch (true)
                     {
-                        mappingConfigBuilder.AddParsingRule(ruleAttribute.GetRule());
-                    }
-
-                    if (attribute is Format formatAttribute)
-                    {
-                        mappingConfigBuilder.UsingFormat(formatAttribute.FormatString);
+                        case var _ when attribute is IParsingRuleAttribute:
+                            mappingConfigBuilder.AddParsingRule(((IParsingRuleAttribute) attribute).GetRule());
+                            break;
+                        case var _ when attribute is Format:
+                            mappingConfigBuilder.UsingFormat(((Format) attribute).FormatString);
+                            break;
+                        case var _ when attribute is DefaultValue:
+                            mappingConfigBuilder.WithDefaultValue(((DefaultValue) attribute).Value);
+                            break;
                     }
                 }
 

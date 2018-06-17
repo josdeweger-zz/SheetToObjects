@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
+using SheetToObjects.Lib.Exceptions;
 using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
@@ -87,6 +89,32 @@ namespace SheetToObjects.Specs.Lib.FluentConfiguration
                 .Build();
 
             result.ColumnMappings.OfType<NameColumnMapping>().Single().Rules.Single().Should().BeOfType<RegexRule>();
+        }
+
+        [Fact]
+        public void GivenMappingNonNullableNotRequiredValueType_WhenNoDefaultValueIsGiven_ItThrows()
+        {
+            Action result = () => new MappingConfigBuilder<TestModel>()
+                .MapColumn(column => column
+                    .WithHeader("My Not Required Property")
+                    .MapTo(m => m.IntProperty))
+                .Build();
+
+            result.Should().Throw<MappingConfigurationException>()
+                .WithMessage($"Non-nullable property '{nameof(TestModel.IntProperty)}' is not required and therefor needs a default value.");
+        }
+
+        [Fact]
+        public void GivenMappingNonNullableNotRequiredValueType_WhenDefaultValueIsGiven_ItDoesNotThrow()
+        {
+            Action result = () => new MappingConfigBuilder<TestModel>()
+                .MapColumn(column => column
+                    .WithHeader("My Not Required Property")
+                    .WithDefaultValue(3)
+                    .MapTo(m => m.IntProperty))
+                .Build();
+
+            result.Should().NotThrow<MappingConfigurationException>();
         }
     }
 }

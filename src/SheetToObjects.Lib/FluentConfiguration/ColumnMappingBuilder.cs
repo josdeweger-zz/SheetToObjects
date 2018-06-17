@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using SheetToObjects.Core;
+using SheetToObjects.Lib.Exceptions;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib.FluentConfiguration
@@ -14,6 +16,7 @@ namespace SheetToObjects.Lib.FluentConfiguration
         private string _columnLetter;
         private string _propertyName;
         private string _format;
+        private object _defaultValue;
         private readonly List<IParsingRule> _parsingRules = new List<IParsingRule>();
         private readonly List<IRule> _rules = new List<IRule>();
 
@@ -41,6 +44,15 @@ namespace SheetToObjects.Lib.FluentConfiguration
         public ColumnMappingBuilder<T> WithColumnLetter(string columnLetter)
         {
             _columnLetter = columnLetter; 
+            return this;
+        }
+
+        /// <summary>
+        /// Set a default value for non-nullable value types that are not required
+        /// </summary>
+        public ColumnMappingBuilder<T> WithDefaultValue<TValue>(TValue defaultValue)
+        {
+            _defaultValue = defaultValue;
             return this;
         }
 
@@ -87,7 +99,8 @@ namespace SheetToObjects.Lib.FluentConfiguration
         /// </summary>
         public ColumnMapping MapTo<TProperty>(Expression<Func<T, TProperty>> propertyLambda)
         {
-            var type = typeof(T);
+            var modelType = typeof(T);
+            var propertyType = typeof(TProperty);
 
             if (!(propertyLambda.Body is MemberExpression member))
                 throw new ArgumentException($"Expression '{propertyLambda}' refers to a method, not a property.");
@@ -97,9 +110,20 @@ namespace SheetToObjects.Lib.FluentConfiguration
             if (propertyInfo == null)
                 throw new ArgumentException($"Expression '{propertyLambda}' refers to a field, not a property.");
 
-            if (type != propertyInfo.ReflectedType && !type.IsSubclassOf(propertyInfo.ReflectedType))
-                throw new ArgumentException($"Expression '{propertyLambda}' refers to a property that is not from type {type}.");
+            if (modelType != propertyInfo.ReflectedType && !modelType.IsSubclassOf(propertyInfo.ReflectedType))
+                throw new ArgumentException($"Expression '{propertyLambda}' refers to a property that is not from type {modelType}.");
 
+            var hasRequiredRule = _parsingRules.Any(r => r.GetType() == typeof(RequiredRule));
+
+            if (propertyType.IsNotNullable()
+                && propertyType.IsValueType
+                && !hasRequiredRule
+                && _defaultValue.IsNull())
+            {
+                throw new MappingConfigurationException(
+                    $"Non-nullable property '{propertyInfo.Name}' is not required and therefor needs a default value.");
+            }
+            
             return MapTo(propertyInfo);
         }
 
@@ -114,13 +138,13 @@ namespace SheetToObjects.Lib.FluentConfiguration
             _propertyName = property.Name;
 
             if(_header.IsNotNullOrWhiteSpace())
-                return new NameColumnMapping(_header, _propertyName, _format, _parsingRules, _rules);
+                return new NameColumnMapping(_header, _propertyName, _format, _parsingRules, _rules, _defaultValue);
             if(_columnLetter.IsNotNullOrWhiteSpace())
-                return new LetterColumnMapping(_columnLetter, _propertyName, _format, _parsingRules, _rules);
+                return new LetterColumnMapping(_columnLetter, _propertyName, _format, _parsingRules, _rules, _defaultValue);
             if(_columnIndex >= 0)
-                return new IndexColumnMapping(_columnIndex, _propertyName, _format, _parsingRules, _rules);
+                return new IndexColumnMapping(_columnIndex, _propertyName, _format, _parsingRules, _rules, _defaultValue);
 
-            return new PropertyColumnMapping(_propertyName, _format, _parsingRules, _rules);
+            return new PropertyColumnMapping(_propertyName, _format, _parsingRules, _rules, _defaultValue);
         }
     }
 }

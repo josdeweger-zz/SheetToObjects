@@ -14,6 +14,7 @@ namespace SheetToObjects.Lib
             string displayName,
             string propertyName,
             string format,
-            bool isRequired);
+            bool isRequired,
+            object defaultValue);
     }
 }

@@ -7,8 +7,8 @@ namespace SheetToObjects.Lib.FluentConfiguration
     {
         public string ColumnName { get; }
 
-        public PropertyColumnMapping(string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules) 
-            : base(propertyName, format, parsingRules, rules)
+        public PropertyColumnMapping(string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules, object defaultValue) 
+            : base(propertyName, format, parsingRules, rules, defaultValue)
         {
             ColumnName = propertyName;
             ColumnIndex = -1;
