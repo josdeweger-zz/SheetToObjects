@@ -12,4 +12,8 @@
     <PackageTags>Google Sheets, Microsoft Excel, CSV, Comma Seperated File, mapping, objects, poco, configuration, validation</PackageTags>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
 </Project>
