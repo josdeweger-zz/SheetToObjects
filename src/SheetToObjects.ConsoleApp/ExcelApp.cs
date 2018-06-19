@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SheetToObjects.Adapters.MicrosoftExcel;
 using SheetToObjects.ConsoleApp.Models;
+using SheetToObjects.Core;
 using SheetToObjects.Lib;
 
 namespace SheetToObjects.ConsoleApp
@@ -21,12 +22,18 @@ namespace SheetToObjects.ConsoleApp
 
         public void Run()
         {
-            var excelRange = new ExcelRange(new ExcelCell("A", 1), new ExcelCell("I", 5));
-            var sheet = _sheetProvider.GetFromPath(@"./Files/profiles.xlsx", "profiles", excelRange);
+            var result = Timer.TimeFunc(() =>
+            {
+                var excelRange = new ExcelRange(new ExcelCell("A", 1), new ExcelCell("U", 9995));
+                var sheet = _sheetProvider.GetFromPath(@"./Files/Sample - Superstore.xlsx", "orders", excelRange);
 
-            var result = _sheetMapper.Map<ProfileModel>(sheet);
+                return _sheetMapper.Map<SuperstoreModel>(sheet);
+            });
 
-            WriteToConsole(sheet, result.ParsedModels, result.ValidationErrors);
+            Console.WriteLine("===============================================================");
+            Console.WriteLine($"Mapped {result.Item1.ParsedModels.Count} models in {result.Item2.ToString()} " +
+                $"with {result.Item1.ValidationErrors.Count} validation errors");
+            Console.WriteLine("===============================================================");
         }
         
         private static void WriteToConsole(params object[] objects)
