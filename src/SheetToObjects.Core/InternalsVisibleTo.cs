@@ -5,3 +5,4 @@
 [assembly: InternalsVisibleTo("SheetToObjects.Adapters.MicrosoftExcel")]
 [assembly: InternalsVisibleTo("SheetToObjects.Lib")]
 [assembly: InternalsVisibleTo("SheetToObjects.Specs")]
+[assembly: InternalsVisibleTo("SheetToObjects.ConsoleApp")]
