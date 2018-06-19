@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
-using SheetToObjects.Adapters.Csv;
+using SheetToObjects.Adapters.MicrosoftExcel;
 using SheetToObjects.ConsoleApp.Models;
+using SheetToObjects.Core;
 using SheetToObjects.Lib;
+using IProvideSheet = SheetToObjects.Adapters.Csv.IProvideSheet;
 
 namespace SheetToObjects.ConsoleApp
 {
@@ -22,12 +24,18 @@ namespace SheetToObjects.ConsoleApp
 
         public void Run()
         {
-            var fileStream = File.Open(@"./Files/profiles.csv", FileMode.Open);
-            var sheet = _sheetProvider.GetFromStream(fileStream, ';');
+            var result = Timer.TimeFunc(() =>
+            {
+                var fileStream = File.Open(@"./Files/profiles.csv", FileMode.Open);
+                var sheet = _sheetProvider.GetFromStream(fileStream, ';');
 
-            var result = _sheetMapper.Map<ProfileModel>(sheet);
+                return _sheetMapper.Map<ProfileModel>(sheet);
+            });
 
-            WriteToConsole(sheet, result.ParsedModels, result.ValidationErrors);
+            Console.WriteLine("===============================================================");
+            Console.WriteLine($"Mapped {result.Item1.ParsedModels.Count} models in {result.Item2.ToString()} " +
+                              $"with {result.Item1.ValidationErrors.Count} validation errors");
+            Console.WriteLine("===============================================================");
         }
         
         private static void WriteToConsole(params object[] objects)
