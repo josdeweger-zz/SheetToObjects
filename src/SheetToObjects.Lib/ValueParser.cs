@@ -90,7 +90,7 @@ namespace SheetToObjects.Lib
                     return Result.Fail<object, string>(errorMessage);
                 }
 
-                var enumValue = Enum.Parse(type, value, ignoreCase: true);
+                var enumValue = Enum.Parse(type, value.Replace(" ", string.Empty), ignoreCase: true);
                 if (enumValue.IsNotNull())
                 {
                     return Result.Ok<object, string>(enumValue);
