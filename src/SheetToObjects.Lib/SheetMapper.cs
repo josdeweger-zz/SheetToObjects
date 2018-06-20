@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Lib.FluentConfiguration;
+using SheetToObjects.Lib.Parsing;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
@@ -20,7 +21,7 @@ namespace SheetToObjects.Lib
             _modelValidator = modelValidator;
         }
 
-        public SheetMapper() : this(new RowMapper(new ValueMapper(new ValueParser())), new ModelValidator())
+        public SheetMapper() : this(new RowMapper(new ValueMapper(new ParsingStrategyProvider())), new ModelValidator())
         {
 
         }

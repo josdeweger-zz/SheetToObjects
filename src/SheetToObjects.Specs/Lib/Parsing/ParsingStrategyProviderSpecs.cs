@@ -1,18 +1,18 @@
 ﻿using System;
 using FluentAssertions;
-using SheetToObjects.Lib;
+using SheetToObjects.Lib.Parsing;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
 
-namespace SheetToObjects.Specs.Lib
+namespace SheetToObjects.Specs.Lib.Parsing
 {
-    public class ValueParserSpecs
+    public class ParsingStrategyProviderSpecs
     {
-        private readonly ValueParser _cellValueParser;
+        private readonly ParsingStrategyProvider _cellValueParser;
 
-        public ValueParserSpecs()
+        public ParsingStrategyProviderSpecs()
         {
-            _cellValueParser = new ValueParser();
+            _cellValueParser = new ParsingStrategyProvider();
         }
 
         [Fact]

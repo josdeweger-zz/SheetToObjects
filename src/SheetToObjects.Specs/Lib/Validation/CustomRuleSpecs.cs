@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using SheetToObjects.Lib.Validation;
-using SheetToObjects.Specs.TestModels;
 using Xunit;
 
 namespace SheetToObjects.Specs.Lib.Validation

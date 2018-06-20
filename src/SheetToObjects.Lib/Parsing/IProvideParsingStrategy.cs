@@ -1,9 +1,9 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
 
-namespace SheetToObjects.Lib
+namespace SheetToObjects.Lib.Parsing
 {
-    internal interface IParseValue
+    internal interface IProvideParsingStrategy
     {
         Result<object, string> Parse(Type type, string value, string format = "");
     }
