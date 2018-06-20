@@ -1,5 +1,4 @@
-﻿using System;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 
 namespace SheetToObjects.Lib.Validation
 {

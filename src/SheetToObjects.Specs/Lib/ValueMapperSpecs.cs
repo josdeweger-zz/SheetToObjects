@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Moq;
 using SheetToObjects.Lib;
+using SheetToObjects.Lib.Parsing;
 using Xunit;
 
 namespace SheetToObjects.Specs.Lib
@@ -11,9 +12,9 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenNotRequiredEmptyValue_WhenMapping_ItIsSetToDefaultValue()
         {
-            var valueParser = new Mock<IParseValue>();
+            var parsingStrategyProvider = new Mock<IProvideParsingStrategy>();
 
-            var mapper = new ValueMapper(valueParser.Object);
+            var mapper = new ValueMapper(parsingStrategyProvider.Object);
 
             var result = mapper.Map(
                 value: string.Empty, 
@@ -33,9 +34,9 @@ namespace SheetToObjects.Specs.Lib
         [Fact]
         public void GivenRequiredEmptyValue_WhenMapping_ValidationFails()
         {
-            var valueParser = new Mock<IParseValue>();
+            var parsingStrategyProvider = new Mock<IProvideParsingStrategy>();
 
-            var mapper = new ValueMapper(valueParser.Object);
+            var mapper = new ValueMapper(parsingStrategyProvider.Object);
 
             var result = mapper.Map(
                 value: string.Empty,
@@ -55,10 +56,10 @@ namespace SheetToObjects.Specs.Lib
         public void GivenValidValue_WhenParsingIsSuccesful_ItSucceeds()
         {
             var value = 50;
-            var valueParser = new Mock<IParseValue>();
-            valueParser.Setup(v => v.Parse(typeof(int), value.ToString(), string.Empty)).Returns(Result.Ok<object, string>(value));
+            var parsingStrategyProvider = new Mock<IProvideParsingStrategy>();
+            parsingStrategyProvider.Setup(v => v.Parse(typeof(int), value.ToString(), string.Empty)).Returns(Result.Ok<object, string>(value));
 
-            var mapper = new ValueMapper(valueParser.Object);
+            var mapper = new ValueMapper(parsingStrategyProvider.Object);
 
             var result = mapper.Map(
                 value: value.ToString(),
@@ -79,10 +80,10 @@ namespace SheetToObjects.Specs.Lib
         public void GivenInvalidValue_WhenParsingFails_FailureIsReturned()
         {
             var value = "foo";
-            var valueParser = new Mock<IParseValue>();
-            valueParser.Setup(v => v.Parse(typeof(int), value.ToString(), string.Empty)).Returns(Result.Fail<object, string>("Parsing failed"));
+            var parsingStrategyProvider = new Mock<IProvideParsingStrategy>();
+            parsingStrategyProvider.Setup(v => v.Parse(typeof(int), value.ToString(), string.Empty)).Returns(Result.Fail<object, string>("Parsing failed"));
 
-            var mapper = new ValueMapper(valueParser.Object);
+            var mapper = new ValueMapper(parsingStrategyProvider.Object);
 
             var result = mapper.Map(
                 value: value,

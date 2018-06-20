@@ -1,14 +1,15 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
+using SheetToObjects.Lib.Parsing;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
 {
     internal class ValueMapper : IMapValue
     {
-        private readonly IParseValue _valueParser;
+        private readonly IProvideParsingStrategy _valueParser;
 
-        public ValueMapper(IParseValue valueParser)
+        public ValueMapper(IProvideParsingStrategy valueParser)
         {
             _valueParser = valueParser;
         }

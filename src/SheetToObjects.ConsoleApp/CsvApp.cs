@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
-using SheetToObjects.Adapters.MicrosoftExcel;
 using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Core;
 using SheetToObjects.Lib;
