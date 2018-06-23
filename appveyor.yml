@@ -5,3 +5,10 @@ build_script:
 test: off
 artifacts:
 - path: artifacts/*.nupkg
+deploy:
+  provider: NuGet
+  # server:                  # remove to push to NuGet.org
+  api_key:
+    secure: efznHErN6qJT7NqTvpXxzuLS7kkOiDTAlcIEPnFyFx3BUvZME3z4SlXKXwF63Fnt
+  skip_symbols: true
+  artifact: /.*\.nupkg/
