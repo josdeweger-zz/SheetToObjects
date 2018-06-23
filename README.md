@@ -1,8 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/xyh066af9kpkqpgm?svg=true)](https://ci.appveyor.com/project/josdeweger/sheettoobjects)
 [![Nuget Version](https://img.shields.io/nuget/v/SheetToObjects.Lib.svg)](https://www.nuget.org/packages/SheetToObjects.Lib/)
 
-<img class="badge-img clickable" src="https://img.shields.io/nuget/v/Nuget.Core.svg?maxAge=2592000" alt="">
-
 # What is SheetToObjects?
 A simple library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO.
 
