@@ -58,8 +58,8 @@ namespace SheetToObjects.Specs.Lib.AttributeConfiguration
             var result = new MappingConfigByAttributeCreator<AutoMapTestModel>().CreateMappingConfig();
 
             result.Value.HasHeaders.Should().BeTrue();
-            result.Value.ColumnMappings.Single().Should().BeOfType<PropertyColumnMapping>()
-                .Which.ColumnName.Should().Be("AutoMap");
+            result.Value.ColumnMappings.Should().Contain(c =>
+                ((PropertyColumnMapping) c).ColumnName == nameof(AutoMapTestModel.Emailaddress));
         }
 
         [Fact]
