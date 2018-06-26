@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Common.props" />
   <PropertyGroup>
-    
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>1.0.2</Version>
     <Authors>Josdeweger</Authors>
     <Company>Redhotminute</Company>
     <Product>SheetToObjects</Product>
@@ -11,8 +10,8 @@
     <PackageProjectUrl>https://github.com/josdeweger/SheetToObjects</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/josdeweger/SheetToObjects/blob/dev/LICENSE</PackageLicenseUrl>
     <PackageTags>Google Sheets, Microsoft Excel, CSV, Comma Seperated File, mapping, objects, poco, configuration, validation</PackageTags>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<RepositoryUrl>https://github.com/josdeweger/SheetToObjects</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/josdeweger/SheetToObjects</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
