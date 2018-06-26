@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Common.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Version>1.0.2</Version>
     <Authors>Josdeweger</Authors>
     <Company>Redhotminute</Company>
     <Product>SheetToObjects</Product>

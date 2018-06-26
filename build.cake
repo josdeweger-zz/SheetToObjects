@@ -71,35 +71,12 @@ Task("Run-Unit-Tests")
     }
 });
 
-Task("Create-Nuget-Packages")
-    .IsDependentOn("Build")
-    .Does(() =>
-{
-    var packageVersion = version + "-ci" + buildNumber.PadLeft(5, '0');
-
-    var settings = new DotNetCorePackSettings
-    {
-        ArgumentCustomization = args => args.Append("/p:Version=" + packageVersion),
-        Configuration = "Release",
-        OutputDirectory = artifactsFolderPath,
-        NoBuild = true,
-    };
-
-    var projects = GetFiles(solutionFolderPath + "**/*.csproj");
-
-    foreach(var project in projects)
-    {
-        DotNetCorePack(project.FullPath, settings);
-    }
-});
-
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Create-Nuget-Packages");
+    .IsDependentOn("Run-Unit-Tests");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

@@ -11,11 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Core", "Shee
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Lib", "SheetToObjects.Lib\SheetToObjects.Lib.csproj", "{1E929F63-CF74-4AE5-B80F-D0BBB0C74544}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheetToObjects.Adapters.GoogleSheets", "SheetToObjects.Adapters.GoogleSheets\SheetToObjects.Adapters.GoogleSheets.csproj", "{863988E9-A76A-4909-B76B-708F3E4F75C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Adapters.GoogleSheets", "SheetToObjects.Adapters.GoogleSheets\SheetToObjects.Adapters.GoogleSheets.csproj", "{863988E9-A76A-4909-B76B-708F3E4F75C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheetToObjects.Adapters.MicrosoftExcel", "SheetToObjects.Adapters.MicrosoftExcel\SheetToObjects.Adapters.MicrosoftExcel.csproj", "{D2BF51CA-9E18-4222-BE27-6F5DBBAC6CFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Adapters.MicrosoftExcel", "SheetToObjects.Adapters.MicrosoftExcel\SheetToObjects.Adapters.MicrosoftExcel.csproj", "{D2BF51CA-9E18-4222-BE27-6F5DBBAC6CFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheetToObjects.Adapters.Csv", "SheetToObjects.Adapters.Csv\SheetToObjects.Adapters.Csv.csproj", "{BB23F27B-8F37-4E22-89BE-C61268C1F75A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Adapters.Csv", "SheetToObjects.Adapters.Csv\SheetToObjects.Adapters.Csv.csproj", "{BB23F27B-8F37-4E22-89BE-C61268C1F75A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1634F6CF-74F3-4757-A5CB-ECAB800FCA75}"
+	ProjectSection(SolutionItems) = preProject
+		Common.props = Common.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
