@@ -9,13 +9,6 @@ var configuration       = Argument("configuration", "Release");
 var solutionFolderPath  = "./src/";
 var solution            = solutionFolderPath + "SheetToObjects.sln";
 var artifactsFolderPath = "./artifacts/";
-var buildNumber         = string.IsNullOrWhiteSpace(EnvironmentVariable("APPVEYOR_BUILD_NUMBER")) 
-                            ? "0" 
-                            : EnvironmentVariable("APPVEYOR_BUILD_NUMBER");
-var version             = FileReadText("version.txt");
-var commitSha           = string.IsNullOrWhiteSpace(EnvironmentVariable("APPVEYOR_REPO_COMMIT"))
-                            ? ""
-                            : EnvironmentVariable("APPVEYOR_REPO_COMMIT");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -47,7 +40,6 @@ Task("Build")
 {
     var settings = new DotNetCoreBuildSettings
     {
-        ArgumentCustomization = args => args.Append("/p:Version=" + version + ";FileVersion=" + version + ";InformationalVersion=" + commitSha),
         Configuration = configuration
     };
 
