@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
+using SheetToObjects.Core;
 
 namespace SheetToObjects.Lib.Validation
 {
@@ -19,10 +20,21 @@ namespace SheetToObjects.Lib.Validation
         {
             try
             {
-                var stringValue = value.ToString();
+                var stringValue = value.IsNull() ? string.Empty : value.ToString();
 
                 if (Regex.IsMatch(stringValue, _pattern, _isCaseSensitive ? RegexOptions.IgnoreCase : RegexOptions.None))
                 {
+                    if (value.IsNull())
+                    {
+                        if (typeof(TValue) == typeof(string))
+                        {
+                            var returnValue = (TValue)Convert.ChangeType(string.Empty, typeof(TValue));
+                            return Result.Ok<TValue, IValidationError>(returnValue);
+                        }
+
+                        return Result.Ok<TValue, IValidationError>(default(TValue));
+                    }
+
                     return Result.Ok<TValue, IValidationError>(value);
                 }
 
