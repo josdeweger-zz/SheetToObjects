@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using SheetToObjects.Lib.Validation;
 using SheetToObjects.Specs.TestModels;
 using Xunit;
@@ -56,6 +57,30 @@ namespace SheetToObjects.Specs.Lib.Validation
             var result = new RegexRule(pattern).Validate(0, 0, string.Empty, string.Empty, value);
 
             result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GivenValidatingRegex_WhenEmptyValueIsAllowed_EmptyValueIsValid()
+        {
+            var value = string.Empty;
+            var pattern = @"^$|^[^@\s]+@[^@\s]+$`";
+
+            var result = new RegexRule(pattern).Validate(0, 0, "email", "email", value);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(value);
+        }
+
+        [Fact]
+        public void GivenValidatingRegex_WhenEmptyValueIsAllowed_NoValueIsValid()
+        {
+            string value = null;
+            var pattern = @"^$|^[^@\s]+@[^@\s]+$`";
+
+            var result = new RegexRule(pattern).Validate(0, 0, "email", "email", value);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(string.Empty);
         }
     }
 }
