@@ -288,5 +288,54 @@ namespace SheetToObjects.Specs.Lib.Validation
             result.ValidationErrors.Single().RowIndex.Should().Be(2);
             result.ValidationErrors.Single().ColumnIndex.Should().Be(0);
         }
+
+        [Fact]
+        public void GivenValidatingWithIsRequiredInHeaderRow_WhenColumnIsInHeader_ItIsValid()
+        {
+
+            var sheetData = new SheetBuilder()
+                .AddHeaders("Column1")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue(4).Build()).Build(1))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(2).WithValue(12).Build()).Build(2))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("Column1")
+                        .IsRequired()
+                        .WithRequiredInHeaderRow()
+                        .MapTo(t => t.IntProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ValidationErrors.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void GivenValidatingWithIsRequiredInHeaderRow_WhenColumnIsNotInHeader_ItIsValid()
+        {
+
+            var sheetData = new SheetBuilder()
+                .AddHeaders("Column2")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue(4).Build()).Build(1))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(2).WithValue(12).Build()).Build(2))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("Column1")
+                        .IsRequired()
+                        .WithRequiredInHeaderRow()
+                        .MapTo(t => t.IntProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeFalse();
+            result.ValidationErrors.Should().HaveCount(1);
+            result.ValidationErrors.Single().PropertyName.Should().Be("Column1");
+        }
     }
 }

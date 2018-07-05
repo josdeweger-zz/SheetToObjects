@@ -4,6 +4,8 @@
     {
         string ColumnName { get; }
 
+        bool IsRequiredInHeaderRow { get; }
+
         void SetColumnIndex(int columnIndex);
     }
 }

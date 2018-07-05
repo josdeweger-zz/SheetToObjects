@@ -50,7 +50,16 @@ namespace SheetToObjects.Lib
             var mappingConfig = GetMappingConfig<T>();
 
             if (mappingConfig.HasHeaders)
-                SetHeaderIndexesInColumnMappings(sheet.Rows.FirstOrDefault(), mappingConfig);
+            {
+                var headerValidationErrors = HandleHeaderRow(sheet.Rows.FirstOrDefault(), mappingConfig);
+                if (headerValidationErrors.Any())
+                {
+                    return MappingResult<T>.Create(
+                        parsedModels,
+                        headerValidationErrors
+                    );
+                }
+            }
 
             var dataRows = mappingConfig.HasHeaders ? sheet.Rows.Skip(1).ToList() : sheet.Rows;
 
@@ -86,8 +95,10 @@ namespace SheetToObjects.Lib
                                             $"to map the properties by data attributes");
         }
 
-        private void SetHeaderIndexesInColumnMappings(Row firstRow, MappingConfig mappingConfig)
+        private List<IValidationError> HandleHeaderRow(Row firstRow, MappingConfig mappingConfig)
         {
+            var validationErrors = new List<IValidationError>();
+
             foreach (var columnMapping in mappingConfig.ColumnMappings.OfType<IUseHeaderRow>())
             {
                 var headerCell = firstRow.Cells.FirstOrDefault(c => c.Value.ToString().Equals(columnMapping.ColumnName.ToString(), StringComparison.OrdinalIgnoreCase));
@@ -95,7 +106,14 @@ namespace SheetToObjects.Lib
                 {
                     columnMapping.SetColumnIndex(headerCell.ColumnIndex);
                 }
+                else if (columnMapping.IsRequiredInHeaderRow)
+                {
+                    validationErrors.Add(ParsingValidationError.CouldNotFindHeader(-1, 0,columnMapping.ColumnName, columnMapping.ColumnName));
+                }
+
             }
+
+            return validationErrors;
         }
     }
 }

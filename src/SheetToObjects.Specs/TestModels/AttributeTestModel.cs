@@ -19,5 +19,10 @@ namespace SheetToObjects.Specs.TestModels
         [Format("yyyy-MM-dd")]
         [IsRequired]
         public DateTime DateTimeProperty { get; set; }
+
+
+        [MappingByHeader("RequiredInHeaderProperty")]
+        [RequiredInHeaderRow]
+        public string RequiredInHeaderProperty { get; set; }
     }
 }

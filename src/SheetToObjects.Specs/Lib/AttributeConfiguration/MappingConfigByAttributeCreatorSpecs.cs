@@ -81,5 +81,17 @@ namespace SheetToObjects.Specs.Lib.AttributeConfiguration
 
             columnMapping.DefaultValue.Should().Be(defaultValue);
         }
+
+        [Fact]
+        void WhenPropertyIsRequiredInHeaderRow_RequiredInHeaderRowIsSet()
+        {
+            var columnName = "RequiredInHeaderProperty";
+
+            var result = new MappingConfigByAttributeCreator<AttributeTestModel>().CreateMappingConfig();
+
+            var columnMapping = result.Value.ColumnMappings.Single(c => c.PropertyName.Equals(columnName)) as IUseHeaderRow;
+
+            columnMapping.IsRequiredInHeaderRow.Should().BeTrue();
+        }
     }
 }
