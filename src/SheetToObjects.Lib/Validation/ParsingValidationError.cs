@@ -5,6 +5,7 @@
         private const string CellNotFoundMessage = "Cell not found";
         private const string CouldNotParseValueMessage = "Could not parse value";
         private const string ValueTypeCanNotBeNullMessage = "Value type can not be null";
+        private const string HeaderNotFoundMesage = "Could not find columname in headerrow";
 
         public string CellValue { get; }
         public string ColumnName { get; }
@@ -37,5 +38,13 @@
         {
             return new ParsingValidationError(columnIndex, rowIndex, columnName, propertyName, string.Empty, ValueTypeCanNotBeNullMessage);
         }
+
+        public static IValidationError CouldNotFindHeader(int columnIndex, int rowIndex, string columnName,string propertyName)
+        {
+            return new ParsingValidationError(columnIndex, rowIndex, columnName, propertyName, columnName, HeaderNotFoundMesage);
+        }
+
+
+
     }
 }

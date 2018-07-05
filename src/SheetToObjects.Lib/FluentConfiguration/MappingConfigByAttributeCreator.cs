@@ -63,6 +63,9 @@ namespace SheetToObjects.Lib.FluentConfiguration
                         case var _ when attribute is DefaultValue:
                             mappingConfigBuilder.WithDefaultValue(((DefaultValue) attribute).Value);
                             break;
+                        case var _ when attribute is RequiredInHeaderRow:
+                            mappingConfigBuilder.WithRequiredInHeaderRow();
+                            break;
                     }
                 }
 

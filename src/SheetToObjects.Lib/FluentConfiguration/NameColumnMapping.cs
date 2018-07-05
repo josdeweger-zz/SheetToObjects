@@ -7,11 +7,14 @@ namespace SheetToObjects.Lib.FluentConfiguration
     {
         public string ColumnName { get; }
 
-        public NameColumnMapping(string columnName, string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules, object defaultValue) 
+        public bool IsRequiredInHeaderRow { get; }
+
+        public NameColumnMapping(string columnName, string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules, object defaultValue, bool isRequiredInHeaderRow) 
             : base(propertyName, format, parsingRules, rules, defaultValue)
         {
             ColumnName = columnName;
             ColumnIndex = -1;
+            IsRequiredInHeaderRow = isRequiredInHeaderRow;
         }
 
         public void SetColumnIndex(int columnIndex)
