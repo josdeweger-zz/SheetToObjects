@@ -32,6 +32,10 @@ namespace SheetToObjects.ConsoleApp
             });
 
             Console.WriteLine("===============================================================");
+            foreach (var error in result.Item1.ValidationErrors)
+            {
+                Console.WriteLine($"Column: {error.ColumnName} | Row: {error.RowIndex} | Message: {error.ErrorMessage}");
+            }
             Console.WriteLine($"Mapped {result.Item1.ParsedModels.Count} models in {result.Item2.ToString()} " +
                               $"with {result.Item1.ValidationErrors.Count} validation errors");
             Console.WriteLine("===============================================================");

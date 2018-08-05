@@ -8,6 +8,7 @@
         private const string ValueDoesNotMatchRegexMessage = "Value {0} does not match pattern {1}";
         private const string CouldNotValidateValueWithPatternMessage = "Value could not be validated by regex '{0}'";
         private const string CouldNotValidateValueMessage = "Value could not be validated";
+        private const string ColumnMustContainUniqueValuesMessage = "Column '{0}' with index {1} must contain unique values";
 
         public string CellValue { get; }
         public string ColumnName { get; }
@@ -60,6 +61,11 @@
         public static IValidationError CouldNotValidateValue(int columnIndex, int rowIndex, string columnName, string propertyName)
         {
             return new RuleValidationError(columnIndex, rowIndex, CouldNotValidateValueMessage, columnName, string.Empty, propertyName);
+        }
+
+        public static IValidationError ColumnMustContainUniqueValues(int columnIndex, string columnName)
+        {
+            return new RuleValidationError(columnIndex, -1, string.Format(ColumnMustContainUniqueValuesMessage, columnName, columnIndex), columnName, string.Empty, string.Empty);
         }
     }
 }

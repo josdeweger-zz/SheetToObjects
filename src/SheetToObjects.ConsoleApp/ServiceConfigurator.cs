@@ -31,7 +31,7 @@ namespace SheetToObjects.ConsoleApp
                     )
                     .AddConfigFor<SuperstoreModel>(cfg => cfg
                         .HasHeaders()
-                        .MapColumn(column => column.WithHeader("Row ID").IsRequired().MapTo(m => m.RowId))
+                        .MapColumn(column => column.WithHeader("Row ID").ShouldHaveUniqueValues().IsRequired().MapTo(m => m.RowId))
                         .MapColumn(column => column.WithHeader("Order ID").IsRequired().MapTo(m => m.OrderId))
                         .MapColumn(column => column.WithHeader("Order Date").IsRequired().UsingFormat("d-M-yyyy").MapTo(m => m.OrderDate))
                         .MapColumn(column => column.WithHeader("Ship Date").IsRequired().UsingFormat("d-M-yyyy").MapTo(m => m.ShipDate))

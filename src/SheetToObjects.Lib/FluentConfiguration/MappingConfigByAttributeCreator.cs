@@ -57,6 +57,9 @@ namespace SheetToObjects.Lib.FluentConfiguration
                         case var _ when attribute is IRuleAttribute:
                             mappingConfigBuilder.AddRule(((IRuleAttribute)attribute).GetRule());
                             break;
+                        case var _ when attribute is IColumnRuleAttribute:
+                            mappingConfigBuilder.AddRule(((IColumnRuleAttribute)attribute).GetRule());
+                            break;
                         case var _ when attribute is Format:
                             mappingConfigBuilder.UsingFormat(((Format) attribute).FormatString);
                             break;
