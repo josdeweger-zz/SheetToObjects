@@ -5,8 +5,9 @@
 A simple library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO.
 
 # Quickstart
-Below is an example on how to get started. The steps are 1. Configure, 2. Get sheet data, 3. Do the mapping
+Below is an example on how to get started:
 ```
+//1. configure
 var sheetMapper = new SheetMapper()
     .AddConfigFor<SomeModel>(cfg => cfg
         .AddColumn(column => column
@@ -32,8 +33,10 @@ var sheetMapper = new SheetMapper()
             .MapTo(m => m.Email))
     );
 
+//2. get sheet data
 var sheet = await _googleSheetProvider.GetAsync(mySheetId, "'My SheetName'!A1:H5", myApiKey);
 
+//3. do the mapping
 var result = _sheetMapper.Map<MyModel>(sheet);
 ```
 
