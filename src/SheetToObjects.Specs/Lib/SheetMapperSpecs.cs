@@ -265,6 +265,50 @@ namespace SheetToObjects.Specs.Lib
             result.IsSuccess.Should().BeTrue();
             result.ParsedModels.Single().ParsedModel.StringProperty.Should().Be(defaultLabel);
         }
+
+        [Fact]
+        public void GivenColumnWithUniqueValidation_WhenAllValuesAreUnique_ItIsValid()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("FirstColumn")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("First Value").Build()).Build(1))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(2).WithValue("Second Value").Build()).Build(2))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("FirstColumn")
+                        .ShouldHaveUniqueValues()
+                        .MapTo(t => t.StringProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void GivenColumnWithUniqueValidation_WhenOneValueExistsTwice_ItIsNotValid()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("FirstColumn")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("Same Value").Build()).Build(1))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(2).WithValue("Same Value").Build()).Build(2))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("FirstColumn")
+                        .ShouldHaveUniqueValues()
+                        .MapTo(t => t.StringProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeFalse();
+            result.ParsedModels.Should().HaveCount(2);
+        }
     }
 
     public class ModelOne

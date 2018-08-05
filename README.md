@@ -9,11 +9,27 @@ Below is an example on how to get started. The steps are 1. Configure, 2. Get sh
 ```
 var sheetMapper = new SheetMapper()
     .AddConfigFor<SomeModel>(cfg => cfg
-        .AddColumn(column => column.WithHeader("First Name").IsRequired().MapTo(m => m.FirstName))
-        .AddColumn(column => column.WithHeader("Middle Name").MapTo(m => m.MiddleName))
-        .AddColumn(column => column.WithHeader("Last Name").IsRequired().MapTo(m => m.LastName))
-        .AddColumn(column => column.WithHeader("Email").Matches("^\S+@\S+$").MapTo(m => m.Email))
-        .AddColumn(column => column.WithHeader("Age").WithCustomRule<int>(age => age > 18 && age <= 67).MapTo(m => m.Email))
+        .AddColumn(column => column
+            .WithHeader("First Name")
+            .IsRequired()
+            .MapTo(m => m.FirstName))
+        .AddColumn(column => column
+            .WithHeader("Middle Name")
+            .MapTo(m => m.MiddleName))
+        .AddColumn(column => column
+            .WithHeader("Last Name")
+            .IsRequired()
+            .MapTo(m => m.LastName))
+        .AddColumn(column => column
+            .WithHeader("Email")
+            .IsRequired()
+            .ShouldHaveUniqueValue()
+            .Matches("^\S+@\S+$")
+            .MapTo(m => m.Email))
+        .AddColumn(column => column
+            .WithHeader("Age")
+            .WithCustomRule<int>(age => age > 18 && age <= 67)
+            .MapTo(m => m.Email))
     );
 
 var sheet = await _googleSheetProvider.GetAsync(mySheetId, "'My SheetName'!A1:H5", myApiKey);

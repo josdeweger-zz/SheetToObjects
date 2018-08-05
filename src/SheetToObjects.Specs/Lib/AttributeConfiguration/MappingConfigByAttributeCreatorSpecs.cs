@@ -93,5 +93,17 @@ namespace SheetToObjects.Specs.Lib.AttributeConfiguration
 
             columnMapping.IsRequiredInHeaderRow.Should().BeTrue();
         }
+
+        [Fact]
+        void WhenPropertyShouldBeUniqueInColumn_UniqueInColumnRuleIsSet()
+        {
+            var columnName = "UniqueInColumnProperty";
+
+            var result = new MappingConfigByAttributeCreator<AttributeTestModel>().CreateMappingConfig();
+
+            var columnMapping = result.Value.ColumnMappings.Single(c => c.PropertyName.Equals(columnName));
+
+            columnMapping.Rules.OfType<UniqueValuesInColumnRule>().Should().NotBeNull();
+        }
     }
 }

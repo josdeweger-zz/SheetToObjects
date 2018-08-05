@@ -9,7 +9,7 @@ namespace SheetToObjects.Lib.Parsing
 
         public ObjectValueParser(Type type)
         {
-            _type = type;
+            _type = Nullable.GetUnderlyingType(type) ?? type;
         }
 
         public Result<object, string> Parse(string value)

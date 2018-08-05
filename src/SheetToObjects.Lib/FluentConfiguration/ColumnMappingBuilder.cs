@@ -63,7 +63,7 @@ namespace SheetToObjects.Lib.FluentConfiguration
             return this;
         }
 
-    /// <summary>
+        /// <summary>
         /// Add new rule that the column needs to adhere to during parsing
         /// </summary>
         public ColumnMappingBuilder<T> AddParsingRule(IParsingRule rule)

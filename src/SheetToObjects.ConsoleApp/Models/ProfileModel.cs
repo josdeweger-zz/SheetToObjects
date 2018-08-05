@@ -32,6 +32,7 @@ namespace SheetToObjects.ConsoleApp.Models
         [Format("d-M-yyyy")]
         public DateTime DateOfBirth { get; set; }
 
+        [ShouldHaveUniqueValue]
         [IsRequired]
         public string RelationNumber { get; set; }
         

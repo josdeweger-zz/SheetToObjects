@@ -42,5 +42,14 @@ namespace SheetToObjects.Lib.FluentConfiguration
             columnMappingBuilder.AddRule(new MaximumRule<TComparer>(comparer));
             return columnMappingBuilder;
         }
+        
+        /// <summary>
+        /// Values in this column have to be unique
+        /// </summary>
+        public static ColumnMappingBuilder<T> ShouldHaveUniqueValues<T>(this ColumnMappingBuilder<T> columnMappingBuilder)
+        {
+            columnMappingBuilder.AddRule(new UniqueValuesInColumnRule());
+            return columnMappingBuilder;
+        }
     }
 }

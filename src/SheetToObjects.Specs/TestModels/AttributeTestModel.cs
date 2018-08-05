@@ -8,7 +8,6 @@ namespace SheetToObjects.Specs.TestModels
     [SheetToObjectConfig(sheetHasHeaders:true)]
     public class AttributeTestModel
     {
-
         [MappingByIndex(3)]
         [IsRequired]
         [DefaultValue("Default String Value")]
@@ -20,9 +19,13 @@ namespace SheetToObjects.Specs.TestModels
         [IsRequired]
         public DateTime DateTimeProperty { get; set; }
 
-
         [MappingByHeader("RequiredInHeaderProperty")]
         [RequiredInHeaderRow]
         public string RequiredInHeaderProperty { get; set; }
+
+
+        [MappingByHeader("UniqueInColumnProperty")]
+        [ShouldHaveUniqueValue]
+        public string UniqueInColumnProperty { get; set; }
     }
 }
