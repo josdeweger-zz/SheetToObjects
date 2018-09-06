@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using SheetToObjects.Adapters.GoogleSheets;
+using SheetToObjects.Adapters.GoogleSheets.Shared.Models;
 using SheetToObjects.Specs.Builders;
 using Xunit;
 

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Refit;
+using SheetToObjects.Adapters.GoogleSheets.Shared.Models;
 using SheetToObjects.Lib;
 
 namespace SheetToObjects.Adapters.GoogleSheets

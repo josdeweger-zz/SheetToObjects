@@ -17,13 +17,11 @@
     <ProjectReference Include="..\SheetToObjects.Adapters.GoogleSheets\SheetToObjects.Adapters.GoogleSheets.csproj" />
     <ProjectReference Include="..\SheetToObjects.Adapters.MicrosoftExcel\SheetToObjects.Adapters.MicrosoftExcel.csproj" />
     <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Adapters.ProtectedGoogleSheets\SheetToObjects.Adapters.ProtectedGoogleSheets.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="app-settings.default.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="app-settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Files\profiles.csv">
