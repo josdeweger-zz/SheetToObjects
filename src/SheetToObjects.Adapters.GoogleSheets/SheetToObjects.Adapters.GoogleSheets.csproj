@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Adapters.GoogleSheets.Shared\SheetToObjects.Adapters.GoogleSheets.Shared.csproj" />
   </ItemGroup>
 
 </Project>

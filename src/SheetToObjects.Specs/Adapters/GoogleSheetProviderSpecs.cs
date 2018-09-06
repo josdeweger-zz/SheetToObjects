@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using SheetToObjects.Adapters.GoogleSheets;
+using SheetToObjects.Adapters.GoogleSheets.Shared.Models;
 using SheetToObjects.Lib;
 using SheetToObjects.Specs.Builders;
 using Xunit;

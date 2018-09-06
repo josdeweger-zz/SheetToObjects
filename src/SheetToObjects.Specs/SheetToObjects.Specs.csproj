@@ -12,6 +12,7 @@
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.35.1.1338" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,8 @@
     <ProjectReference Include="..\SheetToObjects.Adapters.GoogleSheets\SheetToObjects.Adapters.GoogleSheets.csproj" />
     <ProjectReference Include="..\SheetToObjects.Adapters.MicrosoftExcel\SheetToObjects.Adapters.MicrosoftExcel.csproj" />
     <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Adapters.GoogleSheets.Shared\SheetToObjects.Adapters.GoogleSheets.Shared.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Adapters.ProtectedGoogleSheets\SheetToObjects.Adapters.ProtectedGoogleSheets.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,11 +8,21 @@ namespace SheetToObjects.ConsoleApp
     {
         private static void Main()
         {
+            RunProtectedGoogleSheetsExampleAsync().GetAwaiter().GetResult();
             RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
             RunExcelExample();
             RunCsvExample();
 
             Console.ReadLine();
+        }
+
+        private static async Task RunProtectedGoogleSheetsExampleAsync()
+        {
+            await new ServiceCollection()
+                .ConfigureServices()
+                .BuildServiceProvider()
+                .GetService<ProtectedGoogleSheetsApp>()
+                .Run();
         }
 
         private static async Task RunGoogleSheetsExampleAsync()

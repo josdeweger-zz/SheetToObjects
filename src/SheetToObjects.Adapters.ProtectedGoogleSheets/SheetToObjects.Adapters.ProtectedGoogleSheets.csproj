@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Adapters.GoogleSheets.Shared\SheetToObjects.Adapters.GoogleSheets.Shared.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Core\SheetToObjects.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.35.1.1338" />
+  </ItemGroup>
+</Project>

@@ -13,6 +13,7 @@ namespace SheetToObjects.ConsoleApp
         {
             serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.SheetProvider>();
             serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.SheetProvider>();
+            serviceCollection.AddTransient<Adapters.ProtectedGoogleSheets.Interfaces.IProvideSheet, Adapters.ProtectedGoogleSheets.SheetProvider>();
             serviceCollection.AddTransient<Adapters.MicrosoftExcel.IProvideSheet, Adapters.MicrosoftExcel.SheetProvider>();
 
             serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
@@ -53,8 +54,6 @@ namespace SheetToObjects.ConsoleApp
                         .MapColumn(column => column.WithHeader("Profit").IsRequired().MapTo(m => m.Profit))
                     );
 
-                
-
                 return sheetMapper;
             });
 
@@ -69,6 +68,7 @@ namespace SheetToObjects.ConsoleApp
             serviceCollection.AddTransient<CsvApp>();
             serviceCollection.AddTransient<ExcelApp>();
             serviceCollection.AddTransient<GoogleSheetsApp>();
+            serviceCollection.AddTransient<ProtectedGoogleSheetsApp>();
 
             return serviceCollection;
         }

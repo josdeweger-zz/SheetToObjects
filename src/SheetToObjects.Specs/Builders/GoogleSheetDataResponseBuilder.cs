@@ -1,5 +1,5 @@
-﻿using SheetToObjects.Adapters.GoogleSheets;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SheetToObjects.Adapters.GoogleSheets.Shared.Models;
 
 namespace SheetToObjects.Specs.Builders
 {
@@ -22,3 +22,4 @@ namespace SheetToObjects.Specs.Builders
         }
     }
 }
+ 
