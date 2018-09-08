@@ -12,15 +12,18 @@ namespace SheetToObjects.ConsoleApp
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.SheetProvider>();
+            serviceCollection.AddTransient<Adapters.GoogleSheets.ISheetsServiceWrapper, Adapters.GoogleSheets.SheetsServiceWrapper>();
+            serviceCollection.AddTransient<Adapters.GoogleSheets.ICreateGoogleClientService, Adapters.GoogleSheets.GoogleClientServiceFactory>();
             serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.SheetProvider>();
-            serviceCollection.AddTransient<Adapters.ProtectedGoogleSheets.Interfaces.IProvideSheet, Adapters.ProtectedGoogleSheets.SheetProvider>();
+            serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideProtectedSheet, Adapters.GoogleSheets.ProtectedSheetProvider>();
             serviceCollection.AddTransient<Adapters.MicrosoftExcel.IProvideSheet, Adapters.MicrosoftExcel.SheetProvider>();
 
             serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
             {
                 var sheetMapper = new SheetMapper();
 
-                sheetMapper.AddConfigFor<EpicTrackingModel>(cfg => cfg
+                sheetMapper
+                    .AddConfigFor<EpicTrackingModel>(cfg => cfg
                         .MapColumn(column => column.WithColumnLetter("A").MapTo(m => m.SprintNumber))
                         .MapColumn(column => column.WithColumnLetter("B").MapTo(m => m.SprintName))
                         .MapColumn(column => column.WithColumnLetter("C").MapTo(m => m.StoryPointsCompleted))
@@ -58,6 +61,7 @@ namespace SheetToObjects.ConsoleApp
             });
 
             serviceCollection.AddOptions();
+
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("app-settings.json", false)

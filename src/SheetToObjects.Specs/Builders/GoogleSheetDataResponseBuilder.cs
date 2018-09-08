@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using SheetToObjects.Adapters.GoogleSheets.Shared.Models;
+using SheetToObjects.Adapters.GoogleSheets;
 
 namespace SheetToObjects.Specs.Builders
 {
     internal class GoogleSheetDataResponseBuilder
     {
-        private readonly List<List<string>> _values = new List<List<string>>();
+        private readonly List<IList<string>> _values = new List<IList<string>>();
 
-        public GoogleSheetDataResponseBuilder WithRow(List<string> row)
+        public GoogleSheetDataResponseBuilder WithRow(IList<string> row)
         {
             _values.Add(row);
             return this;

@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 using SheetToObjects.Adapters.MicrosoftExcel;
 using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Core;
@@ -38,21 +37,6 @@ namespace SheetToObjects.ConsoleApp
             Console.WriteLine($"Mapped {result.Item1.ParsedModels.Count} models in {result.Item2.ToString()} " +
                 $"with {result.Item1.ValidationErrors.Count} validation errors");
             Console.WriteLine("===============================================================");
-        }
-        
-        private static void WriteToConsole(params object[] objects)
-        {
-            foreach (var obj in objects)
-            {
-                Console.WriteLine("===============================================================");
-                ConsoleWriteJson(obj);
-                Console.WriteLine("===============================================================");
-            }
-        }
-
-        private static void ConsoleWriteJson(object obj)
-        {
-            Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
         }
     }
 }
