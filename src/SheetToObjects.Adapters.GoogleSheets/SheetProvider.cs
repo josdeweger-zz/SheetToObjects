@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Refit;
-using SheetToObjects.Adapters.GoogleSheets.Shared.Models;
 using SheetToObjects.Lib;
+using Sheet = SheetToObjects.Lib.Sheet;
 
 namespace SheetToObjects.Adapters.GoogleSheets
 {
@@ -10,14 +10,14 @@ namespace SheetToObjects.Adapters.GoogleSheets
         private const string GoogleSheetsUrl = "https://sheets.googleapis.com/v4";
 
         private readonly IGoogleSheetApi _googleSheetApi;
-        private readonly IConvertResponseToSheet<GoogleSheetResponse> _googleSheetConverter;
+        private readonly IConvertResponseToSheet<GoogleSheetResponse> _googleSheetAdapter;
 
         internal SheetProvider(
             IGoogleSheetApi googleSheetApi,
-            IConvertResponseToSheet<GoogleSheetResponse> googleSheetConverter)
+            IConvertResponseToSheet<GoogleSheetResponse> googleSheetAdapter)
         {
             _googleSheetApi = googleSheetApi;
-            _googleSheetConverter = googleSheetConverter;
+            _googleSheetAdapter = googleSheetAdapter;
         }
 
         public SheetProvider() : this(RestService.For<IGoogleSheetApi>(GoogleSheetsUrl), new GoogleSheetAdapter()) { }
@@ -26,7 +26,7 @@ namespace SheetToObjects.Adapters.GoogleSheets
         {
             var sheetDataResponse = await _googleSheetApi.GetSheetAsync(sheetId, range, apiKey);
 
-            return _googleSheetConverter.Convert(sheetDataResponse);
+            return _googleSheetAdapter.Convert(sheetDataResponse);
         }
     }
 }

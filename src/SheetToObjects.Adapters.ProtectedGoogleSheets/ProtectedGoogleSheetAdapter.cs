@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Google.Apis.Sheets.v4.Data;
-using SheetToObjects.Adapters.GoogleSheets.Shared.Extensions;
 using SheetToObjects.Core;
 using SheetToObjects.Lib;
+using SheetToObjects.Lib.Extensions;
 using Sheet = SheetToObjects.Lib.Sheet;
 
 namespace SheetToObjects.Adapters.ProtectedGoogleSheets

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using SheetToObjects.Adapters.ProtectedGoogleSheets.Interfaces;
+using SheetToObjects.Adapters.GoogleSheets;
 using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Core;
 using SheetToObjects.Lib;
@@ -11,16 +9,13 @@ namespace SheetToObjects.ConsoleApp
 {
     public class ProtectedGoogleSheetsApp
     {
-        private readonly AppSettings _appSettings;
-        private readonly IProvideSheet _sheetProvider;
+        private readonly IProvideProtectedSheet _sheetProvider;
         private readonly IMapSheetToObjects _sheetMapper;
 
         public ProtectedGoogleSheetsApp(
-            IOptions<AppSettings> appSettings,
-            IProvideSheet sheetProvider,
+            IProvideProtectedSheet sheetProvider,
             IMapSheetToObjects sheetMapper)
         {
-            _appSettings = appSettings.Value;
             _sheetProvider = sheetProvider;
             _sheetMapper = sheetMapper;
         }
@@ -29,12 +24,12 @@ namespace SheetToObjects.ConsoleApp
         {
             var result = await Timer.TimeFuncAsync(async () =>
             {
-                var sheet = await _sheetProvider.GetAsync("secret.json", 
-                                                          "DOCUMENT NAME", 
-                                                          "DOCUMENT ID", 
-                                                          "SET RANGE HERE"); // 'Job offers'!A:F
+                var sheet = await _sheetProvider.GetAsync("SheetToObjects-a96682815641.json",
+                                                          "SheetToObjects demo",
+                                                          "1cxAOIdNlb2UJ8h5ADUyqiolQt7znf-S7AAEKJV8VpJc", 
+                                                          "'store'!A1:U9995");
 
-                return _sheetMapper.Map<EpicTrackingModel>(sheet);
+                return _sheetMapper.Map<SuperstoreModel>(sheet);
             });
 
             Console.WriteLine("===============================================================");
@@ -45,21 +40,6 @@ namespace SheetToObjects.ConsoleApp
             Console.WriteLine($"Mapped {result.Item1.ParsedModels.Count} models in {result.Item2.ToString()} " +
                               $"with {result.Item1.ValidationErrors.Count} validation errors");
             Console.WriteLine("===============================================================");
-        }
-
-        private static void WriteToConsole(params object[] objects)
-        {
-            foreach (var obj in objects)
-            {
-                Console.WriteLine("===============================================================");
-                ConsoleWriteJson(obj);
-                Console.WriteLine("===============================================================");
-            }
-        }
-
-        private static void ConsoleWriteJson(object obj)
-        {
-            Console.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
         }
     }
 }

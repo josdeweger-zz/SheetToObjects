@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Google.Apis.Sheets.v4.Data;
 using Moq;
 using SheetToObjects.Adapters.GoogleSheets;
 using SheetToObjects.Lib;
@@ -9,18 +10,24 @@ using Xunit;
 
 namespace SheetToObjects.Specs.Adapters
 {
-    public class GoogleSheetProviderSpecs
+    public class GoogleProtectedSheetProviderSpecs
     {
-        private readonly Mock<IGoogleSheetApi> _googleSheetApiMock;
-        private readonly Mock<IConvertResponseToSheet<GoogleSheetResponse>> _googleSheetConverterMock;
+        private readonly Mock<ICreateGoogleClientService> _googleClientServiceCreatorMock;
+        private readonly Mock<IConvertResponseToSheet<ValueRange>> _googleSheetConverterMock;
 
-        public GoogleSheetProviderSpecs()
+        public GoogleProtectedSheetProviderSpecs()
         {
-            _googleSheetApiMock = new Mock<IGoogleSheetApi>();
+            var sheetServiceWrapperMock = new Mock<ISheetsServiceWrapper>();
+            
+            sheetServiceWrapperMock
+                .Setup(s => s.Get(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new ValueRange()));
 
-            _googleSheetApiMock
-                .Setup(g => g.GetSheetAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new GoogleSheetResponse()));
+            _googleClientServiceCreatorMock = new Mock<ICreateGoogleClientService>();
+
+            _googleClientServiceCreatorMock
+                .Setup(g => g.Create(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(sheetServiceWrapperMock.Object);
 
             var sheetData = new SheetBuilder()
                 .AddHeaders("header1", "header2")
@@ -34,16 +41,16 @@ namespace SheetToObjects.Specs.Adapters
                     .Build(1))
                 .Build();
 
-            _googleSheetConverterMock = new Mock<IConvertResponseToSheet<GoogleSheetResponse>>();
-            _googleSheetConverterMock.Setup(s => s.Convert(It.IsAny<GoogleSheetResponse>())).Returns(sheetData);
+            _googleSheetConverterMock = new Mock<IConvertResponseToSheet<ValueRange>>();
+            _googleSheetConverterMock.Setup(s => s.Convert(It.IsAny<ValueRange>())).Returns(sheetData);
         }
 
         [Fact]
         public async void GivenGettingSheet_WhenGettingData_ThenConvertedDataIsReturned()
         {
-            var provider = new SheetProvider(_googleSheetApiMock.Object, _googleSheetConverterMock.Object);
+            var provider = new ProtectedSheetProvider(_googleClientServiceCreatorMock.Object, _googleSheetConverterMock.Object);
 
-            var sheet = await provider.GetAsync("1", "A1:A2", "someKey");
+            var sheet = await provider.GetAsync("my.json", "My Document", "some-guid", "A1:B3");
 
             sheet.Rows.Count.Should().Be(3);
             sheet.Rows.First().Cells.Count.Should().Be(2);

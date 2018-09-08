@@ -12,7 +12,7 @@ namespace SheetToObjects.Adapters.ProtectedGoogleSheets
 {
     public class SheetProvider : IProvideSheet
     {
-        readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
+        readonly string[] _scopes = { SheetsService.Scope.Spreadsheets };
 
         private readonly IConvertResponseToSheet<ValueRange> _googleSheetConverter;
 
@@ -30,7 +30,7 @@ namespace SheetToObjects.Adapters.ProtectedGoogleSheets
             GoogleCredential credential;
             using (var stream = new FileStream(jsonFile, FileMode.Open, FileAccess.Read))
             {
-                credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
+                credential = GoogleCredential.FromStream(stream).CreateScoped(_scopes);
             }
 
             // Create Google Sheets API service.

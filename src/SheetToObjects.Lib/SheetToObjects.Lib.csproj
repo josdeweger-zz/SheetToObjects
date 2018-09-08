@@ -21,4 +21,10 @@
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="1.10.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Google.Apis.Sheets.v4">
+      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis.sheets.v4\1.35.1.1338\lib\netstandard2.0\Google.Apis.Sheets.v4.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

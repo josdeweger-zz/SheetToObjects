@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />

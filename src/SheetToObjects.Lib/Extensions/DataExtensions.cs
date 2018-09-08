@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SheetToObjects.Lib;
 
-namespace SheetToObjects.Adapters.GoogleSheets.Shared.Extensions
+namespace SheetToObjects.Lib.Extensions
 {
-    internal static class DataExtensions
+    public static class DataExtensions
     {
-        public static List<Row> ToRows(this List<List<string>> sheetData)
+        public static List<Row> ToRows(this IList<IList<string>> sheetData)
         {
             return sheetData.Select((rowData, rowIndex) => new Row(RowDataToCells(rowData, rowIndex), rowIndex)).ToList();
         }
@@ -16,7 +15,7 @@ namespace SheetToObjects.Adapters.GoogleSheets.Shared.Extensions
             return sheetData.Select((rowData, rowIndex) => new Row(RowDataToCells(rowData, rowIndex), rowIndex)).ToList();
         }
 
-        public static List<Cell> RowDataToCells(this List<string> rowData, int rowIndex)
+        public static List<Cell> RowDataToCells(this IList<string> rowData, int rowIndex)
         {
             return rowData.Select((cellData, columnIndex) => new Cell(columnIndex, rowIndex, cellData)).ToList();
         }
