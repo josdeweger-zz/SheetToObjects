@@ -13,7 +13,7 @@ namespace SheetToObjects.Specs.Adapters
         [Fact]
         public void GivenNoResponseData_WhenConvertingToSheet_ArgumentExceptionIsThrown()
         {
-            var converter = new GoogleSheetAdapter();
+            var converter = new GoogleSheetToSheetConverter();
 
             Action result = () => converter.Convert(null);
 
@@ -25,7 +25,7 @@ namespace SheetToObjects.Specs.Adapters
         {
             var responseData = new GoogleSheetResponse();
 
-            var converter = new GoogleSheetAdapter();
+            var converter = new GoogleSheetToSheetConverter();
 
             var result = converter.Convert(responseData);
 
@@ -43,7 +43,7 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<string>{ rowZeroColumnAValue, rowZeroColumnBValue, rowZeroColumnCValue })
                 .Build();
 
-            var converter = new GoogleSheetAdapter();
+            var converter = new GoogleSheetToSheetConverter();
 
             var result = converter.Convert(responseData);
 
@@ -60,7 +60,7 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<string> { "myValue" })
                 .Build();
 
-            var converter = new GoogleSheetAdapter();
+            var converter = new GoogleSheetToSheetConverter();
 
             var result = converter.Convert(responseData);
 
@@ -75,7 +75,7 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<string> { "myValue" })
                 .Build();
 
-            var converter = new GoogleSheetAdapter();
+            var converter = new GoogleSheetToSheetConverter();
 
             var result = converter.Convert(responseData);
 

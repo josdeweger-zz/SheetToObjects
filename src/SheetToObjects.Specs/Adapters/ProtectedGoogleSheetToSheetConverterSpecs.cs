@@ -9,12 +9,12 @@ using Xunit;
 
 namespace SheetToObjects.Specs.Adapters
 {
-    public class ProtectedGoogleSheetAdapterSpecs
+    public class ProtectedGoogleSheetToSheetConverterSpecs
     {
         [Fact]
         public void GivenNoResponseData_WhenConvertingToSheet_ArgumentExceptionIsThrown()
         {
-            var converter = new ProtectedGoogleSheetAdapter();
+            var converter = new ProtectedGoogleSheetToSheetConverter();
 
             Action result = () => converter.Convert(null);
 
@@ -26,7 +26,7 @@ namespace SheetToObjects.Specs.Adapters
         {
             var responseData = new ValueRange();
 
-            var converter = new ProtectedGoogleSheetAdapter();
+            var converter = new ProtectedGoogleSheetToSheetConverter();
 
             var result = converter.Convert(responseData);
 
@@ -44,7 +44,7 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<object> { rowZeroColumnAValue, rowZeroColumnBValue, rowZeroColumnCValue })
                 .Build();
 
-            var converter = new ProtectedGoogleSheetAdapter();
+            var converter = new ProtectedGoogleSheetToSheetConverter();
 
             var result = converter.Convert(responseData);
 
@@ -61,7 +61,7 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<object> { "myValue" })
                 .Build();
 
-            var converter = new ProtectedGoogleSheetAdapter();
+            var converter = new ProtectedGoogleSheetToSheetConverter();
 
             var result = converter.Convert(responseData);
 
@@ -76,7 +76,7 @@ namespace SheetToObjects.Specs.Adapters
                 .WithRow(new List<object> { "myValue" })
                 .Build();
 
-            var converter = new ProtectedGoogleSheetAdapter();
+            var converter = new ProtectedGoogleSheetToSheetConverter();
 
             var result = converter.Convert(responseData);
 
