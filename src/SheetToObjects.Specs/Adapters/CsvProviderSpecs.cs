@@ -15,7 +15,7 @@ namespace SheetToObjects.Specs.Adapters
         {
             var base64EncodedCsv = "some invalid base64encoded string";
 
-            var provider = new SheetProvider(new CsvAdapter());
+            var provider = new CsvAdapter(new CsvToSheetConverter());
             Action result = () => provider.GetFromBase64Encoded(base64EncodedCsv, ';');
 
             result.Should().Throw<FormatException>();
@@ -26,7 +26,7 @@ namespace SheetToObjects.Specs.Adapters
         {
             var base64EncodedCsv = "Y29sdW1uMTtjb2x1bW5zMg0Kb25lOzENCnR3bzsy";
 
-            var provider = new SheetProvider(new CsvAdapter());
+            var provider = new CsvAdapter(new CsvToSheetConverter());
             var csvData = provider.GetFromBase64Encoded(base64EncodedCsv, ';');
 
             csvData.Rows.Count.Should().Be(3);
@@ -36,7 +36,7 @@ namespace SheetToObjects.Specs.Adapters
         [Fact]
         public void GivenNonExistentPath_WhenLoadingCsvData_ItThrows()
         {
-            var provider = new SheetProvider(new CsvAdapter());
+            var provider = new CsvAdapter(new CsvToSheetConverter());
 
             Action result = () => provider.GetFromPath(@"/some/non/existing/file", ';');
 
@@ -46,7 +46,7 @@ namespace SheetToObjects.Specs.Adapters
         [Fact]
         public void GivenCsvFileOnDisk_WhenLoadingCsvData_SheetContainsData()
         {
-            var provider = new SheetProvider(new CsvAdapter());
+            var provider = new CsvAdapter(new CsvToSheetConverter());
 
             var sheet = provider.GetFromPath(@"./TestFiles/test.csv", ';');
 
@@ -70,7 +70,7 @@ namespace SheetToObjects.Specs.Adapters
 
                     using (var sr = new StreamReader(memoryStream, Encoding.UTF8,false, 1024, true))
                     {
-                        var provider = new SheetProvider(new CsvAdapter());
+                        var provider = new CsvAdapter(new CsvToSheetConverter());
                         var csvData = provider.GetFromStream(sr.BaseStream, ';');
 
                         csvData.Rows.Count.Should().Be(3);

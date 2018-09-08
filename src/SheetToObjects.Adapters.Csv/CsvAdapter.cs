@@ -1,26 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using SheetToObjects.Core;
+using System.Text;
 using SheetToObjects.Lib;
 
 namespace SheetToObjects.Adapters.Csv
 {
-    internal class CsvAdapter : IConvertResponseToSheet<CsvData>
+    public class CsvAdapter : IProvideSheet
     {
-        public Sheet Convert(CsvData csvData)
+        private readonly IConvertDataToSheet<CsvData> _csvDataConverter;
+
+        internal CsvAdapter(IConvertDataToSheet<CsvData> csvDataConverter)
         {
-            if(csvData.IsNull())
-                throw new ArgumentException(nameof(csvData));
-
-            if (!csvData.Values.Any())
-                return new Sheet(new List<Row>());
-
-            var cells = csvData.Values.ToRows();
-
-            return new Sheet(cells);
+            _csvDataConverter = csvDataConverter;
         }
 
+        public CsvAdapter() : this(new CsvToSheetConverter()) { }
 
+        public Sheet GetFromBase64Encoded(string base64EncodedFile, char delimiter)
+        {
+            var fileBytes = Convert.FromBase64String(base64EncodedFile);
+            var fileString = Encoding.UTF8.GetString(fileBytes);
+
+            var data = fileString
+                .Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(l => l.Split(delimiter).ToList())
+                .ToList();
+
+            var csvData = new CsvData { Values = data };
+
+            return _csvDataConverter.Convert(csvData);
+        }
+
+        public Sheet GetFromPath(string csvPath, char delimiter)
+        {
+            var data = File.ReadAllLines(csvPath)
+                .Select(line => line.Split(delimiter).ToList())
+                .ToList();
+
+            var csvData = new CsvData { Values = data };
+
+            return _csvDataConverter.Convert(csvData);
+        }
+
+        public Sheet GetFromStream(Stream stream, char delimiter)
+        {
+            var lines = new List<string>();
+            using (var reader = new StreamReader(stream))
+            {
+                while(!reader.EndOfStream)
+                {
+                    lines.Add(reader.ReadLine());
+                }
+            }
+
+            var data = lines
+                .Select(line => line.Split(delimiter).ToList())
+                .ToList();
+
+            var csvData = new CsvData { Values = data };
+
+            return _csvDataConverter.Convert(csvData);
+        }
     }
 }

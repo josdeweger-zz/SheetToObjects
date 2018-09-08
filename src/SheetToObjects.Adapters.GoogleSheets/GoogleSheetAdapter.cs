@@ -1,26 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SheetToObjects.Core;
+﻿using System.Threading.Tasks;
+using Refit;
 using SheetToObjects.Lib;
-using SheetToObjects.Lib.Extensions;
 using Sheet = SheetToObjects.Lib.Sheet;
 
 namespace SheetToObjects.Adapters.GoogleSheets
 {
-    internal class GoogleSheetAdapter : IConvertResponseToSheet<GoogleSheetResponse>
+    public class GoogleSheetAdapter : IProvideSheet
     {
-        public Sheet Convert(GoogleSheetResponse googleSheetData)
+        private const string GoogleSheetsUrl = "https://sheets.googleapis.com/v4";
+
+        private readonly IGoogleSheetApi _googleSheetApi;
+        private readonly IConvertDataToSheet<GoogleSheetResponse> _googleSheetAdapter;
+
+        internal GoogleSheetAdapter(
+            IGoogleSheetApi googleSheetApi,
+            IConvertDataToSheet<GoogleSheetResponse> googleSheetAdapter)
         {
-            if (googleSheetData.IsNull())
-                throw new ArgumentException(nameof(googleSheetData));
+            _googleSheetApi = googleSheetApi;
+            _googleSheetAdapter = googleSheetAdapter;
+        }
 
-            if (!googleSheetData.Values.Any())
-                return new Sheet(new List<Row>());
+        public GoogleSheetAdapter() : this(RestService.For<IGoogleSheetApi>(GoogleSheetsUrl), new GoogleSheetToSheetConverter()) { }
 
-            var cells = googleSheetData.Values.ToRows();
+        public async Task<Sheet> GetAsync(string sheetId, string range, string apiKey)
+        {
+            var sheetDataResponse = await _googleSheetApi.GetSheetAsync(sheetId, range, apiKey);
 
-            return new Sheet(cells);
+            return _googleSheetAdapter.Convert(sheetDataResponse);
         }
     }
 }

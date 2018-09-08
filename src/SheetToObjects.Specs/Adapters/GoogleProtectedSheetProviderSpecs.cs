@@ -13,7 +13,7 @@ namespace SheetToObjects.Specs.Adapters
     public class GoogleProtectedSheetProviderSpecs
     {
         private readonly Mock<ICreateGoogleClientService> _googleClientServiceCreatorMock;
-        private readonly Mock<IConvertResponseToSheet<ValueRange>> _googleSheetConverterMock;
+        private readonly Mock<IConvertDataToSheet<ValueRange>> _googleSheetConverterMock;
 
         public GoogleProtectedSheetProviderSpecs()
         {
@@ -41,14 +41,14 @@ namespace SheetToObjects.Specs.Adapters
                     .Build(1))
                 .Build();
 
-            _googleSheetConverterMock = new Mock<IConvertResponseToSheet<ValueRange>>();
+            _googleSheetConverterMock = new Mock<IConvertDataToSheet<ValueRange>>();
             _googleSheetConverterMock.Setup(s => s.Convert(It.IsAny<ValueRange>())).Returns(sheetData);
         }
 
         [Fact]
         public async void GivenGettingSheet_WhenGettingData_ThenConvertedDataIsReturned()
         {
-            var provider = new ProtectedSheetProvider(_googleClientServiceCreatorMock.Object, _googleSheetConverterMock.Object);
+            var provider = new ProtectedGoogleSheetAdapter(_googleClientServiceCreatorMock.Object, _googleSheetConverterMock.Object);
 
             var sheet = await provider.GetAsync("my.json", "My Document", "some-guid", "A1:B3");
 

@@ -11,11 +11,11 @@ namespace SheetToObjects.ConsoleApp
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.SheetProvider>();
+            serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.CsvAdapter>();
             serviceCollection.AddTransient<Adapters.GoogleSheets.ISheetsServiceWrapper, Adapters.GoogleSheets.SheetsServiceWrapper>();
             serviceCollection.AddTransient<Adapters.GoogleSheets.ICreateGoogleClientService, Adapters.GoogleSheets.GoogleClientServiceFactory>();
-            serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.SheetProvider>();
-            serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideProtectedSheet, Adapters.GoogleSheets.ProtectedSheetProvider>();
+            serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.GoogleSheetAdapter>();
+            serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideProtectedSheet, Adapters.GoogleSheets.ProtectedGoogleSheetAdapter>();
             serviceCollection.AddTransient<Adapters.MicrosoftExcel.IProvideSheet, Adapters.MicrosoftExcel.SheetProvider>();
 
             serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
