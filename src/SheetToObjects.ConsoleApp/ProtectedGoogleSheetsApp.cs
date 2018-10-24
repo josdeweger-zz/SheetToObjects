@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SheetToObjects.Adapters.GoogleSheets;
+using SheetToObjects.Adapters.ProtectedGoogleSheets;
 using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Core;
 using SheetToObjects.Lib;
@@ -32,7 +32,6 @@ namespace SheetToObjects.ConsoleApp
                 return _sheetMapper.Map<SuperstoreModel>(sheet);
             });
 
-            Console.WriteLine("===============================================================");
             foreach (var error in result.Item1.ValidationErrors)
             {
                 Console.WriteLine($"Column: {error.ColumnName} | Row: {error.RowIndex} | Message: {error.ErrorMessage}");

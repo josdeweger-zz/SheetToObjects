@@ -1,0 +1,7 @@
+emailaddress;relationnumber;firstname;middlename;lastname;dateofbirth;gender;language;terms;profiletype
+import1@mail.com;12345678a;John;;Doe;1-1-1950;M;nl-NL;yes;2
+import2@mail.com;1234567a;Jan;van;Laan;2-2-1960;F;nl-NL;no;2
+import3@mail.com;98765;Steve;;Smith;15-12-1970;F;nl-NL;yes;2
+import4@mail.com;1234567aa;Eugene;the;Hero;30-4-2017;M;nl-NL;yes;2
+import5@mail.com;12345;Luke;;Skywalker;30-4-2017;M;nl-NL;yes;2
+import6@mail.com;123456;His;Royal;Dudeness;30-4-2017;M;nl-NL;no;2

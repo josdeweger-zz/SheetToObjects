@@ -1,4 +1,4 @@
-﻿namespace SheetToObjects.Adapters.GoogleSheets
+﻿namespace SheetToObjects.Adapters.ProtectedGoogleSheets
 {
     public interface ICreateGoogleClientService
     {
