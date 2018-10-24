@@ -1,7 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="../Common.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Josdeweger</Authors>
+    <Company>Redhotminute</Company>
+    <Product>SheetToObjects</Product>
+    <Description>SheetToObjects is a library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO.</Description>
+    <PackageLicenseUrl>https://github.com/josdeweger/SheetToObjects/blob/dev/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/josdeweger/SheetToObjects</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/josdeweger/SheetToObjects</RepositoryUrl>
+    <PackageTags>Google Sheets, Microsoft Excel, CSV, Comma Seperated File, mapping, objects, poco, configuration, validation</PackageTags>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
