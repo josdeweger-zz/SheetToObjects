@@ -11,9 +11,6 @@
     <PackageProjectUrl>https://github.com/josdeweger/SheetToObjects</PackageProjectUrl>
     <RepositoryUrl>https://github.com/josdeweger/SheetToObjects</RepositoryUrl>
     <PackageTags>Google Sheets, Microsoft Excel, CSV, Comma Seperated File, mapping, objects, poco, configuration, validation</PackageTags>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
