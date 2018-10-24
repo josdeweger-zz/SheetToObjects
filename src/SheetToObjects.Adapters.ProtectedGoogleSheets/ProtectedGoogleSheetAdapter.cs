@@ -1,27 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using Google.Apis.Sheets.v4.Data;
-using SheetToObjects.Core;
 using SheetToObjects.Lib;
-using SheetToObjects.Lib.Extensions;
 using Sheet = SheetToObjects.Lib.Sheet;
 
 namespace SheetToObjects.Adapters.ProtectedGoogleSheets
 {
-    internal class ProtectedGoogleSheetAdapter : IConvertResponseToSheet<ValueRange>
+    public class ProtectedGoogleSheetAdapter : IProvideProtectedSheet
     {
-        public Sheet Convert(ValueRange googleSheetData)
+        private readonly ICreateGoogleClientService _googleClientServiceCreator;
+        private readonly IConvertDataToSheet<ValueRange> _protectedGoogleSheetAdapter;
+
+        internal ProtectedGoogleSheetAdapter(
+            ICreateGoogleClientService googleClientServiceCreator,
+            IConvertDataToSheet<ValueRange> protectedGoogleSheetAdapter)
         {
-            if (googleSheetData.IsNull())
-                throw new ArgumentException(nameof(googleSheetData));
+            _googleClientServiceCreator = googleClientServiceCreator;
+            _protectedGoogleSheetAdapter = protectedGoogleSheetAdapter;
+        }
 
-            if (googleSheetData.Values.IsNull() || !googleSheetData.Values.Any())
-                return new Sheet(new List<Row>());
+        public ProtectedGoogleSheetAdapter() : this(new GoogleClientServiceFactory(), new ProtectedGoogleSheetToSheetConverter()) { }
+        
+        public async Task<Sheet> GetAsync(string authenticationJsonFilePath, string documentName, string sheetId, string range)
+        {
+            var service = _googleClientServiceCreator.Create(authenticationJsonFilePath, documentName);
 
-            var cells = googleSheetData.Values.ToRows();
+            var sheetDataResponse = await service.Get(sheetId, range);
 
-            return new Sheet(cells);
+            return _protectedGoogleSheetAdapter.Convert(sheetDataResponse);
         }
     }
 }

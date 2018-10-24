@@ -36,7 +36,6 @@ namespace SheetToObjects.ConsoleApp
                 return _sheetMapper.Map<EpicTrackingModel>(sheet);
             });
 
-            Console.WriteLine("===============================================================");
             foreach (var error in result.Item1.ValidationErrors)
             {
                 Console.WriteLine($"Column: {error.ColumnName} | Row: {error.RowIndex} | Message: {error.ErrorMessage}");

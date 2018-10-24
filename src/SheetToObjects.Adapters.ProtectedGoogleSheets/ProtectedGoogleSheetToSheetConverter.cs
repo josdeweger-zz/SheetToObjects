@@ -7,7 +7,7 @@ using SheetToObjects.Lib;
 using SheetToObjects.Lib.Extensions;
 using Sheet = SheetToObjects.Lib.Sheet;
 
-namespace SheetToObjects.Adapters.GoogleSheets
+namespace SheetToObjects.Adapters.ProtectedGoogleSheets
 {
     internal class ProtectedGoogleSheetToSheetConverter : IConvertDataToSheet<ValueRange>
     {

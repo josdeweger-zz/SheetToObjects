@@ -2,7 +2,7 @@
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 
-namespace SheetToObjects.Adapters.GoogleSheets
+namespace SheetToObjects.Adapters.ProtectedGoogleSheets
 {
     public class SheetsServiceWrapper : ISheetsServiceWrapper
     {

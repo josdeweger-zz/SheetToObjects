@@ -8,25 +8,20 @@ namespace SheetToObjects.ConsoleApp
     {
         private static void Main()
         {
-            RunProtectedGoogleSheetsExampleAsync().GetAwaiter().GetResult();
             RunGoogleSheetsExampleAsync().GetAwaiter().GetResult();
+            RunProtectedGoogleSheetsExampleAsync().GetAwaiter().GetResult();
             RunExcelExample();
-            RunCsvExample();
+            RunCsvWithValidationErrorsExample();
+            RunCsvWithoutValidationErrorsExample();
 
             Console.ReadLine();
         }
 
-        private static async Task RunProtectedGoogleSheetsExampleAsync()
-        {
-            await new ServiceCollection()
-                .ConfigureServices()
-                .BuildServiceProvider()
-                .GetService<ProtectedGoogleSheetsApp>()
-                .Run();
-        }
-
         private static async Task RunGoogleSheetsExampleAsync()
         {
+            Console.WriteLine("===============================================================");
+            Console.WriteLine("Running Google Sheets example");
+
             await new ServiceCollection()
                 .ConfigureServices()
                 .BuildServiceProvider()
@@ -34,8 +29,23 @@ namespace SheetToObjects.ConsoleApp
                 .Run();
         }
 
+        private static async Task RunProtectedGoogleSheetsExampleAsync()
+        {
+            Console.WriteLine("===============================================================");
+            Console.WriteLine("Running Protected Google Sheets example");
+
+            await new ServiceCollection()
+                .ConfigureServices()
+                .BuildServiceProvider()
+                .GetService<ProtectedGoogleSheetsApp>()
+                .Run();
+        }
+
         private static void RunExcelExample()
         {
+            Console.WriteLine("===============================================================");
+            Console.WriteLine("Running Excel example");
+
             new ServiceCollection()
                 .ConfigureServices()
                 .BuildServiceProvider()
@@ -43,12 +53,27 @@ namespace SheetToObjects.ConsoleApp
                 .Run();
         }
 
-        private static void RunCsvExample()
+        private static void RunCsvWithValidationErrorsExample()
         {
+            Console.WriteLine("===============================================================");
+            Console.WriteLine("Running CSV with validation errors example");
+
             new ServiceCollection()
                 .ConfigureServices()
                 .BuildServiceProvider()
-                .GetService<CsvApp>()
+                .GetService<CsvAppWithValidationErrors>()
+                .Run();
+        }
+
+        private static void RunCsvWithoutValidationErrorsExample()
+        {
+            Console.WriteLine("===============================================================");
+            Console.WriteLine("Running CSV without validation errors example");
+
+            new ServiceCollection()
+                .ConfigureServices()
+                .BuildServiceProvider()
+                .GetService<CsvAppWithoutValidationErrors>()
                 .Run();
         }
     }

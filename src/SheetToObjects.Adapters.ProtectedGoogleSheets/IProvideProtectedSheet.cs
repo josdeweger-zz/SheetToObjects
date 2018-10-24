@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using SheetToObjects.Lib;
 
-namespace SheetToObjects.Adapters.GoogleSheets
+namespace SheetToObjects.Adapters.ProtectedGoogleSheets
 {
     public interface IProvideProtectedSheet
     {

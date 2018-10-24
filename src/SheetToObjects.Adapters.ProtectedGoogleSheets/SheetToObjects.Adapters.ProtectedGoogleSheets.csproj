@@ -1,27 +1,27 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <Authors>Jacob Duijzer</Authors>
-    <Product>SheetToObjects.Adapters.ProtectedGoogleSheets</Product>
-    <Summary>Google Sheets adapter for protected sheets with the SheetToObjects library.</Summary>
-    <Description>SheetToObjects is a library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO.</Description>
-    <PackageProjectUrl>https://github.com/josdeweger/SheetToObjects</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/josdeweger/SheetToObjects/blob/dev/LICENSE</PackageLicenseUrl>
-    <PackageTags>Google Sheets, Microsoft Excel, CSV, Comma Seperated File, mapping, objects, poco, configuration, validation</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/josdeweger/SheetToObjects</RepositoryUrl>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.36.1.1387" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
-    <ProjectReference Include="..\SheetToObjects.Adapters.GoogleSheets.Shared\SheetToObjects.Adapters.GoogleSheets.Shared.csproj" />
-    <ProjectReference Include="..\SheetToObjects.Core\SheetToObjects.Core.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.35.1.1338" />
+    <Reference Include="Google.Apis">
+      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis\1.35.1\lib\netstandard2.0\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth">
+      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis.auth\1.35.1\lib\netstandard2.0\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Sheets.v4">
+      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis.sheets.v4\1.35.1.1338\lib\netstandard2.0\Google.Apis.Sheets.v4.dll</HintPath>
+    </Reference>
   </ItemGroup>
+
 </Project>

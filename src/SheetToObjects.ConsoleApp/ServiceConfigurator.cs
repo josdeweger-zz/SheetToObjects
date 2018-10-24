@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SheetToObjects.Adapters.ProtectedGoogleSheets;
 using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Lib;
 using SheetToObjects.Lib.FluentConfiguration;
@@ -12,10 +13,10 @@ namespace SheetToObjects.ConsoleApp
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.CsvAdapter>();
-            serviceCollection.AddTransient<Adapters.GoogleSheets.ISheetsServiceWrapper, Adapters.GoogleSheets.SheetsServiceWrapper>();
-            serviceCollection.AddTransient<Adapters.GoogleSheets.ICreateGoogleClientService, Adapters.GoogleSheets.GoogleClientServiceFactory>();
+            serviceCollection.AddTransient<ISheetsServiceWrapper, SheetsServiceWrapper>();
+            serviceCollection.AddTransient<ICreateGoogleClientService, GoogleClientServiceFactory>();
+            serviceCollection.AddTransient<IProvideProtectedSheet, ProtectedGoogleSheetAdapter>();
             serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.GoogleSheetAdapter>();
-            serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideProtectedSheet, Adapters.GoogleSheets.ProtectedGoogleSheetAdapter>();
             serviceCollection.AddTransient<Adapters.MicrosoftExcel.IProvideSheet, Adapters.MicrosoftExcel.SheetProvider>();
 
             serviceCollection.AddTransient<IMapSheetToObjects>(ctx =>
@@ -69,10 +70,11 @@ namespace SheetToObjects.ConsoleApp
 
             serviceCollection.Configure<AppSettings>(configuration.GetSection("Configuration"));
 
-            serviceCollection.AddTransient<CsvApp>();
             serviceCollection.AddTransient<ExcelApp>();
             serviceCollection.AddTransient<GoogleSheetsApp>();
             serviceCollection.AddTransient<ProtectedGoogleSheetsApp>();
+            serviceCollection.AddTransient<CsvAppWithValidationErrors>();
+            serviceCollection.AddTransient<CsvAppWithoutValidationErrors>();
 
             return serviceCollection;
         }
