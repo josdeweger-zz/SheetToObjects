@@ -290,6 +290,28 @@ namespace SheetToObjects.Specs.Lib
         }
 
         [Fact]
+        public void GivenColumnWithUniqueValidation_WhenOneValueExistsTwice_ItIsNotValid()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("FirstColumn")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("Same Value").Build()).Build(1))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(2).WithValue("Same Value").Build()).Build(2))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("FirstColumn")
+                        .ShouldHaveUniqueValues()
+                        .MapTo(t => t.StringProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeFalse();
+            result.ParsedModels.Should().HaveCount(2);
+        }
+
+        [Fact]
         public void GivenParsingShouldBeStoppedOnFirstEmptyRow_WhenSecondRowIsEmpty_OnlyRowOneIsParsed()
         {
             var sheetData = new SheetBuilder()
