@@ -28,6 +28,13 @@ namespace SheetToObjects.Lib.FluentConfiguration
             return this;
         }
 
+        public MappingConfigBuilder<T> StopParsingAtFirstEmptyRow()
+        {
+            _mappingConfig.StopParsingAtFirstEmptyRow = true;
+
+            return this;
+        }
+
         public MappingConfig Build()
         {
             return _mappingConfig;

@@ -10,6 +10,8 @@ namespace SheetToObjects.Lib.FluentConfiguration
 
         public bool HasHeaders { get; set; }
 
+        public bool StopParsingAtFirstEmptyRow { get; set; }
+
         public MappingConfig(bool hasHeaders = true, bool autoMapProperties = true)
         {
             HasHeaders = hasHeaders;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using SheetToObjects.Core;
 using SheetToObjects.Lib;
 using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Specs.Builders;
@@ -289,12 +290,13 @@ namespace SheetToObjects.Specs.Lib
         }
 
         [Fact]
-        public void GivenColumnWithUniqueValidation_WhenOneValueExistsTwice_ItIsNotValid()
+        public void GivenParsingShouldBeStoppedOnFirstEmptyRow_WhenSecondRowIsEmpty_OnlyRowOneIsParsed()
         {
             var sheetData = new SheetBuilder()
                 .AddHeaders("FirstColumn")
-                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("Same Value").Build()).Build(1))
-                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(2).WithValue("Same Value").Build()).Build(2))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("Some Value").Build()).Build(1))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(2).Build()).Build(2))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(3).Build()).Build(3))
                 .Build();
 
             var result = new SheetMapper()
@@ -302,12 +304,35 @@ namespace SheetToObjects.Specs.Lib
                     .HasHeaders()
                     .MapColumn(column => column
                         .WithHeader("FirstColumn")
-                        .ShouldHaveUniqueValues()
-                        .MapTo(t => t.StringProperty)))
+                        .MapTo(t => t.StringProperty))
+                    .StopParsingAtFirstEmptyRow())
                 .Map<TestModel>(sheetData);
 
-            result.IsSuccess.Should().BeFalse();
-            result.ParsedModels.Should().HaveCount(2);
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void GivenParsingShouldBeStoppedOnFirstEmptyRow_WhenSecondRowIsEmptyAndThirdIsNotEmpty_OnlyRowOneIsParsed()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("FirstColumn")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("Some Value").Build()).Build(1))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(2).Build()).Build(2))
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(3).WithValue("Foo").Build()).Build(3))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("FirstColumn")
+                        .MapTo(t => t.StringProperty))
+                    .StopParsingAtFirstEmptyRow())
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(1);
         }
     }
 
