@@ -80,5 +80,28 @@ namespace SheetToObjects.Specs.Adapters
                 }
             }
         }
+
+        [Theory]        
+        [InlineData(true, 3)]
+        [InlineData(false, 1048576)]
+
+        public void GivenALargeNumberOfRows_WhenLoadingDataWithoutStopping_ReturnsMaxNumberOfRows(bool stopOnEmptyRow, int expectedCount)
+        {
+            int max_number_of_excel_rows = 1048576;
+
+            using (var fileStream = new FileStream(TwoColumnsTwoRowsWithHeadersFilePath, FileMode.Open))
+            {
+                using (var sr = new StreamReader(fileStream, Encoding.UTF8, false, 1024, true))
+                {
+                    var provider = new SheetProvider(new ExcelAdapter());
+                    var excelRange = new ExcelRange(new ExcelCell("A", 1), new ExcelCell("B", max_number_of_excel_rows));
+
+                    var csvData = provider.GetFromStream(sr.BaseStream, "my sheet", excelRange, stopOnEmptyRow);
+
+                    csvData.Rows.Count.Should().Be(expectedCount);
+                    csvData.Rows.First().Cells.Count.Should().Be(2);
+                }
+            }
+        }
     }
 }

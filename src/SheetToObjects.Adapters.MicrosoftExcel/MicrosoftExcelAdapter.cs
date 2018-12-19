@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using OfficeOpenXml;
 using SheetToObjects.Lib;
 
@@ -17,32 +18,32 @@ namespace SheetToObjects.Adapters.MicrosoftExcel
 
         public SheetProvider() : this(new ExcelAdapter()) { }
 
-        public Sheet GetFromBase64Encoded(string base64EncodedFile, string sheetName, ExcelRange range)
+        public Sheet GetFromBase64Encoded(string base64EncodedFile, string sheetName, ExcelRange range, bool stopReadingOnEmptyRow = false)
         {
             var fileBytes = Convert.FromBase64String(base64EncodedFile);
 
             using (var fileStream = new MemoryStream(fileBytes))
             {
-                return GetFromStream(fileStream, sheetName, range);
+                return GetFromStream(fileStream, sheetName, range, stopReadingOnEmptyRow);
             }
         }
 
-        public Sheet GetFromPath(string excelPath, string sheetName, ExcelRange range)
+        public Sheet GetFromPath(string excelPath, string sheetName, ExcelRange range, bool stopReadingOnEmptyRow = false)
         {
             using (var fileStream = new FileStream(excelPath, FileMode.Open))
             {
-                return GetFromStream(fileStream, sheetName, range);
+                return GetFromStream(fileStream, sheetName, range, stopReadingOnEmptyRow);
             }
         }
 
-        public Sheet GetFromStream(Stream fileStream, string sheetName, ExcelRange range)
+        public Sheet GetFromStream(Stream fileStream, string sheetName, ExcelRange range, bool stopReadingOnEmptyRow = false)
         {
             using (var excelPackage = new ExcelPackage(fileStream))
             {
                 var workBook = excelPackage.Workbook;
                 var workSheet = GetSheetFromWorkBook(workBook, sheetName);
 
-                var data = CreateDataForRange(workSheet, range);
+                var data = CreateDataForRange(workSheet, range, stopReadingOnEmptyRow);
 
                 var excelData = new ExcelData { Values = data };
 
@@ -50,7 +51,7 @@ namespace SheetToObjects.Adapters.MicrosoftExcel
             }
         }
 
-        private static List<List<string>> CreateDataForRange(ExcelWorksheet workSheet, ExcelRange range)
+        private static List<List<string>> CreateDataForRange(ExcelWorksheet workSheet, ExcelRange range, bool stopReadingOnEmptyRow)
         {
             var data = new List<List<string>>();
 
@@ -62,6 +63,9 @@ namespace SheetToObjects.Adapters.MicrosoftExcel
                 {
                     row.Add(workSheet.Cells[rowNumber, columnNumber].Text);
                 }
+
+                if (stopReadingOnEmptyRow && row.All(x => string.IsNullOrEmpty(x)))
+                    return data;
 
                 data.Add(row);
             }
