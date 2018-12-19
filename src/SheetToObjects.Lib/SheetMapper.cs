@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
+using SheetToObjects.Core;
 using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Parsing;
 using SheetToObjects.Lib.Validation;
@@ -61,14 +62,7 @@ namespace SheetToObjects.Lib
                 }
             }
 
-            var dataRows = mappingConfig.HasHeaders ? sheet.Rows.Skip(1).ToList() : sheet.Rows;
-
-            dataRows.ForEach(row =>
-            {
-                _rowMapper.Map<T>(row, mappingConfig)
-                    .OnSuccess(result => parsedModels.Add(result))
-                    .OnFailure(rowValidationErrors => validationErrors.AddRange(rowValidationErrors));
-            });
+            MapRows(sheet, mappingConfig, parsedModels, validationErrors);
 
             var validationResult = _modelValidator.Validate(parsedModels, mappingConfig.ColumnMappings);
 
@@ -76,6 +70,36 @@ namespace SheetToObjects.Lib
                 validationResult.ValidatedModels,
                 validationErrors.Concat(validationResult.ValidationErrors).ToList()
             );
+        }
+
+        private void MapRows<T>(Sheet sheet, MappingConfig mappingConfig, List<ParsedModelResult<T>> parsedModels, List<IValidationError> validationErrors)
+            where T : new()
+        {
+            var dataRows = mappingConfig.HasHeaders ? sheet.Rows.Skip(1).ToList() : sheet.Rows;
+
+            if (mappingConfig.StopParsingAtFirstEmptyRow)
+                dataRows = FilterAfterFirstEmptyRow<T>(dataRows);
+            
+            dataRows.ForEach(row =>
+            {
+                _rowMapper.Map<T>(row, mappingConfig)
+                    .OnSuccess(result => parsedModels.Add(result))
+                    .OnFailure(rowValidationErrors => validationErrors.AddRange(rowValidationErrors));
+            });
+        }
+
+        private static List<Row> FilterAfterFirstEmptyRow<T>(List<Row> dataRows) 
+            where T : new()
+        {
+            var firstEmptyRow = dataRows
+                .FirstOrDefault(d => d.Cells
+                    .TrueForAll(c => c.Value.IsNull() ||
+                                     c.Value is string s && s.IsNullOrEmpty()));
+
+            if (firstEmptyRow.IsNotNull())
+                dataRows = dataRows.Where(r => r.RowIndex < firstEmptyRow.RowIndex).ToList();
+
+            return dataRows;
         }
 
         private MappingConfig GetMappingConfig<T>()
