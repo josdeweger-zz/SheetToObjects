@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2011
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.ConsoleApp", "SheetToObjects.ConsoleApp\SheetToObjects.ConsoleApp.csproj", "{9A11189F-30E1-47C0-8B3D-D71810D784F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Specs", "SheetToObjects.Specs\SheetToObjects.Specs.csproj", "{71827426-699E-45C7-B964-B483AD76EACC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Core", "SheetToObjects.Core\SheetToObjects.Core.csproj", "{FE4C9175-D211-43A8-81E3-36281D8C5036}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Lib", "SheetToObjects.Lib\SheetToObjects.Lib.csproj", "{1E929F63-CF74-4AE5-B80F-D0BBB0C74544}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Adapters.GoogleSheets", "SheetToObjects.Adapters.GoogleSheets\SheetToObjects.Adapters.GoogleSheets.csproj", "{863988E9-A76A-4909-B76B-708F3E4F75C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Adapters.MicrosoftExcel", "SheetToObjects.Adapters.MicrosoftExcel\SheetToObjects.Adapters.MicrosoftExcel.csproj", "{D2BF51CA-9E18-4222-BE27-6F5DBBAC6CFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Adapters.Csv", "SheetToObjects.Adapters.Csv\SheetToObjects.Adapters.Csv.csproj", "{BB23F27B-8F37-4E22-89BE-C61268C1F75A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1634F6CF-74F3-4757-A5CB-ECAB800FCA75}"
+	ProjectSection(SolutionItems) = preProject
+		Common.props = Common.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheetToObjects.Adapters.ProtectedGoogleSheets", "SheetToObjects.Adapters.ProtectedGoogleSheets\SheetToObjects.Adapters.ProtectedGoogleSheets.csproj", "{C6EA22A6-873B-44BC-9C4E-AD01227FBDA0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A11189F-30E1-47C0-8B3D-D71810D784F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A11189F-30E1-47C0-8B3D-D71810D784F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A11189F-30E1-47C0-8B3D-D71810D784F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A11189F-30E1-47C0-8B3D-D71810D784F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71827426-699E-45C7-B964-B483AD76EACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71827426-699E-45C7-B964-B483AD76EACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71827426-699E-45C7-B964-B483AD76EACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71827426-699E-45C7-B964-B483AD76EACC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE4C9175-D211-43A8-81E3-36281D8C5036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE4C9175-D211-43A8-81E3-36281D8C5036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE4C9175-D211-43A8-81E3-36281D8C5036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE4C9175-D211-43A8-81E3-36281D8C5036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E929F63-CF74-4AE5-B80F-D0BBB0C74544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E929F63-CF74-4AE5-B80F-D0BBB0C74544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E929F63-CF74-4AE5-B80F-D0BBB0C74544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E929F63-CF74-4AE5-B80F-D0BBB0C74544}.Release|Any CPU.Build.0 = Release|Any CPU
+		{863988E9-A76A-4909-B76B-708F3E4F75C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{863988E9-A76A-4909-B76B-708F3E4F75C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{863988E9-A76A-4909-B76B-708F3E4F75C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{863988E9-A76A-4909-B76B-708F3E4F75C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2BF51CA-9E18-4222-BE27-6F5DBBAC6CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2BF51CA-9E18-4222-BE27-6F5DBBAC6CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2BF51CA-9E18-4222-BE27-6F5DBBAC6CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2BF51CA-9E18-4222-BE27-6F5DBBAC6CFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB23F27B-8F37-4E22-89BE-C61268C1F75A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB23F27B-8F37-4E22-89BE-C61268C1F75A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB23F27B-8F37-4E22-89BE-C61268C1F75A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB23F27B-8F37-4E22-89BE-C61268C1F75A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6EA22A6-873B-44BC-9C4E-AD01227FBDA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6EA22A6-873B-44BC-9C4E-AD01227FBDA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6EA22A6-873B-44BC-9C4E-AD01227FBDA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6EA22A6-873B-44BC-9C4E-AD01227FBDA0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {81AF46D8-11F7-4744-AAA2-CE129D2DE0A4}
+	EndGlobalSection
+EndGlobal

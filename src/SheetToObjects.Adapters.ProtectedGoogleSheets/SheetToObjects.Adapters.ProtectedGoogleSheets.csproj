@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Common.props" />
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Josdeweger</Authors>
+    <Company>Redhotminute</Company>
+    <Product>SheetToObjects</Product>
+    <Description>SheetToObjects is a library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO.</Description>
+    <PackageLicenseUrl>https://github.com/josdeweger/SheetToObjects/blob/dev/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/josdeweger/SheetToObjects</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/josdeweger/SheetToObjects</RepositoryUrl>
+    <PackageTags>Google Sheets, Microsoft Excel, CSV, Comma Seperated File, mapping, objects, poco, configuration, validation</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.36.1.1387" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Google.Apis">
+      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis\1.35.1\lib\netstandard2.0\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth">
+      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis.auth\1.35.1\lib\netstandard2.0\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Sheets.v4">
+      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis.sheets.v4\1.35.1.1338\lib\netstandard2.0\Google.Apis.Sheets.v4.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

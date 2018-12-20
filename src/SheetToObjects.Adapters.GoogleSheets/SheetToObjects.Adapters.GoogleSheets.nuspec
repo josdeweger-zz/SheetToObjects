@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/josdeweger/SheetToObjects/blob/dev/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/josdeweger/SheetToObjects</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SheetToObjects is a library which aims to provide developers with an easy solution to map sheets (Google Sheets, Microsoft Excel, csv) to a model/POCO. This adapter lets you use SheetToObjects in conjunction with Google Sheets.</description>
+    <releaseNotes>First release.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Google Sheets, mapping, objects, poco, configuration, validation</tags>
+  </metadata>
+</package>
