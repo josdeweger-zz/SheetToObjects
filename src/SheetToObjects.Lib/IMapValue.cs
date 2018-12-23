@@ -1,5 +1,6 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
+using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Validation;
 
 namespace SheetToObjects.Lib
@@ -11,10 +12,6 @@ namespace SheetToObjects.Lib
             Type propertyType,
             int columnIndex,
             int rowIndex,
-            string displayName,
-            string propertyName,
-            string format,
-            bool isRequired,
-            object defaultValue);
+            ColumnMapping columnMapping);
     }
 }

@@ -48,11 +48,7 @@ namespace SheetToObjects.Lib
                         property.PropertyType, 
                         columnMapping.ColumnIndex, 
                         row.RowIndex,
-                        columnMapping.DisplayName, 
-                        columnMapping.PropertyName, 
-                        columnMapping.Format,
-                        columnMapping.IsRequired,
-                        columnMapping.DefaultValue)
+                        columnMapping)
                     .OnSuccess(value =>
                     {
                         if (value.ToString().IsNotNullOrEmpty())

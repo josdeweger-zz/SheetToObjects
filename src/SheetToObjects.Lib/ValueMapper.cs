@@ -1,5 +1,7 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
+using SheetToObjects.Core;
+using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Parsing;
 using SheetToObjects.Lib.Validation;
 
@@ -19,26 +21,41 @@ namespace SheetToObjects.Lib
             Type propertyType, 
             int columnIndex, 
             int rowIndex, 
-            string displayName, 
-            string propertyName, 
-            string format,
-            bool isRequired,
-            object defaultValue)
+            ColumnMapping columnMapping)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return HandleEmptyValue(isRequired, columnIndex, rowIndex, displayName, propertyName, defaultValue);
+                return HandleEmptyValue(columnIndex, rowIndex, columnMapping);
             }
 
-            var parsingResult = _valueParser.Parse(propertyType, value, format);
+            if (columnMapping.CustomParser.IsNotNull())
+            {
+                try
+                {
+                    var parsedValue = columnMapping.CustomParser(value);
+                    return Result.Ok<object, IValidationError>(parsedValue);
+                }
+                catch (Exception)
+                {
+                    var parsingValidationError = ParsingValidationError.CouldNotParseValue(
+                        columnIndex,
+                        rowIndex,
+                        columnMapping.DisplayName,
+                        columnMapping.PropertyName);
+
+                    return Result.Fail<object, IValidationError>(parsingValidationError);
+                }
+            }
+
+            var parsingResult = _valueParser.Parse(propertyType, value, columnMapping.Format);
 
             if (!parsingResult.IsSuccess)
             {
                 var validationError = ParsingValidationError.CouldNotParseValue(
                     columnIndex,
                     rowIndex,
-                    displayName,
-                    propertyName);
+                    columnMapping.DisplayName,
+                    columnMapping.PropertyName);
 
                 return Result.Fail<object, IValidationError>(validationError);
             }
@@ -46,20 +63,20 @@ namespace SheetToObjects.Lib
             return Result.Ok<object, IValidationError>(parsingResult.Value);
         }
 
-        private static Result<object, IValidationError> HandleEmptyValue(bool isRequired, int columnIndex, int rowIndex, string displayName, string propertyName, object defaultValue)
+        private static Result<object, IValidationError> HandleEmptyValue(int columnIndex, int rowIndex, ColumnMapping columnMapping)
         {
-            if (isRequired)
+            if (columnMapping.IsRequired)
             {
                 var cellValueRequiredError = RuleValidationError.CellValueRequired(
                     columnIndex,
                     rowIndex,
-                    displayName,
-                    propertyName);
+                    columnMapping.DisplayName,
+                    columnMapping.PropertyName);
 
                 return Result.Fail<object, IValidationError>(cellValueRequiredError);
             }
 
-            return Result.Ok<object, IValidationError>(defaultValue ?? string.Empty);
+            return Result.Ok<object, IValidationError>(columnMapping.DefaultValue ?? string.Empty);
         }
     }
 }
