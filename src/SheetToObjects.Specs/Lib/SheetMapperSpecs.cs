@@ -356,6 +356,61 @@ namespace SheetToObjects.Specs.Lib
             result.IsSuccess.Should().BeTrue();
             result.ParsedModels.Should().HaveCount(1);
         }
+
+        [Fact]
+        public void GivenSheet_WhenCustomBooleanParserIsProvided_ValueIsConverted()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("Bool")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("1").Build()).Build(1))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("Bool")
+                        .WithCustomParser(x => x.Equals("1") ? true : false)
+                        .IsRequired()
+                        .MapTo(t => t.BoolProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.First().ParsedModel.BoolProperty.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenSheet_WhenCustomEnumParserIsProvided_ValueIsConverted()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("EnumProperty")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("Second").Build()).Build(1))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("EnumProperty")
+                        .WithCustomParser(x =>
+                        {
+                            switch (x)
+                            {
+                                case "First": return EnumModel.First;
+                                case "Second": return EnumModel.Second;
+                                case "Third": return EnumModel.Third;
+                                default: return EnumModel.Default;
+                            }
+                        })
+                        .IsRequired()
+                        .MapTo(t => t.EnumProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.First().ParsedModel.EnumProperty.Should().Be(EnumModel.Second);
+        }
     }
 
     public class ModelOne

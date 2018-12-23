@@ -20,6 +20,7 @@ namespace SheetToObjects.Lib.FluentConfiguration
         private bool _isRequiredInHeaderRow;
         private readonly List<IParsingRule> _parsingRules = new List<IParsingRule>();
         private readonly List<IRule> _rules = new List<IRule>();
+        private Func<string, object> _customParser;
 
         /// <summary>
         /// Map to column by header (other options are to map by column index or column letter)
@@ -101,6 +102,12 @@ namespace SheetToObjects.Lib.FluentConfiguration
             return this;
         }
 
+        public ColumnMappingBuilder<T> WithCustomParser(Func<string, object> customParser)
+        {
+            _customParser = customParser;
+            return this;
+        }
+
         /// <summary>
         /// Specify the model property this column needs to map to. The type is inferred from the type on the model
         /// </summary>
@@ -145,13 +152,13 @@ namespace SheetToObjects.Lib.FluentConfiguration
             _propertyName = property.Name;
 
             if(_header.IsNotNullOrWhiteSpace())
-                return new NameColumnMapping(_header, _propertyName, _format, _parsingRules, _rules, _defaultValue,_isRequiredInHeaderRow);
+                return new NameColumnMapping(_header, _propertyName, _format, _parsingRules, _rules, _defaultValue,_isRequiredInHeaderRow, _customParser);
             if(_columnLetter.IsNotNullOrWhiteSpace())
-                return new LetterColumnMapping(_columnLetter, _propertyName, _format, _parsingRules, _rules, _defaultValue);
+                return new LetterColumnMapping(_columnLetter, _propertyName, _format, _parsingRules, _rules, _defaultValue, _customParser);
             if(_columnIndex >= 0)
-                return new IndexColumnMapping(_columnIndex, _propertyName, _format, _parsingRules, _rules, _defaultValue);
+                return new IndexColumnMapping(_columnIndex, _propertyName, _format, _parsingRules, _rules, _defaultValue, _customParser);
 
-            return new PropertyColumnMapping(_propertyName, _format, _parsingRules, _rules, _defaultValue,_isRequiredInHeaderRow);
+            return new PropertyColumnMapping(_propertyName, _format, _parsingRules, _rules, _defaultValue,_isRequiredInHeaderRow, _customParser);
         }
     }
 }

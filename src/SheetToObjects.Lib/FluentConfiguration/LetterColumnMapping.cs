@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SheetToObjects.Core;
 using SheetToObjects.Lib.Validation;
 
@@ -8,8 +9,15 @@ namespace SheetToObjects.Lib.FluentConfiguration
     {
         public string ColumnName { get; }
 
-        public LetterColumnMapping(string columnLetter, string propertyName, string format, List<IParsingRule> parsingRules, List<IRule> rules, object defaultValue) 
-            : base(propertyName, format, parsingRules, rules, defaultValue)
+        public LetterColumnMapping(
+            string columnLetter, 
+            string propertyName, 
+            string format, 
+            List<IParsingRule> parsingRules, 
+            List<IRule> rules, 
+            object defaultValue,
+            Func<string, object> customParser) 
+            : base(propertyName, format, parsingRules, rules, defaultValue, customParser)
         {
             ColumnName = columnLetter;
             ColumnIndex = columnLetter.ConvertExcelColumnNameToIndex();
