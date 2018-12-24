@@ -28,11 +28,11 @@ namespace SheetToObjects.Lib
                 return HandleEmptyValue(columnIndex, rowIndex, columnMapping);
             }
 
-            if (columnMapping.CustomParser.IsNotNull())
+            if (columnMapping.CustomValueParser.IsNotNull())
             {
                 try
                 {
-                    var parsedValue = columnMapping.CustomParser(value);
+                    var parsedValue = columnMapping.CustomValueParser(value);
                     return Result.Ok<object, IValidationError>(parsedValue);
                 }
                 catch (Exception)

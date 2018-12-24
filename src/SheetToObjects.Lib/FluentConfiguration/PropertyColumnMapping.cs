@@ -16,8 +16,8 @@ namespace SheetToObjects.Lib.FluentConfiguration
             List<IRule> rules, 
             object defaultValue, 
             bool isRequiredInHeaderRow,
-            Func<string, object> customParser) 
-            : base(propertyName, format, parsingRules, rules, defaultValue, customParser)
+            Func<string, object> customValueParser) 
+            : base(propertyName, format, parsingRules, rules, defaultValue, customValueParser)
         {
             ColumnName = propertyName;
             ColumnIndex = -1;
