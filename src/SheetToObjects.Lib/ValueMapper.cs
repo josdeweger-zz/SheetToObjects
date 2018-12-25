@@ -1,6 +1,7 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
 using SheetToObjects.Core;
+using SheetToObjects.Lib.Extensions;
 using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Parsing;
 using SheetToObjects.Lib.Validation;
@@ -16,16 +17,11 @@ namespace SheetToObjects.Lib
             _valueParser = valueParser;
         }
 
-        public Result<object, IValidationError> Map(
-            string value, 
-            Type propertyType, 
-            int columnIndex, 
-            int rowIndex, 
-            ColumnMapping columnMapping)
+        public Result<object, IValidationError> Map(string value, Type propertyType, int rowIndex, ColumnMapping columnMapping)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return HandleEmptyValue(columnIndex, rowIndex, columnMapping);
+                return HandleEmptyValue(columnMapping.ColumnIndex, rowIndex, columnMapping);
             }
 
             if (columnMapping.CustomValueParser.IsNotNull())
@@ -38,7 +34,7 @@ namespace SheetToObjects.Lib
                 catch (Exception)
                 {
                     var parsingValidationError = ParsingValidationError.CouldNotParseValue(
-                        columnIndex,
+                        columnMapping.ColumnIndex,
                         rowIndex,
                         columnMapping.DisplayName,
                         columnMapping.PropertyName);
@@ -47,20 +43,18 @@ namespace SheetToObjects.Lib
                 }
             }
 
-            var parsingResult = _valueParser.Parse(propertyType, value, columnMapping.Format);
+            return _valueParser
+                .Parse(propertyType, value, columnMapping.Format)
+                .OnValidationSuccess(parsedValue => parsedValue)
+                .OnValidationFailure(error => {
+                    var validationError = ParsingValidationError.CouldNotParseValue(
+                        columnMapping.ColumnIndex,
+                        rowIndex,
+                        columnMapping.DisplayName,
+                        columnMapping.PropertyName);
 
-            if (!parsingResult.IsSuccess)
-            {
-                var validationError = ParsingValidationError.CouldNotParseValue(
-                    columnIndex,
-                    rowIndex,
-                    columnMapping.DisplayName,
-                    columnMapping.PropertyName);
-
-                return Result.Fail<object, IValidationError>(validationError);
-            }
-
-            return Result.Ok<object, IValidationError>(parsingResult.Value);
+                    return validationError;
+                });
         }
 
         private static Result<object, IValidationError> HandleEmptyValue(int columnIndex, int rowIndex, ColumnMapping columnMapping)
