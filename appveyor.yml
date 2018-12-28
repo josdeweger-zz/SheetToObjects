@@ -5,3 +5,12 @@ build_script:
 test: off
 artifacts:
 - path: 'src\**\*.nupkg'
+deploy:
+  - provider: NuGet
+    on:
+      branch: master
+      APPVEYOR_REPO_TAG: true 
+    symbol_server: https://ci.appveyor.com/nuget/josdeweger-7u3d88pyya90/api/v2/package
+    api_key:
+      secure: d1CMBHpVrKHJOZxYueO4x/ROshtrPzJ8vPqKjxCT0NI=
+    artifact: /.*\.symbols\.nupkg/

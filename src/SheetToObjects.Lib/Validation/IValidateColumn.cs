@@ -5,8 +5,8 @@ namespace SheetToObjects.Lib.Validation
 {
     internal interface IValidateColumn
     {
-        ValidationResult<ParsedModelResult<TModel>> Validate<TModel>(
-            List<ParsedModelResult<TModel>> parsedModels, 
+        ValidationResult<ParsedModel<TModel>> Validate<TModel>(
+            List<ParsedModel<TModel>> parsedModels, 
             List<ColumnMapping> columnMappings) 
             where TModel : new();
     }

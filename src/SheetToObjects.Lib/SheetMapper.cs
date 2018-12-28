@@ -45,7 +45,7 @@ namespace SheetToObjects.Lib
         public MappingResult<T> Map<T>(Sheet sheet)
             where T : new()
         {
-            var parsedModels = new List<ParsedModelResult<T>>();
+            var parsedModels = new List<ParsedModel<T>>();
             var validationErrors = new List<IValidationError>();
 
             var mappingConfig = GetMappingConfig<T>();
@@ -72,7 +72,7 @@ namespace SheetToObjects.Lib
             );
         }
 
-        private void MapRows<T>(Sheet sheet, MappingConfig mappingConfig, List<ParsedModelResult<T>> parsedModels, List<IValidationError> validationErrors)
+        private void MapRows<T>(Sheet sheet, MappingConfig mappingConfig, List<ParsedModel<T>> parsedModels, List<IValidationError> validationErrors)
             where T : new()
         {
             var dataRows = mappingConfig.HasHeaders ? sheet.Rows.Skip(1).ToList() : sheet.Rows;
