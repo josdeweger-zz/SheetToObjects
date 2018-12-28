@@ -46,15 +46,11 @@ namespace SheetToObjects.Lib
             return _valueParser
                 .Parse(propertyType, value, columnMapping.Format)
                 .OnValidationSuccess(parsedValue => parsedValue)
-                .OnValidationFailure(error => {
-                    var validationError = ParsingValidationError.CouldNotParseValue(
-                        columnMapping.ColumnIndex,
-                        rowIndex,
-                        columnMapping.DisplayName,
-                        columnMapping.PropertyName);
-
-                    return validationError;
-                });
+                .OnValidationFailure(error => ParsingValidationError.CouldNotParseValue(
+                    columnMapping.ColumnIndex,
+                    rowIndex,
+                    columnMapping.DisplayName,
+                    columnMapping.PropertyName));
         }
 
         private static Result<object, IValidationError> HandleEmptyValue(int columnIndex, int rowIndex, ColumnMapping columnMapping)

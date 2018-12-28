@@ -9,12 +9,12 @@ namespace SheetToObjects.Lib.Validation
 {
     internal class ModelValidator : IValidateModels
     {
-        public ValidationResult<ParsedModelResult<TModel>> Validate<TModel>(
-            List<ParsedModelResult<TModel>> parsedModels, 
+        public ValidationResult<ParsedModel<TModel>> Validate<TModel>(
+            List<ParsedModel<TModel>> parsedModels, 
             List<ColumnMapping> columnMappings)
             where TModel : new()
         {
-            var validatedModels = new List<ParsedModelResult<TModel>>();
+            var validatedModels = new List<ParsedModel<TModel>>();
             var validationErrors = new List<IValidationError>();
             var properties = typeof(TModel).GetProperties();
 
@@ -22,14 +22,14 @@ namespace SheetToObjects.Lib.Validation
 
             validationErrors.AddRange(ValidateColumnRules(parsedModels, columnMappings, properties));
 
-            return new ValidationResult<ParsedModelResult<TModel>>(validatedModels, validationErrors);
+            return new ValidationResult<ParsedModel<TModel>>(validatedModels, validationErrors);
         }
 
         private static List<IValidationError> ValidatePropertyRules<TModel>(
-            List<ParsedModelResult<TModel>> parsedModels, 
+            List<ParsedModel<TModel>> parsedModels, 
             List<ColumnMapping> columnMappings, 
             PropertyInfo[] properties,
-            List<ParsedModelResult<TModel>> validatedModels) where TModel : new()
+            List<ParsedModel<TModel>> validatedModels) where TModel : new()
         {
             var validationErrors = new List<IValidationError>();
 
@@ -56,7 +56,7 @@ namespace SheetToObjects.Lib.Validation
         }
 
         private static List<IValidationError> ValidateColumnRules<TModel>(
-            List<ParsedModelResult<TModel>> parsedModels,
+            List<ParsedModel<TModel>> parsedModels,
             List<ColumnMapping> columnMappings,
             PropertyInfo[] properties) where TModel : new()
         {
@@ -75,7 +75,7 @@ namespace SheetToObjects.Lib.Validation
                         .Validate(
                             columnMapping.ColumnIndex,
                             columnMapping.DisplayName,
-                            parsedModels.Select(p => propertyInfo.GetValue(p.ParsedModel)).ToList()
+                            parsedModels.Select(p => propertyInfo.GetValue(p.Value)).ToList()
                         )
                         .OnFailure(validationErrors.Add));
             }
@@ -85,29 +85,29 @@ namespace SheetToObjects.Lib.Validation
 
         private static List<IValidationError> ValidateRules<TModel>(
             PropertyInfo property, 
-            ParsedModelResult<TModel> parsedModelResult, 
+            ParsedModel<TModel> parsedModel, 
             ColumnMapping columnMapping) 
             where TModel : new()
         {
             var modelValidationErrors = new List<IValidationError>();
 
-            var propertyValue = property.GetValue(parsedModelResult.ParsedModel);
+            var propertyValue = property.GetValue(parsedModel.Value);
 
             GetRulesOfType<IGenericRule>(columnMapping)
                 .ForEach(genericRule => genericRule
-                    .Validate(columnMapping.ColumnIndex, parsedModelResult.RowIndex, columnMapping.DisplayName, property.Name,
+                    .Validate(columnMapping.ColumnIndex, parsedModel.RowIndex, columnMapping.DisplayName, property.Name,
                         propertyValue)
                     .OnFailure(modelValidationErrors.Add));
 
             GetRulesOfType<IComparableRule>(columnMapping)
                 .ForEach(comparableRule => comparableRule
-                    .Validate(columnMapping.ColumnIndex, parsedModelResult.RowIndex, columnMapping.DisplayName, property.Name,
+                    .Validate(columnMapping.ColumnIndex, parsedModel.RowIndex, columnMapping.DisplayName, property.Name,
                         propertyValue)
                     .OnFailure(modelValidationErrors.Add));
 
             GetRulesOfType<ICustomRule>(columnMapping)
                 .ForEach(customRule => customRule
-                    .Validate(columnMapping.ColumnIndex, parsedModelResult.RowIndex, columnMapping.DisplayName, property.Name,
+                    .Validate(columnMapping.ColumnIndex, parsedModel.RowIndex, columnMapping.DisplayName, property.Name,
                         propertyValue)
                     .OnFailure(modelValidationErrors.Add));
 

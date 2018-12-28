@@ -17,7 +17,7 @@ namespace SheetToObjects.Lib
             _valueMapper = valueMapper;
         }
 
-        public Result<ParsedModelResult<T>, List<IValidationError>> Map<T>(Row row, MappingConfig mappingConfig)
+        public Result<ParsedModel<T>, List<IValidationError>> Map<T>(Row row, MappingConfig mappingConfig)
             where T : new()
         {
             var rowValidationErrors = new List<IValidationError>();
@@ -26,15 +26,13 @@ namespace SheetToObjects.Lib
 
             properties.ForEach(property =>
             {
-                var errors = MapRow(row, mappingConfig, property, obj);
-                rowValidationErrors.AddRange(errors);
+                rowValidationErrors.AddRange(MapRow(row, mappingConfig, property, obj));
             });
 
             if (rowValidationErrors.Any())
-                return Result.Fail<ParsedModelResult<T>, List<IValidationError>>(rowValidationErrors);
+                return Result.Fail<ParsedModel<T>, List<IValidationError>>(rowValidationErrors);
             
-            return Result.Ok<ParsedModelResult<T>, List<IValidationError>>(
-                new ParsedModelResult<T>(obj, row.RowIndex));
+            return Result.Ok<ParsedModel<T>, List<IValidationError>>(new ParsedModel<T>(obj, row.RowIndex));
         }
 
         private IEnumerable<IValidationError> MapRow<TModel>(
@@ -43,11 +41,10 @@ namespace SheetToObjects.Lib
             PropertyInfo property, 
             TModel obj) where TModel : new()
         {
-            var validationErrors = new List<IValidationError>();
             var columnMapping = mappingConfig.GetColumnMappingByPropertyName(property.Name);
 
             if (columnMapping.IsNull())
-                return validationErrors;
+                return new List<IValidationError>();
 
             var cell = row.GetCellByColumnIndex(columnMapping.ColumnIndex);
 
@@ -58,6 +55,8 @@ namespace SheetToObjects.Lib
                     .OnEmpty(() => new List<IValidationError>())
                     .Unwrap();
             }
+
+            var validationErrors = new List<IValidationError>();
 
             _valueMapper
                 .Map(cell.Value.ToString(), property.PropertyType, row.RowIndex, columnMapping)
