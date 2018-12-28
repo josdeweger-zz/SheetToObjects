@@ -10,7 +10,6 @@ namespace SheetToObjects.Lib
         Result<object, IValidationError> Map(
             string value,
             Type propertyType,
-            int columnIndex,
             int rowIndex,
             ColumnMapping columnMapping);
     }

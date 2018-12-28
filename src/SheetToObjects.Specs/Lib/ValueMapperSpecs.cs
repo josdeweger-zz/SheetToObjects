@@ -24,7 +24,6 @@ namespace SheetToObjects.Specs.Lib
             var result = mapper.Map(
                 value: string.Empty, 
                 propertyType: typeof(int),
-                columnIndex: 0,
                 rowIndex: 0,
                 columnMapping: columnMapping);
 
@@ -49,7 +48,6 @@ namespace SheetToObjects.Specs.Lib
             var result = mapper.Map(
                 value: string.Empty, 
                 propertyType: typeof(int),
-                columnIndex: 0,
                 rowIndex: 0,
                 columnMapping: columnMapping);
 
@@ -70,7 +68,6 @@ namespace SheetToObjects.Specs.Lib
             var result = mapper.Map(
                 value: value.ToString(),
                 propertyType: typeof(int),
-                columnIndex: 0,
                 rowIndex: 0,
                 columnMapping: columnMapping);
 
@@ -92,7 +89,6 @@ namespace SheetToObjects.Specs.Lib
             var result = mapper.Map(
                 value: value,
                 propertyType: typeof(int),
-                columnIndex: 0,
                 rowIndex: 0,
                 columnMapping: columnMapping);
 

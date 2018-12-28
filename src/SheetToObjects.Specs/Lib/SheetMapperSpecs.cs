@@ -56,7 +56,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().ParsedModel.DoubleProperty.Should().Be(_doubleValue);
+            result.ParsedModels.Single().Value.DoubleProperty.Should().Be(_doubleValue);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().ParsedModel.IntProperty.Should().Be(_intValue);
+            result.ParsedModels.Single().Value.IntProperty.Should().Be(_intValue);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().ParsedModel.BoolProperty.Should().Be(_boolValue);
+            result.ParsedModels.Single().Value.BoolProperty.Should().Be(_boolValue);
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().ParsedModel.EnumProperty.Should().Be(_enumValue);
+            result.ParsedModels.Single().Value.EnumProperty.Should().Be(_enumValue);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().ParsedModel.DateTimeProperty.Should().Be(_dateTimeValue);
+            result.ParsedModels.Single().Value.DateTimeProperty.Should().Be(_dateTimeValue);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(_sheetData);
 
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.Single().ParsedModel.StringProperty.Should().Be(_stringValue);
+            result.ParsedModels.Single().Value.StringProperty.Should().Be(_stringValue);
         }
 
         [Fact]
@@ -211,10 +211,10 @@ namespace SheetToObjects.Specs.Lib
             var resultModelTwo = sheetMapper.Map<ModelTwo>(sheetDataModelTwo);
 
             resultModelOne.IsSuccess.Should().BeTrue();
-            resultModelOne.ParsedModels.Single().ParsedModel.ModelOnePropertyOne.Should().Be("SomeValue");
+            resultModelOne.ParsedModels.Single().Value.ModelOnePropertyOne.Should().Be("SomeValue");
 
             resultModelTwo.IsSuccess.Should().BeTrue();
-            resultModelTwo.ParsedModels.Single().ParsedModel.ModelTwoPropertyOne.Should().Be(1);
+            resultModelTwo.ParsedModels.Single().Value.ModelTwoPropertyOne.Should().Be(1);
         }
 
         [Fact]
@@ -239,7 +239,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(sheetData);
 
             result.IsSuccess.Should().BeTrue();
-            result.ParsedModels.Single().ParsedModel.IntProperty.Should().Be(defaultAge);
+            result.ParsedModels.Single().Value.IntProperty.Should().Be(defaultAge);
         }
 
         [Fact]
@@ -264,7 +264,7 @@ namespace SheetToObjects.Specs.Lib
                 .Map<TestModel>(sheetData);
 
             result.IsSuccess.Should().BeTrue();
-            result.ParsedModels.Single().ParsedModel.StringProperty.Should().Be(defaultLabel);
+            result.ParsedModels.Single().Value.StringProperty.Should().Be(defaultLabel);
         }
 
         [Fact]
@@ -377,7 +377,7 @@ namespace SheetToObjects.Specs.Lib
 
             result.IsSuccess.Should().BeTrue();
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.First().ParsedModel.BoolProperty.Should().BeTrue();
+            result.ParsedModels.First().Value.BoolProperty.Should().BeTrue();
         }
 
         [Fact]
@@ -409,7 +409,7 @@ namespace SheetToObjects.Specs.Lib
 
             result.IsSuccess.Should().BeTrue();
             result.ParsedModels.Should().HaveCount(1);
-            result.ParsedModels.First().ParsedModel.EnumProperty.Should().Be(EnumModel.Second);
+            result.ParsedModels.First().Value.EnumProperty.Should().Be(EnumModel.Second);
         }
 
         [Fact]
