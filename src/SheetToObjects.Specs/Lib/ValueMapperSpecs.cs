@@ -1,8 +1,11 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Collections.Generic;
+using CSharpFunctionalExtensions;
 using FluentAssertions;
 using Moq;
 using SheetToObjects.Lib;
+using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Lib.Parsing;
+using SheetToObjects.Lib.Validation;
 using Xunit;
 
 namespace SheetToObjects.Specs.Lib
@@ -16,16 +19,14 @@ namespace SheetToObjects.Specs.Lib
 
             var mapper = new ValueMapper(parsingStrategyProvider.Object);
 
+            var columnMapping = new NameColumnMapping(string.Empty, string.Empty, string.Empty, null, null, null, false, null);
+
             var result = mapper.Map(
                 value: string.Empty, 
                 propertyType: typeof(int),
                 columnIndex: 0,
                 rowIndex: 0,
-                displayName: string.Empty,
-                propertyName: string.Empty,
-                format: string.Empty,
-                isRequired: false,
-                defaultValue: null);
+                columnMapping: columnMapping);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(string.Empty);
@@ -38,16 +39,19 @@ namespace SheetToObjects.Specs.Lib
 
             var mapper = new ValueMapper(parsingStrategyProvider.Object);
 
+            var columnMapping = new NameColumnMapping(
+                string.Empty, 
+                string.Empty, 
+                string.Empty, 
+                new List<IParsingRule> { new RequiredRule() }, 
+                null, null, false, null);
+
             var result = mapper.Map(
-                value: string.Empty,
+                value: string.Empty, 
                 propertyType: typeof(int),
                 columnIndex: 0,
                 rowIndex: 0,
-                displayName: string.Empty,
-                propertyName: string.Empty,
-                format: string.Empty,
-                isRequired: true,
-                defaultValue: null);
+                columnMapping: columnMapping);
 
             result.IsFailure.Should().BeTrue();
         }
@@ -61,16 +65,14 @@ namespace SheetToObjects.Specs.Lib
 
             var mapper = new ValueMapper(parsingStrategyProvider.Object);
 
+            var columnMapping = new NameColumnMapping(string.Empty, string.Empty, string.Empty, null, null, null, false, null);
+
             var result = mapper.Map(
                 value: value.ToString(),
                 propertyType: typeof(int),
                 columnIndex: 0,
                 rowIndex: 0,
-                displayName: string.Empty,
-                propertyName: string.Empty,
-                format: string.Empty,
-                isRequired: false,
-                defaultValue: null);
+                columnMapping: columnMapping);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().Be(value);
@@ -85,16 +87,14 @@ namespace SheetToObjects.Specs.Lib
 
             var mapper = new ValueMapper(parsingStrategyProvider.Object);
 
+            var columnMapping = new NameColumnMapping(string.Empty, string.Empty, string.Empty, null, null, null, false, null);
+
             var result = mapper.Map(
                 value: value,
                 propertyType: typeof(int),
                 columnIndex: 0,
                 rowIndex: 0,
-                displayName: string.Empty,
-                propertyName: string.Empty,
-                format: string.Empty,
-                isRequired: false,
-                defaultValue: null);
+                columnMapping: columnMapping);
 
             result.IsFailure.Should().BeTrue();
         }

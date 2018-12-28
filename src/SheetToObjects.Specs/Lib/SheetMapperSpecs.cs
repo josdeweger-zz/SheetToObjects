@@ -356,6 +356,83 @@ namespace SheetToObjects.Specs.Lib
             result.IsSuccess.Should().BeTrue();
             result.ParsedModels.Should().HaveCount(1);
         }
+
+        [Fact]
+        public void GivenSheet_WhenCustomBooleanParserIsProvided_ValueIsConvertedToBoolean()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("Bool")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("1").Build()).Build(1))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("Bool")
+                        .IsRequired()
+                        .ParseValueUsing(x => x.Equals("1") ? true : false)
+                        .MapTo(t => t.BoolProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.First().ParsedModel.BoolProperty.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenSheet_WhenCustomEnumParserIsProvided_ValueIsConvertedToEnum()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("EnumProperty")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("Second").Build()).Build(1))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("EnumProperty")
+                        .IsRequired()
+                        .ParseValueUsing(x =>
+                        {
+                            switch (x)
+                            {
+                                case "First": return EnumModel.First;
+                                case "Second": return EnumModel.Second;
+                                case "Third": return EnumModel.Third;
+                                default: return EnumModel.Default;
+                            }
+                        })
+                        .MapTo(t => t.EnumProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeTrue();
+            result.ParsedModels.Should().HaveCount(1);
+            result.ParsedModels.First().ParsedModel.EnumProperty.Should().Be(EnumModel.Second);
+        }
+
+        [Fact]
+        public void GivenSheet_WhenCustomEnumParserFails_ResultContainsFailure()
+        {
+            var sheetData = new SheetBuilder()
+                .AddHeaders("StringProperty")
+                .AddRow(r => r.AddCell(c => c.WithColumnIndex(0).WithRowIndex(1).WithValue("MyValue").Build()).Build(1))
+                .Build();
+
+            var result = new SheetMapper()
+                .AddConfigFor<TestModel>(cfg => cfg
+                    .HasHeaders()
+                    .MapColumn(column => column
+                        .WithHeader("StringProperty")
+                        .ParseValueUsing(x => throw new Exception("An exception occured"))
+                        .MapTo(t => t.StringProperty)))
+                .Map<TestModel>(sheetData);
+
+            result.IsSuccess.Should().BeFalse();
+            result.ValidationErrors.Should().HaveCount(1);
+            result.ValidationErrors.First().ErrorMessage.Should().Be("Could not parse value");
+        }
     }
 
     public class ModelOne
