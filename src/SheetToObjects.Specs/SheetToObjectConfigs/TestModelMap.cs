@@ -3,11 +3,11 @@ using SheetToObjects.Specs.TestModels;
 
 namespace SheetToObjects.Specs.SheetToObjectConfigs
 {
-    public class TestModelMap : SheetToObjectConfig<TestModel>
+    public class TestModelMap : SheetToObjectConfig
     {
         public TestModelMap()
         {
-            CreateMap(x => x
+            CreateMap<TestModel>(x => x
                 .HasHeaders()
                 .MapColumn(c => c.WithHeader("StringProperty").MapTo(m => m.StringProperty))
                 .MapColumn(c => c.WithHeader("IntProperty").MapTo(m => m.IntProperty))

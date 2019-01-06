@@ -3,7 +3,7 @@ using SheetToObjects.Lib.AttributesConfiguration.RuleAttributes;
 
 namespace SheetToObjects.Specs.TestModels
 {
-    [SheetToObjectConfig()]
+    [SheetToObjectAttributeConfig()]
     public class AutoMapTestModel
     {
         [IsRequired]

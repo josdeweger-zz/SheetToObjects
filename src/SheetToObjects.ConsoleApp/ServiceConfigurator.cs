@@ -1,9 +1,8 @@
 ﻿using System.IO;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SheetToObjects.Adapters.ProtectedGoogleSheets;
-using SheetToObjects.ConsoleApp.SheetToObjectConfigs;
-using SheetToObjects.Lib;
+using SheetToObjects.Extensions.Microsoft.DependencyInjection;
 
 namespace SheetToObjects.ConsoleApp
 {
@@ -11,16 +10,12 @@ namespace SheetToObjects.ConsoleApp
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddTransient<Adapters.ProtectedGoogleSheets.IProvideSheet, Adapters.ProtectedGoogleSheets.ProtectedGoogleSheetAdapter>();
             serviceCollection.AddTransient<Adapters.Csv.IProvideSheet, Adapters.Csv.CsvAdapter>();
-            serviceCollection.AddTransient<ISheetsServiceWrapper, SheetsServiceWrapper>();
-            serviceCollection.AddTransient<ICreateGoogleClientService, GoogleClientServiceFactory>();
-            serviceCollection.AddTransient<IProvideProtectedSheet, ProtectedGoogleSheetAdapter>();
             serviceCollection.AddTransient<Adapters.GoogleSheets.IProvideSheet, Adapters.GoogleSheets.GoogleSheetAdapter>();
             serviceCollection.AddTransient<Adapters.MicrosoftExcel.IProvideSheet, Adapters.MicrosoftExcel.SheetProvider>();
 
-            serviceCollection.AddTransient<IMapSheetToObjects>(ctx => new SheetMapper()
-                .AddSheetToObjectConfig(new EpicTrackingConfig())
-                .AddSheetToObjectConfig(new SuperstoreConfig()));
+            serviceCollection.AddSheetToObjects(Assembly.GetExecutingAssembly());
 
             serviceCollection.AddOptions();
 

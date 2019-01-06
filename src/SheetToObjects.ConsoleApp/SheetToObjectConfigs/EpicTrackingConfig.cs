@@ -3,11 +3,11 @@ using SheetToObjects.Lib.FluentConfiguration;
 
 namespace SheetToObjects.ConsoleApp.SheetToObjectConfigs
 {
-    public class EpicTrackingConfig : SheetToObjectConfig<EpicTracking>
+    public class EpicTrackingConfig : SheetToObjectConfig
     {
         public EpicTrackingConfig()
         {
-            CreateMap(x => x
+            CreateMap<EpicTracking>(x => x
                 .MapColumn(column => column.WithColumnLetter("A").MapTo(m => m.SprintNumber))
                 .MapColumn(column => column.WithColumnLetter("B").MapTo(m => m.SprintName))
                 .MapColumn(column => column.WithColumnLetter("C").MapTo(m => m.StoryPointsCompleted))

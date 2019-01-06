@@ -9,11 +9,11 @@ namespace SheetToObjects.ConsoleApp
 {
     public class ProtectedGoogleSheetsApp
     {
-        private readonly IProvideProtectedSheet _sheetProvider;
+        private readonly IProvideSheet _sheetProvider;
         private readonly IMapSheetToObjects _sheetMapper;
 
         public ProtectedGoogleSheetsApp(
-            IProvideProtectedSheet sheetProvider,
+            IProvideSheet sheetProvider,
             IMapSheetToObjects sheetMapper)
         {
             _sheetProvider = sheetProvider;

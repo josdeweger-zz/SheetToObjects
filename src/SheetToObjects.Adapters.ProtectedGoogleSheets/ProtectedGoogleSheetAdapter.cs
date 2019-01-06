@@ -5,7 +5,7 @@ using Sheet = SheetToObjects.Lib.Sheet;
 
 namespace SheetToObjects.Adapters.ProtectedGoogleSheets
 {
-    public class ProtectedGoogleSheetAdapter : IProvideProtectedSheet
+    public class ProtectedGoogleSheetAdapter : IProvideSheet
     {
         private readonly ICreateGoogleClientService _googleClientServiceCreator;
         private readonly IConvertDataToSheet<ValueRange> _protectedGoogleSheetAdapter;
