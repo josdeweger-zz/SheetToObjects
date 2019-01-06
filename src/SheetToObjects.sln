@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2011
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.ConsoleApp", "SheetToObjects.ConsoleApp\SheetToObjects.ConsoleApp.csproj", "{9A11189F-30E1-47C0-8B3D-D71810D784F4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Specs", "SheetToObjects.Specs\SheetToObjects.Specs.csproj", "{71827426-699E-45C7-B964-B483AD76EACC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Core", "SheetToObjects.Core\SheetToObjects.Core.csproj", "{FE4C9175-D211-43A8-81E3-36281D8C5036}"
@@ -24,7 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Adapters.ProtectedGoogleSheets", "SheetToObjects.Adapters.ProtectedGoogleSheets\SheetToObjects.Adapters.ProtectedGoogleSheets.csproj", "{C6EA22A6-873B-44BC-9C4E-AD01227FBDA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheetToObjects.Extensions.Microsoft.DependencyInjection", "SheetToObjects.Extensions.Microsoft.DependencyInjection\SheetToObjects.Extensions.Microsoft.DependencyInjection.csproj", "{6019026B-A019-431D-92F9-01EECBDFA628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Extensions.Microsoft.DependencyInjection", "SheetToObjects.Extensions.Microsoft.DependencyInjection\SheetToObjects.Extensions.Microsoft.DependencyInjection.csproj", "{6019026B-A019-431D-92F9-01EECBDFA628}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheetToObjects.Examples", "SheetToObjects.Examples\SheetToObjects.Examples.csproj", "{9C87BF5C-C3C6-490A-BCC2-C1C6FE1340AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +32,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9A11189F-30E1-47C0-8B3D-D71810D784F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A11189F-30E1-47C0-8B3D-D71810D784F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A11189F-30E1-47C0-8B3D-D71810D784F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A11189F-30E1-47C0-8B3D-D71810D784F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{71827426-699E-45C7-B964-B483AD76EACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71827426-699E-45C7-B964-B483AD76EACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71827426-699E-45C7-B964-B483AD76EACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -68,6 +64,10 @@ Global
 		{6019026B-A019-431D-92F9-01EECBDFA628}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6019026B-A019-431D-92F9-01EECBDFA628}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6019026B-A019-431D-92F9-01EECBDFA628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C87BF5C-C3C6-490A-BCC2-C1C6FE1340AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C87BF5C-C3C6-490A-BCC2-C1C6FE1340AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C87BF5C-C3C6-490A-BCC2-C1C6FE1340AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C87BF5C-C3C6-490A-BCC2-C1C6FE1340AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

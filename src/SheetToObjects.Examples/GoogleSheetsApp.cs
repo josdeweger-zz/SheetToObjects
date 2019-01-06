@@ -1,35 +1,41 @@
 ﻿using System;
-using System.IO;
-using SheetToObjects.ConsoleApp.Models;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using SheetToObjects.Adapters.GoogleSheets;
 using SheetToObjects.Core;
+using SheetToObjects.Examples.Models;
 using SheetToObjects.Lib;
-using IProvideSheet = SheetToObjects.Adapters.Csv.IProvideSheet;
 
-namespace SheetToObjects.ConsoleApp
+namespace SheetToObjects.Examples
 {
-    public class CsvAppWithoutValidationErrors
+    public class GoogleSheetsApp
     {
+        private readonly AppSettings _appSettings;
         private readonly IProvideSheet _sheetProvider;
         private readonly IMapSheetToObjects _sheetMapper;
 
-        public CsvAppWithoutValidationErrors(
+        public GoogleSheetsApp(
+            IOptions<AppSettings> appSettings,
             IProvideSheet sheetProvider,
             IMapSheetToObjects sheetMapper)
         {
+            _appSettings = appSettings.Value;
             _sheetProvider = sheetProvider;
             _sheetMapper = sheetMapper;
         }
 
-        public void Run()
+        public async Task Run()
         {
-            var result = Timer.TimeFunc(() =>
+            var result = await Timer.TimeFuncAsync(async () =>
             {
-                var fileStream = File.Open(@"./Files/profiles-without-validation-errors.csv", FileMode.Open);
-                var sheet = _sheetProvider.GetFromStream(fileStream, ';');
+                var sheet = await _sheetProvider.GetAsync(
+                    _appSettings.SheetId,
+                    "'Herstructurering Filters Data'!A1:H9",
+                    _appSettings.ApiKey);
 
-                return _sheetMapper.Map<Profile>(sheet);
+                return _sheetMapper.Map<EpicTracking>(sheet);
             });
-            
+
             foreach (var error in result.Item1.ValidationErrors)
             {
                 Console.WriteLine($"Column: {error.ColumnName} | Row: {error.RowIndex} | Message: {error.ErrorMessage}");

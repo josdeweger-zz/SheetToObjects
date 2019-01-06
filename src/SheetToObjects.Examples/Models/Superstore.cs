@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SheetToObjects.ConsoleApp.Models
+namespace SheetToObjects.Examples.Models
 {
     public class Superstore
     {

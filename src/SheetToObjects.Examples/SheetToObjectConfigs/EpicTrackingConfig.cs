@@ -1,7 +1,7 @@
-﻿using SheetToObjects.ConsoleApp.Models;
+﻿using SheetToObjects.Examples.Models;
 using SheetToObjects.Lib.FluentConfiguration;
 
-namespace SheetToObjects.ConsoleApp.SheetToObjectConfigs
+namespace SheetToObjects.Examples.SheetToObjectConfigs
 {
     public class EpicTrackingConfig : SheetToObjectConfig
     {

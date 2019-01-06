@@ -1,4 +1,4 @@
-﻿namespace SheetToObjects.ConsoleApp.Models
+﻿namespace SheetToObjects.Examples.Models
 {
     public class EpicTracking
     {
