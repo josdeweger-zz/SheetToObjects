@@ -1,0 +1,7 @@
+﻿{
+  "Configuration": {
+    "GoogleSheetsUrl": "https://sheets.googleapis.com/v4",
+    "ApiKey": "",
+    "SheetId": ""
+  }
+}

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using SheetToObjects.ConsoleApp.Models;
 using SheetToObjects.Core;
+using SheetToObjects.Examples.Models;
 using SheetToObjects.Lib;
 using IProvideSheet = SheetToObjects.Adapters.Csv.IProvideSheet;
 
-namespace SheetToObjects.ConsoleApp
+namespace SheetToObjects.Examples
 {
     public class CsvAppWithValidationErrors
     {
