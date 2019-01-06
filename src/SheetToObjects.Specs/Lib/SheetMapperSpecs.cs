@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using SheetToObjects.Core;
 using SheetToObjects.Lib;
 using SheetToObjects.Lib.FluentConfiguration;
 using SheetToObjects.Specs.Builders;
