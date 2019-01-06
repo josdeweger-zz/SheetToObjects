@@ -26,6 +26,20 @@ namespace SheetToObjects.Lib
         {
 
         }
+        
+        /// <summary>
+        /// Adds a SheetMap that contains configuration about how the sheet maps to your model
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="sheetMap"></param>
+        /// <returns></returns>
+        public SheetMapper AddSheetToObjectConfig<TModel>(SheetToObjectConfig<TModel> sheetMap) where TModel : new()
+        {
+            var mappingConfig = sheetMap.MappingConfig;
+            _mappingConfigs.AddOrUpdate(typeof(TModel), mappingConfig, (type, existingConfig) => mappingConfig);
+
+            return this;
+        }
 
         /// <summary>
         /// Configure how the sheet maps to your model

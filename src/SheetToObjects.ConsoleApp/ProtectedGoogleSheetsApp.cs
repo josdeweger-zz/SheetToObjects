@@ -29,7 +29,7 @@ namespace SheetToObjects.ConsoleApp
                                                           "1cxAOIdNlb2UJ8h5ADUyqiolQt7znf-S7AAEKJV8VpJc", 
                                                           "'store'!A1:U9995");
 
-                return _sheetMapper.Map<SuperstoreModel>(sheet);
+                return _sheetMapper.Map<Superstore>(sheet);
             });
 
             foreach (var error in result.Item1.ValidationErrors)

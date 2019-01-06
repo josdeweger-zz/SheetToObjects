@@ -26,7 +26,7 @@ namespace SheetToObjects.ConsoleApp
                 var excelRange = new ExcelRange(new ExcelCell("A", 1), new ExcelCell("U", 9995));
                 var sheet = _sheetProvider.GetFromPath(@"./Files/Sample - Superstore.xlsx", "orders", excelRange);
 
-                return _sheetMapper.Map<SuperstoreModel>(sheet);
+                return _sheetMapper.Map<Superstore>(sheet);
             });
 
             foreach (var error in result.Item1.ValidationErrors)

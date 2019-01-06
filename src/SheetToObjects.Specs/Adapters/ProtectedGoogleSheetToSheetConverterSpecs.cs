@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Google.Apis.Sheets.v4.Data;
-using SheetToObjects.Adapters.GoogleSheets;
 using SheetToObjects.Adapters.ProtectedGoogleSheets;
 using SheetToObjects.Specs.Builders;
 using Xunit;

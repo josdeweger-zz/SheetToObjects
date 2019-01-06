@@ -27,7 +27,7 @@ namespace SheetToObjects.ConsoleApp
                 var fileStream = File.Open(@"./Files/profiles-with-validation-errors.csv", FileMode.Open);
                 var sheet = _sheetProvider.GetFromStream(fileStream, ';');
 
-                return _sheetMapper.Map<ProfileModel>(sheet);
+                return _sheetMapper.Map<Profile>(sheet);
             });
             
             foreach (var error in result.Item1.ValidationErrors)

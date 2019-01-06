@@ -33,7 +33,7 @@ namespace SheetToObjects.ConsoleApp
                     "'Herstructurering Filters Data'!A1:H9",
                     _appSettings.ApiKey);
 
-                return _sheetMapper.Map<EpicTrackingModel>(sheet);
+                return _sheetMapper.Map<EpicTracking>(sheet);
             });
 
             foreach (var error in result.Item1.ValidationErrors)

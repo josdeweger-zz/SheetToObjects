@@ -22,16 +22,4 @@
     <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Google.Apis">
-      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis\1.35.1\lib\netstandard2.0\Google.Apis.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.Auth">
-      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis.auth\1.35.1\lib\netstandard2.0\Google.Apis.Auth.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.Sheets.v4">
-      <HintPath>..\..\..\..\Users\jos.deweger\.nuget\packages\google.apis.sheets.v4\1.35.1.1338\lib\netstandard2.0\Google.Apis.Sheets.v4.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
