@@ -3,7 +3,7 @@ using SheetToObjects.Lib;
 
 namespace SheetToObjects.Adapters.ProtectedGoogleSheets
 {
-    public interface IProvideProtectedSheet
+    public interface IProvideSheet
     {
         Task<Sheet> GetAsync(string authenticationJsonFilePath, string documentName, string sheetId, string range);
     }

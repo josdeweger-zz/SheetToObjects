@@ -5,7 +5,7 @@ using SheetToObjects.Lib.AttributesConfiguration.RuleAttributes;
 
 namespace SheetToObjects.Specs.TestModels
 {
-    [SheetToObjectConfig(sheetHasHeaders:true)]
+    [SheetToObjectAttributeConfig(sheetHasHeaders:true)]
     public class AttributeTestModel
     {
         [MappingByIndex(3)]

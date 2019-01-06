@@ -6,7 +6,7 @@ using SheetToObjects.Lib.AttributesConfiguration.RuleAttributes;
 namespace SheetToObjects.ConsoleApp.Models
 {
 
-    [SheetToObjectConfig(true)]
+    [SheetToObjectAttributeConfig(true)]
     public class Profile
     {
         [MappingByHeader("emailaddress")]
