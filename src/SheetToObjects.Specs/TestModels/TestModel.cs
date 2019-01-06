@@ -8,7 +8,6 @@ namespace SheetToObjects.Specs.TestModels
     [SheetToObjectConfig]
     public class TestModel
     {
-
         public string StringProperty { get; set; }
 
         public int IntProperty { get; set; }
@@ -33,7 +32,7 @@ namespace SheetToObjects.Specs.TestModels
 
         public decimal DecimalProperty { get; set; }
 
-        [Regex(@"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$", true)]
+        [Regex(pattern: @"^$|^[^@\s]+@[^@\s]+$`", ignoreCase: true)]
         public string StringRegexProperty { get; set; }
     }
 }
