@@ -3,11 +3,11 @@ using SheetToObjects.Lib.FluentConfiguration;
 
 namespace SheetToObjects.ConsoleApp.SheetToObjectConfigs
 {
-    public class SuperstoreConfig : SheetToObjectConfig<Superstore>
+    public class SuperstoreConfig : SheetToObjectConfig
     {
         public SuperstoreConfig()
         {
-            CreateMap(x => x
+            CreateMap<Superstore>(x => x
                 .HasHeaders()
                 .MapColumn(column => column.WithHeader("Row ID").ShouldHaveUniqueValues().IsRequired().MapTo(m => m.RowId))
                 .MapColumn(column => column.WithHeader("Order ID").IsRequired().MapTo(m => m.OrderId))

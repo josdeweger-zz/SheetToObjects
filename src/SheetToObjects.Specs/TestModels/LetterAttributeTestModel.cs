@@ -3,7 +3,7 @@ using SheetToObjects.Lib.AttributesConfiguration.MappingTypeAttributes;
 
 namespace SheetToObjects.Specs.TestModels
 {
-    [SheetToObjectConfig()]
+    [SheetToObjectAttributeConfig()]
     public class LetterAttributeTestModel
     {
 

@@ -5,7 +5,7 @@ using SheetToObjects.Lib.AttributesConfiguration.RuleAttributes;
 
 namespace SheetToObjects.Specs.TestModels
 {
-    [SheetToObjectConfig]
+    [SheetToObjectAttributeConfig]
     public class TestModel
     {
         public string StringProperty { get; set; }

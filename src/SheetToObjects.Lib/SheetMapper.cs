@@ -26,17 +26,22 @@ namespace SheetToObjects.Lib
         {
 
         }
-        
+
         /// <summary>
         /// Adds a SheetMap that contains configuration about how the sheet maps to your model
         /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <param name="sheetMap"></param>
+        /// <param name="sheetToObjectConfig"></param>
         /// <returns></returns>
-        public SheetMapper AddSheetToObjectConfig<TModel>(SheetToObjectConfig<TModel> sheetMap) where TModel : new()
+        public SheetMapper AddSheetToObjectConfig(SheetToObjectConfig sheetToObjectConfig)
         {
-            var mappingConfig = sheetMap.MappingConfig;
-            _mappingConfigs.AddOrUpdate(typeof(TModel), mappingConfig, (type, existingConfig) => mappingConfig);
+            if (sheetToObjectConfig.MappingConfig.IsNull())
+                throw new ArgumentException(
+                    "A SheetToObjectConfig was provided, but no config was set. " +
+                    "Use the CreateMap method from the constructor of the SheetToObjectConfig " +
+                    "class to create a column to property configuration.");
+
+            var mappingConfig = sheetToObjectConfig.MappingConfig;
+            _mappingConfigs.AddOrUpdate(sheetToObjectConfig.ModelType, mappingConfig, (type, existingConfig) => mappingConfig);
 
             return this;
         }

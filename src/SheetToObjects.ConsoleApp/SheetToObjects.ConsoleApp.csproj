@@ -17,6 +17,7 @@
     <ProjectReference Include="..\SheetToObjects.Adapters.GoogleSheets\SheetToObjects.Adapters.GoogleSheets.csproj" />
     <ProjectReference Include="..\SheetToObjects.Adapters.MicrosoftExcel\SheetToObjects.Adapters.MicrosoftExcel.csproj" />
     <ProjectReference Include="..\SheetToObjects.Adapters.ProtectedGoogleSheets\SheetToObjects.Adapters.ProtectedGoogleSheets.csproj" />
+    <ProjectReference Include="..\SheetToObjects.Extensions.Microsoft.DependencyInjection\SheetToObjects.Extensions.Microsoft.DependencyInjection.csproj" />
     <ProjectReference Include="..\SheetToObjects.Lib\SheetToObjects.Lib.csproj" />
   </ItemGroup>
 

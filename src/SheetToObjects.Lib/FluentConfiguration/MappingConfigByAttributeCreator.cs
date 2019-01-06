@@ -15,7 +15,7 @@ namespace SheetToObjects.Lib.FluentConfiguration
         {
             var type = typeof(T);
 
-            var sheetToConfigAttribute = type.GetCustomAttributes().OfType<SheetToObjectConfig>().FirstOrDefault();
+            var sheetToConfigAttribute = type.GetCustomAttributes().OfType<SheetToObjectAttributeConfig>().FirstOrDefault();
             if (sheetToConfigAttribute.IsNotNull())
             {
                 return Result.Ok(CreateMappingConfigForType(type, sheetToConfigAttribute));
@@ -24,12 +24,12 @@ namespace SheetToObjects.Lib.FluentConfiguration
             return Result.Fail<MappingConfig>($"No SheetToObjectConfig attribute found on model of type {type}");
         }
 
-        private MappingConfig CreateMappingConfigForType(Type type, SheetToObjectConfig sheetToConfigAttribute)
+        private MappingConfig CreateMappingConfigForType(Type type, SheetToObjectAttributeConfig sheetToAttributeConfigAttribute)
         {
             var mappingConfig = new MappingConfig
             {
-                HasHeaders = sheetToConfigAttribute.SheetHasHeaders,
-                AutoMapProperties = sheetToConfigAttribute.AutoMapProperties
+                HasHeaders = sheetToAttributeConfigAttribute.SheetHasHeaders,
+                AutoMapProperties = sheetToAttributeConfigAttribute.AutoMapProperties
             };
 
             foreach (var property in type.GetProperties())
